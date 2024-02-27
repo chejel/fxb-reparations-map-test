@@ -25,7 +25,7 @@
 		border: 1px solid #f5a64c;
 		cursor: pointer;
 		color: #333;
-		padding: 0.45rem 0.75rem;
+		padding: 5px 8px;
 		border-radius: 2px;
 		font-size: 0.9rem;
 		font-weight: 700;

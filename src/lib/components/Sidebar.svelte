@@ -1,0 +1,30 @@
+<script>
+	// Import icon components
+	import CloseIcon from '$lib/components/icons/Close.svelte';
+
+	// Set state of sidebar
+	export let sidebarVisible;
+</script>
+
+<slot />
+
+<!-- Close button -->
+<button
+	class="close-button"
+	aria-label="Close"
+	on:click|stopPropagation={() => {
+		sidebarVisible = false;
+	}}><CloseIcon /></button
+>
+
+<style>
+	.close-button {
+		position: absolute;
+		top: 4px;
+		right: 4px;
+		background-color: transparent;
+		border: 0;
+		cursor: pointer;
+		z-index: 100;
+	}
+</style>

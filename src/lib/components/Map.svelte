@@ -13,13 +13,24 @@
 	import ResetMap from '$lib/components/ResetMap.svelte';
 
 	// Import transition
-	import { slide } from 'svelte/transition';
+	import { fade, slide } from 'svelte/transition';
 
 	// Set variables
 	let mapContainer;
+
 	// for resetting center of map
 	let initialCenterLng;
 	let movedCenterLng;
+
+	// Set state of sidebar and map padding
+	export let sidebarVisible;
+	let mapPadding;
+
+	$: if (sidebarVisible) {
+		mapPadding = { left: 375 };
+	} else {
+		mapPadding = { left: 0 };
+	}
 
 	mapboxgl.accessToken =
 		'pk.eyJ1IjoiamVuY2hlIiwiYSI6ImNsZzZ6OWh4ajA0dGczd25wMzRwcmUwZnEifQ.wSe4_SgYEgC-QX-6Clad9w';
@@ -45,7 +56,7 @@
 		// ]);
 
 		// Add zoom controls
-		$map.addControl(new mapboxgl.NavigationControl({ showCompass: false }), 'bottom-right');
+		$map.addControl(new mapboxgl.NavigationControl({ showCompass: false }), 'top-right');
 
 		$map.on('load', () => {
 			// Establish initial center longtitude value
@@ -56,6 +67,12 @@
 			$map.on('move', () => {
 				movedCenterLng = $map?.getCenter().lng;
 			});
+
+			// Shift globe based on state of sidebar
+			$map.easeTo({
+				padding: mapPadding,
+				duration: 1000
+			});
 		});
 	});
 
@@ -64,16 +81,22 @@
 			$map.remove();
 		}
 	});
+
+	// Update globe padding depending on state of sidebar
+	$: $map?.easeTo({
+		padding: mapPadding,
+		duration: 1000
+	});
 </script>
 
 <div class="map" bind:this={mapContainer} />
 
+<!-- Reset map button -->
 {#if initialCenterLng?.toFixed(1) !== movedCenterLng?.toFixed(1)}
-	<div class="btn-container">
-		<div class="reset-container" transition:slide={{ axis: 'y', duration: 300 }}>
-			<ResetMap>Reset Map</ResetMap>
-		</div>
+	<div class="reset-container" transition:slide={{ axis: 'y', duration: 300 }}>
+		<ResetMap>Reset Map</ResetMap>
 	</div>
+	<div class="btn-container"></div>
 {/if}
 
 <style>
@@ -86,7 +109,7 @@
 
 	.btn-container {
 		position: absolute;
-		top: 10px;
+		top: 80px;
 		right: 10px;
 		display: flex;
 		flex-direction: column;
@@ -95,7 +118,8 @@
 	}
 
 	.reset-container {
-		top: 0;
-		right: 10px;
+		position: absolute;
+		top: 10px;
+		right: 50px;
 	}
 </style>
