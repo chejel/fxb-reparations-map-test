@@ -3,39 +3,37 @@
 	import InfoIcon from '$lib/components/icons/Info.svelte';
 	import ListIcon from '$lib/components/icons/List.svelte';
 
-	// Set props
-	export let aboutPanelVisible;
-	export let listPanelVisible;
+	// Import stores
+	import { aboutPanelVisible, listPanelVisible } from '$lib/stores.js';
 </script>
 
 <div class="btn-container">
 	<button
-		class:active={aboutPanelVisible}
-		on:click={() => {
-			aboutPanelVisible = true;
-			listPanelVisible = false;
-		}}><InfoIcon />About</button
+		class:active={$aboutPanelVisible}
+		on:click|stopPropagation={() => {
+			$aboutPanelVisible = true;
+			$listPanelVisible = false;
+		}}><InfoIcon />About the Project</button
 	>
 	<button
-		class:active={listPanelVisible}
-		on:click={() => {
-			listPanelVisible = true;
-			aboutPanelVisible = false;
-		}}><ListIcon />Places</button
+		class:active={$listPanelVisible}
+		on:click|stopPropagation={() => {
+			$listPanelVisible = true;
+			$aboutPanelVisible = false;
+		}}><ListIcon />List of Places</button
 	>
-	<button><ListIcon />Profiles</button>
 </div>
 
 <style>
 	.btn-container {
 		display: flex;
+		border-top: 0.75px solid #ffab4d;
 		border-bottom: 3px solid #eee;
-		/* width: 100%; */
 	}
 
 	button {
 		font-family: 'Barlow Condensed';
-		background-color: #fff;
+		background-color: #fffffd;
 		color: black;
 		font-size: 1.1rem;
 		font-weight: 600;
@@ -55,7 +53,6 @@
 	}
 
 	.active {
-		/* background-color: #fefaf2; */
 		box-shadow: inset 0px -3px 0px 0px #ffab4d;
 		font-weight: 700;
 		cursor: auto;
