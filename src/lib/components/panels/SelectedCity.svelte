@@ -7,9 +7,23 @@
 	import XIcon from '$lib/components/icons/X.svelte';
 	import CheckIcon from '$lib/components/icons/Check.svelte';
 
-	// City data
-	$: cityData = $reparationsData?.find((city) => city.properties.City === $selectedCity);
-	$: stateAbbr = cityData.properties.City.split(', ')[1]; // to get svg icon
+	// Rename question variables
+	$: cityData = $reparationsData
+		?.map((city) => ({
+			City: city.properties.City,
+			State: city.properties.State,
+			'Report released': city.properties['Has the city released a report on reparations?'],
+			'Funding approved': city.properties['Has the city approved reparations funding?'],
+			'Funding source': city.properties['Has the city decided where funding will come from?'],
+			'Allocation started': city.properties['Has the city begun allocating reparations?'],
+			'Direct payments':
+				city.properties['Has the city determined if direct payments will be included?'],
+			'Eligibility determined':
+				city.properties['Has the city determined who is eligible to receive direct payments?']
+		}))
+		.find((city) => city.City === $selectedCity);
+
+	$: stateAbbr = cityData.City.split(', ')[1]; // to get svg icon
 </script>
 
 <!-- 
@@ -24,87 +38,28 @@
 </div>
 
 <div class="header">
-	<h2>{cityData.properties.City.split(',', 1)}</h2>
-	<span class="state-name">{cityData.properties.State}</span>
+	<h2>{cityData.City.split(',', 1)}</h2>
+	<span class="state-name">{cityData.State}</span>
 </div>
 <hr />
-<div class="question">
-	{#if cityData.properties['Has the city released a report on reparations?'].includes('No')}
-		<XIcon />
-	{:else}
-		<CheckIcon />
-	{/if}
-	<p>
-		<span class="question-bold">Report released</span>: {cityData.properties[
-			'Has the city released a report on reparations?'
-		]}
-	</p>
-</div>
-
-<div class="question">
-	{#if cityData.properties['Has the city approved reparations funding?'].includes('No')}
-		<XIcon />
-	{:else}
-		<CheckIcon />
-	{/if}
-	<p>
-		<span class="question-bold">Funding approved</span>: {cityData.properties[
-			'Has the city approved reparations funding?'
-		]}
-	</p>
-</div>
-
-<div class="question">
-	{#if cityData.properties['Has the city decided where funding will come from?'].includes('No')}
-		<XIcon />
-	{:else}
-		<CheckIcon />
-	{/if}
-	<p>
-		<span class="question-bold">Funding source</span>: {cityData.properties[
-			'Has the ciy decided where funding will come from?'
-		]}
-	</p>
-</div>
-
-<div class="question">
-	{#if cityData.properties['Has the city begun allocating reparations?'].includes('No')}
-		<XIcon />
-	{:else}
-		<CheckIcon />
-	{/if}
-	<p>
-		<span class="question-bold">Allocations started</span>: {cityData.properties[
-			'Has the city begun allocating reparations?'
-		]}
-	</p>
-</div>
-
-<div class="question">
-	{#if cityData.properties['Has the city determined if direct payments will be included?'].includes('No')}
-		<XIcon />
-	{:else}
-		<CheckIcon />
-	{/if}
-	<p>
-		<span class="question-bold">Direct payments determined</span>: {cityData.properties[
-			'Has the city determined if direct payments will be included?'
-		]}
-	</p>
-</div>
-
-<div class="question">
-	{#if cityData.properties['Has the city determined who is eligible to receive direct payments?'].includes('N/A')}
-		<XIcon />
-	{:else}
-		<CheckIcon />
-	{/if}
-	<p>
-		<span class="question-bold">Eligibility determined</span>: {cityData.properties[
-			'Has the city determined who is eligible to receive direct payments?'
-		]}
-	</p>
-</div>
+{#each Object.entries(cityData).filter((city) => city[0] !== 'City' && city[0] !== 'State') as city}
+	<table class="question">
+		<tr>
+			<td
+				>{#if city[1].includes('No')}
+					<XIcon />
+				{:else}
+					<CheckIcon />
+				{/if}</td
+			>
+			<td
+				><p>
+					<span class="question-bold">{city[0]}</span>: {city[1]}
+				</p></td
+			>
+		</tr>
+	</table>
+{/each}
 
 <style>
 	.header {
@@ -112,6 +67,7 @@
 		align-items: baseline;
 		gap: 8px;
 	}
+
 	.state-name {
 		font-family: 'Barlow Condensed', sans-serif;
 		text-transform: uppercase;
@@ -129,6 +85,11 @@
 
 	.question-bold {
 		font-weight: 600;
+	}
+
+	tr {
+		display: flex;
+		gap: 4px;
 	}
 
 	/* state icon */
