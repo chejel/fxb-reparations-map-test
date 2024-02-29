@@ -7,20 +7,30 @@
 	import '../../../node_modules/mapbox-gl/dist/mapbox-gl.css';
 
 	// Stores
-	import { map } from '$lib/stores.js';
+	import {
+		map,
+		reparationsData,
+		selectedCity,
+		aboutPanelVisible,
+		listPanelVisible,
+		citiesPanelVisible
+	} from '$lib/stores.js';
 
 	// Import components
 	import ResetMap from '$lib/components/ResetMap.svelte';
+	import MapFilters from '$lib/components/MapFilters.svelte';
 
 	// Import transition
-	import { fade, slide } from 'svelte/transition';
+	import { slide } from 'svelte/transition';
 
 	// Set variables
 	let mapContainer;
 
 	// for resetting center of map
 	let initialCenterLng;
+	let initialCenterLat;
 	let movedCenterLng;
+	let movedCenterLat;
 
 	// Set state of sidebar and map padding
 	export let sidebarVisible;
@@ -45,7 +55,11 @@
 				center: [-95.7, 38.1],
 				zoom: 3.75,
 				minZoom: 3.75,
-				maxZoom: 7
+				maxZoom: 7,
+				maxBounds: [
+					[-190, 10], // SW corner
+					[-56, 72.5] // NE corner
+				]
 			})
 		);
 
@@ -61,11 +75,14 @@
 		$map.on('load', () => {
 			// Establish initial center longtitude value
 			initialCenterLng = $map?.getCenter().lng;
+			initialCenterLat = $map?.getCenter().lat;
 			movedCenterLng = $map?.getCenter().lng;
+			movedCenterLat = $map?.getCenter().lat;
 
 			// ...to determine when map has been panned/zoomed
 			$map.on('move', () => {
 				movedCenterLng = $map?.getCenter().lng;
+				movedCenterLat = $map?.getCenter().lat;
 			});
 
 			// Shift globe based on state of sidebar
@@ -73,6 +90,88 @@
 				padding: mapPadding,
 				duration: 1000
 			});
+
+			// Add markers for cities
+			$map.addSource('cities', {
+				type: 'geojson',
+				data: {
+					type: 'FeatureCollection',
+					features: $reparationsData
+				}
+			});
+
+			$map.addLayer({
+				id: 'cities-layer',
+				type: 'circle',
+				source: 'cities',
+				paint: {
+					'circle-radius': 4,
+					'circle-stroke-width': 1.5,
+					'circle-color': '#C70039',
+					'circle-stroke-color': 'white'
+				}
+			});
+
+			// Add city labels:
+			$map.addLayer({
+				id: 'cities-labels',
+				type: 'symbol',
+				source: 'cities',
+				layout: {
+					'text-field': ['get', 'City'],
+					'text-variable-anchor': ['left'],
+					'text-radial-offset': 0.5,
+					'text-justify': 'auto',
+					'text-font': ['League Spartan Bold'],
+					//'text-size': 12
+					'text-size': {
+						stops: [
+							[3, 12],
+							[5, 14],
+							[7, 16]
+						]
+					}
+				},
+				paint: {
+					'text-color': '#333',
+					'text-halo-color': 'white',
+					'text-halo-width': 1
+				}
+			});
+
+			// Change cursor to pointer when hovering over marker
+			$map.on('mouseenter', ['cities-layer', 'cities-labels'], () => {
+				$map.getCanvas().style.cursor = 'pointer';
+			});
+
+			// cursor goes back to default off point
+			$map.on('mouseleave', ['cities-layer', 'cities-labels'], () => {
+				$map.getCanvas().style.cursor = 'auto';
+			});
+
+			// Get city name from clicking marker/label
+			$map.on('click', ['cities-layer', 'cities-labels'], (e) => {
+				selectedCity.set(e.features[0].properties.City);
+				$aboutPanelVisible = false;
+				$listPanelVisible = true;
+				$citiesPanelVisible = true;
+			});
+
+			// Add layer for filtered cities
+			$map.addLayer({
+				id: 'filtered-layer',
+				type: 'circle',
+				source: 'cities',
+				paint: {
+					'circle-radius': 4,
+					'circle-stroke-width': 1.5,
+					'circle-color': 'green',
+					'circle-stroke-color': 'white'
+				}
+			});
+
+			// Hide US cities on initial load
+			$map.setFilter('filtered-layer', ['in', 'City', '']);
 		});
 	});
 
@@ -82,22 +181,29 @@
 		}
 	});
 
-	// Update globe padding depending on state of sidebar
+	// Update map padding depending on state of sidebar
 	$: $map?.easeTo({
 		padding: mapPadding,
 		duration: 1000
 	});
 </script>
 
-<div class="map" bind:this={mapContainer} />
-
 <!-- Reset map button -->
-{#if initialCenterLng?.toFixed(1) !== movedCenterLng?.toFixed(1)}
+{#if initialCenterLng?.toFixed(1) !== movedCenterLng?.toFixed(1) || initialCenterLat?.toFixed(1) !== movedCenterLat?.toFixed(1)}
 	<div class="reset-container" transition:slide={{ axis: 'y', duration: 300 }}>
 		<ResetMap>Reset Map</ResetMap>
 	</div>
 	<div class="btn-container"></div>
 {/if}
+
+<!-- Map -->
+<div class="map" bind:this={mapContainer} />
+
+<!-- Toggle filters -->
+<div class="toggle-container">
+	<MapFilters />
+	<hr style="border-top: 1px solid rgba(255, 255, 255, 1);" />
+</div>
 
 <style>
 	.map {
@@ -121,5 +227,14 @@
 		position: absolute;
 		top: 10px;
 		right: 50px;
+	}
+
+	.toggle-container {
+		position: absolute;
+		bottom: 100px;
+		right: 10px;
+		display: flex;
+		flex-direction: column;
+		row-gap: 5px;
 	}
 </style>
