@@ -12,6 +12,9 @@
 
 	// Set state of sidebar
 	export let sidebarVisible;
+
+	// Import transition
+	import { fade } from 'svelte/transition';
 </script>
 
 <!-- Header -->
@@ -25,13 +28,15 @@
 <PanelBtns />
 
 <!-- Body -->
-<div class="panel-body">
-	{#if $aboutPanelVisible}
+{#if $aboutPanelVisible}
+	<div class="panel-body" in:fade>
 		<AboutPanel />
-	{:else if $listPanelVisible}
+	</div>
+{:else if $listPanelVisible}
+	<div class="panel-body" in:fade>
 		<PlacesPanel />
-	{/if}
-</div>
+	</div>
+{/if}
 
 <!-- Close button -->
 <button
@@ -44,51 +49,31 @@
 
 <style>
 	header {
-		/* box-shadow: inset 0px -4px 66px rgba(0, 0, 0, 0.1); */
-		background: #02aab0; /* fallback for old browsers */
-		background: -webkit-linear-gradient(to top, #00cdac, #02aab0); /* Chrome 10-25, Safari 5.1-6 */
+		padding: 1rem 1rem 0.5rem;
+
+		/* Source: https://uigradients.com */
+		background: #ffb347; /* older browsers */
+		background: -webkit-linear-gradient(to top, #f4d948, #ffb347); /* Chrome 10-25, Safari 5.1-6 */
 		background: linear-gradient(
 			to top,
-			#00cdac,
-			#02aab0
+			#f4d948,
+			/* #ffd23f, #ffcc33 */ #ffb347
 		); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-
-		background: #2193b0; /* fallback for old browsers */
-		background: -webkit-linear-gradient(to top, #6dd5ed, #2193b0); /* Chrome 10-25, Safari 5.1-6 */
-		background: linear-gradient(
-			to top,
-			#6dd5ed,
-			#2193b0
-		); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-
-		background: #ff7e5f; /* fallback for old browsers */
-		background: -webkit-linear-gradient(to top, #feb47b, #ff7e5f); /* Chrome 10-25, Safari 5.1-6 */
-		background: linear-gradient(
-			to top,
-			#feb47b,
-			#ff7e5f
-		); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-
-		background: #ffb347; /* fallback for old browsers */
-		background: -webkit-linear-gradient(to top, #ffcc33, #ffb347); /* Chrome 10-25, Safari 5.1-6 */
-		background: linear-gradient(
-			to top,
-			#ffcc33,
-			#ffb347
-		); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-
-		padding: 1rem;
 	}
 
 	.subheader {
-		font-family: 'Barlow', sans-serif;
-		font-size: 1.2rem;
+		font-family: 'Outfit', sans-serif;
+		font-size: 1rem;
 	}
 
 	.panel-body {
 		padding: 1rem;
 		/* background-color: rgba(252, 231, 204, 0.5); */
 		background-color: rgba(236, 194, 122, 0.2);
+		max-height: calc(100svh - 2rem);
+		display: flex;
+		flex-direction: column;
+		overflow: hidden;
 	}
 
 	.close-button {

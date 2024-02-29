@@ -18,9 +18,12 @@
 	let citiesCount = $reparationsData?.length;
 	let countiesCount = 3;
 	let statesCount = 3;
+
+	// Import transition
+	import { fade } from 'svelte/transition';
 </script>
 
-<main class="about-body">
+<main class="places-body">
 	<!-- Locations buttons -->
 	<section class="btn-container">
 		<button
@@ -34,7 +37,7 @@
 			}}
 			>Cities <span
 				class="btn-badge"
-				style="font-weight: 400; padding: {citiesCount < 10 ? '0.15rem 0.5rem' : '0.15rem 0.35rem'}"
+				style="font-weight: 400; padding: {citiesCount < 10 ? '0.15rem 0.5rem' : '0.15rem 0.25rem'}"
 				>{citiesCount}</span
 			></button
 		>
@@ -72,24 +75,33 @@
 	</section>
 
 	<!-- Location panel -->
-	<section class="list-container">
-		{#if $citiesPanelVisible}
+	{#if $citiesPanelVisible}
+		<section class="location-container" transition:fade>
 			<CitiesPanel />
-		{:else if $statesPanelVisible}
+		</section>
+	{:else if $statesPanelVisible}
+		<section class="location-container" transition:fade>
 			<StatesPanel />
-		{/if}
-	</section>
+		</section>
+	{/if}
 </main>
 
 <style>
-	.about-body {
+	/* to display scrollbar on table section only */
+	.places-body {
+		display: flex;
+		flex-direction: column;
+		overflow: hidden;
+	}
+
+	.location-container {
 		display: flex;
 		flex-direction: column;
 		overflow: hidden;
 	}
 
 	section:not(:last-child) {
-		margin-bottom: 1rem;
+		margin-bottom: 1.25rem;
 	}
 
 	.btn-container {
@@ -101,7 +113,7 @@
 
 	button {
 		background-color: transparent;
-		padding: 0.5rem 1rem;
+		padding: 0.35rem 0;
 		font-family: 'Barlow', sans-serif;
 		color: black;
 		font-size: 0.85rem;
@@ -112,8 +124,6 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		/* border: 0.5px solid gray; */
-		/* margin-left: -1px; */
 	}
 
 	button:first-child {
@@ -121,7 +131,6 @@
 	}
 
 	button:not(:first-child) {
-		/* border-right: 0.5px solid white; */
 		margin-left: -1px;
 	}
 
@@ -131,9 +140,8 @@
 
 	button:not(.active):after {
 		content: '❘';
-		/* font-family: 'sans-serif'; */
 		font-size: 1.5rem;
-		color: white;
+		color: #fffffd;
 		display: inline-block;
 		position: absolute;
 		right: -7px;
@@ -145,14 +153,9 @@
 
 	.active {
 		font-weight: 600;
-		/* background-color: #f0ebe1; */
 		background-color: rgba(255, 255, 253, 0.75);
 		border: 1px solid #ffab4d;
 		border-radius: 5px !important;
-	}
-
-	.list-container {
-		overflow: auto;
 	}
 
 	.btn-badge {
