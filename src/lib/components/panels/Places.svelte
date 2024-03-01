@@ -37,7 +37,7 @@
 			}}
 			>Cities <span
 				class="btn-badge"
-				style="font-weight: 400; padding: {citiesCount < 10 ? '0.15rem 0.5rem' : '0.15rem 0.25rem'}"
+				style="padding: {citiesCount < 10 ? '0.15rem 0.5rem' : '0.15rem 0.25rem'}"
 				>{citiesCount}</span
 			></button
 		>
@@ -52,7 +52,7 @@
 			}}
 			>Counties <span
 				class="btn-badge"
-				style="font-weight: 400; padding: {statesCount < 10 ? '0.15rem 0.5rem' : '0.15rem 0.35rem'}"
+				style="padding: {statesCount < 10 ? '0.15rem 0.5rem' : '0.15rem 0.25rem'}"
 				>{countiesCount}</span
 			></button
 		>
@@ -68,7 +68,7 @@
 			}}
 			>States <span
 				class="btn-badge"
-				style="font-weight: 400; padding: {statesCount < 10 ? '0.15rem 0.5rem' : '0.15rem 0.35rem'}"
+				style="padding: {statesCount < 10 ? '0.15rem 0.5rem' : '0.15rem 0.25rem'}"
 				>{statesCount}</span
 			></button
 		>
@@ -164,5 +164,6 @@
 		font-size: 0.8rem;
 		margin-left: 0.5rem;
 		border-radius: 50%;
+		font-weight: 500;
 	}
 </style>
