@@ -34,46 +34,47 @@
 		{
 			id: 1,
 			name: 'Report released',
-			toggleValue: reportReleased,
+			toggleValue: 'reportReleased',
 			question: 'Has the city released a report on reparations?'
 		},
 		{
 			id: 2,
 			name: 'Funding approved',
-			toggleValue: fundingApproved,
+			toggleValue: 'fundingApproved',
 			question: 'Has the city approved reparations funding?'
 		},
 		{
 			id: 3,
 			name: 'Funding source',
-			toggleValue: fundingSource,
+			toggleValue: 'fundingSource',
 			question: 'Has the city decided where funding will come from?'
 		},
 		{
 			id: 4,
 			name: 'Allocation started',
-			toggleValue: allocationStarted,
+			toggleValue: 'allocationStarted',
 			question: 'Has the city begun allocating reparations?'
 		},
 		{
 			id: 5,
 			name: 'Direct payments',
-			toggleValue: directPayments,
+			toggleValue: 'directPayments',
 			question: 'Has the city determined if direct payments will be included?'
 		},
 		{
 			id: 6,
 			name: 'Eligibility determined',
-			toggleValue: eligibility,
+			toggleValue: 'eligibility',
 			question: 'Has the city determined who is eligible to receive direct payments?'
 		}
 	];
 </script>
 
-{#each data as { name, question }}
+{#each data as { name, toggleValue, question }}
 	<div class="single-toggle-container">
-		<label class="toggle">
+		<label for={toggleValue} class="toggle">
 			<input
+				id={toggleValue}
 				type="checkbox"
 				bind:group={questionToggle}
 				value={question}
@@ -146,7 +147,7 @@
 	}
 
 	input:checked + .switch {
-		background-color: #40679e;
+		background-color: #597e52; /* #40679e; */
 	}
 
 	input:checked + .switch:before {
