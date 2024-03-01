@@ -12,6 +12,7 @@
 
 	// Import components
 	import CitiesPanel from '$lib/components/panels/CitiesPanel.svelte';
+	import CountiesPanel from '$lib/components/panels/CountiesPanel.svelte';
 	import StatesPanel from '$lib/components/panels/StatesPanel.svelte';
 
 	// Number of cities
@@ -76,11 +77,15 @@
 
 	<!-- Location panel -->
 	{#if $citiesPanelVisible}
-		<section class="location-container" transition:fade>
+		<section class="location-container" in:fade>
 			<CitiesPanel />
 		</section>
+	{:else if $countiesPanelVisible}
+		<section class="location-container" in:fade>
+			<CountiesPanel />
+		</section>
 	{:else if $statesPanelVisible}
-		<section class="location-container" transition:fade>
+		<section class="location-container" in:fade>
 			<StatesPanel />
 		</section>
 	{/if}
