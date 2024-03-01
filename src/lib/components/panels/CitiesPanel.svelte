@@ -1,7 +1,7 @@
 <script>
 	// Import components
 	import CitiesTable from '$lib/components/panels/CitiesTable.svelte';
-	import SelectedCity from '$lib/components/panels/SelectedCity.svelte';
+	import SelectedCityCard from '$lib/components/panels/SelectedCityCard.svelte';
 
 	// Import icon components
 	import ArrowLeft from '$lib/components/icons/ArrowLeft.svelte';
@@ -27,7 +27,7 @@
 			</button>
 		</section>
 		<section class="selected-city" in:fade>
-			<SelectedCity />
+			<SelectedCityCard />
 		</section>
 	{/if}
 {/if}
@@ -40,8 +40,7 @@
 		overflow: auto;
 		font-size: 1rem;
 		background-color: rgba(255, 255, 253, 0.75);
-		/* border: 1px solid rgba(236, 194, 122, 0.5); */
-		border: 0.75px solid #ffb347;
+		border: 0.75px solid #597e52;
 		padding: 0.25rem;
 		border-radius: 5px;
 	}
@@ -65,10 +64,11 @@
 
 	.selected-city {
 		background-color: rgba(255, 255, 253, 0.75);
-		/* border: 1px solid rgba(236, 194, 122, 0.5); */
-		border: 0.75px solid #ffb347;
+		/* border: 0.75px solid #ffb347; */
+		border: 0.75px solid #597e52;
 		padding: 0.75rem;
 		border-radius: 5px;
-		position: relative;
+		/* position: relative; */
+		overflow: auto;
 	}
 </style>
