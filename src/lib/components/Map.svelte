@@ -19,9 +19,10 @@
 	// Import components
 	import ResetMap from '$lib/components/ResetMap.svelte';
 	import MapFilters from '$lib/components/MapFilters.svelte';
+	import ResetIcon from '$lib/components/icons/Reset.svelte';
 
 	// Import transition
-	import { slide } from 'svelte/transition';
+	import { fade } from 'svelte/transition';
 
 	// Set variables
 	let mapContainer;
@@ -58,7 +59,7 @@
 				maxZoom: 7,
 				maxBounds: [
 					[-190, 10], // SW corner
-					[-56, 72.5] // NE corner
+					[-40, 72.5] // NE corner
 				]
 			})
 		);
@@ -190,8 +191,8 @@
 
 <!-- Reset map button -->
 {#if initialCenterLng?.toFixed(1) !== movedCenterLng?.toFixed(1) || initialCenterLat?.toFixed(1) !== movedCenterLat?.toFixed(1)}
-	<div class="reset-container" transition:slide={{ axis: 'y', duration: 300 }}>
-		<ResetMap>Reset Map</ResetMap>
+	<div class="reset-container" transition:fade>
+		<ResetMap><ResetIcon /></ResetMap>
 	</div>
 	<div class="btn-container"></div>
 {/if}
@@ -225,8 +226,12 @@
 
 	.reset-container {
 		position: absolute;
-		top: 10px;
-		right: 50px;
+		top: 75px;
+		right: 10px;
+		z-index: 1;
+		/* display: flex;
+		justify-content: center;
+		align-items: center; */
 	}
 
 	.toggle-container {

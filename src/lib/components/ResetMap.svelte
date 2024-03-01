@@ -21,14 +21,21 @@
 
 <style>
 	button.reset-map {
-		background-color: rgba(243, 185, 95, 0.9);
-		border: 1px solid #f5a64c;
+		background-color: #fff;
+		/* border: 1px solid #f5a64c; */
+		border: 1px solid rgb(199, 127, 127);
 		cursor: pointer;
 		color: #333;
-		padding: 5px 8px;
-		border-radius: 2px;
+		padding: 5px 6px;
+		border-radius: 4px;
 		font-size: 0.9rem;
 		font-weight: 700;
 		text-transform: uppercase;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		width: 29px;
+		height: 29px;
+		box-shadow: 0 0 2px 1px rgba(0, 0, 0, 0.15);
 	}
 </style>
