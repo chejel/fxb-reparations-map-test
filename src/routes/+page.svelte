@@ -4,7 +4,6 @@
 	import Footer from '$lib/components/Footer.svelte';
 	// Sidebar components
 	import Sidebar from '$lib/components/Sidebar.svelte';
-
 	// Import icon components
 	import ListIcon from '$lib/components/icons/List.svelte';
 
@@ -29,14 +28,14 @@
 		);
 
 		reparationsData.update((data) => {
-			return data.map((d) => {
+			return data.map((d, i) => {
 				return {
-					...d,
-					// Convert lat/long to numeric:
-					Latitude: +[d.Latitude],
-					Longitude: +[d.Longitude],
-					// Generate ID from city name, removing spaces and periods:
-					ID: d.City.split(',', 1)[0].replace(/[ ,.]/g, '')
+					type: 'Feature',
+					geometry: {
+						type: 'Point',
+						coordinates: [+d['Longitude'], +d['Latitude']]
+					},
+					properties: { ...d, index: i }
 				};
 			});
 		});
@@ -67,7 +66,9 @@
 </svelte:head>
 
 <!-- Map -->
-<Map bind:sidebarVisible />
+{#if $reparationsData}
+	<Map bind:sidebarVisible />
+{/if}
 
 <!-- Sidebar -->
 {#if sidebarVisible}
