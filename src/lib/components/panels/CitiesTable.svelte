@@ -87,4 +87,11 @@
 	.index {
 		color: #c70039;
 	}
+
+	/* for touch screens */
+	@media (hover: none) {
+		button {
+			color: #333;
+		}
+	}
 </style>

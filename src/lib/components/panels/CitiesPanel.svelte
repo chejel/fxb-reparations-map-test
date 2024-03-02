@@ -87,4 +87,11 @@
 		/* position: relative; */
 		overflow: auto;
 	}
+
+	/* for touch screens */
+	@media (hover: none) {
+		button {
+			color: #333;
+		}
+	}
 </style>
