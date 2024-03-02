@@ -1,7 +1,4 @@
 
-
-@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Barlow:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Oswald:wght@200..700&display=swap');
-
 * {
     margin: 0;
     padding: 0;
@@ -23,14 +20,6 @@ a {
 }
 
 /* google-webfonts-helper: https://gwfh.mranftl.com/fonts */
-/* outfit-200 - latin */
-@font-face {
-  font-display: swap; 
-  font-family: 'Outfit';
-  font-style: normal;
-  font-weight: 200;
-  src: url('/fonts/outfit-v11-latin-200.woff2') format('woff2');
-}
 /* outfit-regular - latin */
 @font-face {
     font-display: swap; 
@@ -47,13 +36,71 @@ a {
   font-weight: 600;
   src: url('/fonts/outfit-v11-latin-600.woff2') format('woff2'); 
 }
-  /* outfit-700 - latin */
+
+/* barlow-regular - latin */
 @font-face {
-    font-display: swap; 
-    font-family: 'Outfit';
-    font-style: normal;
-    font-weight: 700;
-    src: url('/fonts/outfit-v11-latin-700.woff2') format('woff2'); 
+  font-display: swap;
+  font-family: 'Barlow';
+  font-style: normal;
+  font-weight: 400;
+  src: url('/fonts/barlow-v12-latin-regular.woff2') format('woff2');
+}
+/* barlow-500 - latin */
+@font-face {
+  font-display: swap;
+  font-family: 'Barlow';
+  font-style: normal;
+  font-weight: 500;
+  src: url('/fonts/barlow-v12-latin-500.woff2') format('woff2');
+}
+/* barlow-600 - latin */
+@font-face {
+  font-display: swap;
+  font-family: 'Barlow';
+  font-style: normal;
+  font-weight: 600;
+  src: url('/fonts/barlow-v12-latin-600.woff2') format('woff2');
+}
+/* barlow-700 - latin */
+@font-face {
+  font-display: swap;
+  font-family: 'Barlow';
+  font-style: normal;
+  font-weight: 700;
+  src: url('/fonts/barlow-v12-latin-700.woff2') format('woff2');
+}
+
+/* barlow-condensed-regular - latin */
+@font-face {
+  font-display: swap;
+  font-family: 'Barlow Condensed';
+  font-style: normal;
+  font-weight: 400;
+  src: url('/fonts/barlow-condensed-v12-latin-regular.woff2') format('woff2');
+}
+/* barlow-condensed-500 - latin */
+@font-face {
+  font-display: swap;
+  font-family: 'Barlow Condensed';
+  font-style: normal;
+  font-weight: 500;
+  src: url('/fonts/barlow-condensed-v12-latin-500.woff2') format('woff2');
+}
+/* barlow-condensed-600 - latin */
+@font-face {
+  font-display: swap;
+  font-family: 'Barlow Condensed';
+  font-style: normal;
+  font-weight: 600;
+  src: url('/fonts/barlow-condensed-v12-latin-600.woff2') format('woff2');
+}
+/* barlow-condensed-700 - latin */
+@font-face {
+  font-display: swap;
+  font-family: 'Barlow Condensed';
+  font-style: normal;
+  font-weight: 700;
+  src: url('/fonts/barlow-condensed-v12-latin-700.woff2') format('woff2');
 }
 
 h1 {
@@ -63,7 +110,7 @@ h1 {
 
 h2 {
   font-family: "Outfit", sans-serif;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 button {
