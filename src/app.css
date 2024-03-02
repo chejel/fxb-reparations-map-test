@@ -159,6 +159,6 @@ hr {
 }
 
 /* Mapbox zoom controls */
-.mapboxgl-ctrl, .mapbox-ctrl-group:not(:empty) {
+.mapboxgl-ctrl-top-right > .mapboxgl-ctrl, mapboxgl-ctrl-group, .mapbox-ctrl-group:not(:empty) {
   box-shadow: 0 0 2px 1px rgba(0, 0, 0, 0.15) !important;
 }
