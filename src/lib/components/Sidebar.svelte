@@ -24,7 +24,6 @@
 </header>
 
 <!-- About + Places buttons -->
-<!-- <PanelBtns bind:aboutPanelVisible bind:listPanelVisible /> -->
 <PanelBtns />
 
 <!-- Body -->

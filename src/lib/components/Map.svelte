@@ -19,6 +19,7 @@
 	// Import components
 	import ResetMap from '$lib/components/ResetMap.svelte';
 	import MapFilters from '$lib/components/MapFilters.svelte';
+	// Import icon components
 	import ResetIcon from '$lib/components/icons/Reset.svelte';
 
 	// Import transition
@@ -44,7 +45,7 @@
 	}
 
 	mapboxgl.accessToken =
-		'pk.eyJ1IjoiamVuY2hlIiwiYSI6ImNsZzZ6OWh4ajA0dGczd25wMzRwcmUwZnEifQ.wSe4_SgYEgC-QX-6Clad9w';
+		'pk.eyJ1IjoiamVuY2hlIiwiYSI6ImNsdDlhNWNtdTBnOXEybW5wMmxxMDRneGMifQ.-aAXBbQZGsiJeZ-zvOXJQA';
 
 	onMount(async () => {
 		// Set up map via store

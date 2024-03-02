@@ -3,12 +3,6 @@
 	import { map } from '$lib/stores.js';
 
 	// Set variables for toggle
-	let reportReleased = false;
-	let fundingApproved = false;
-	let fundingSource = false;
-	let allocationStarted = false;
-	let directPayments = false;
-	let eligibility = false;
 	let questionToggle;
 
 	function toggleFilter(question) {
@@ -97,6 +91,7 @@
 		display: flex;
 		column-gap: 3px;
 	}
+
 	.toggle-text {
 		font-family: 'Barlow Condensed', sans-serif;
 		margin-left: 0.2rem;

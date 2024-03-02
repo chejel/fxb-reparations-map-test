@@ -27,15 +27,13 @@
 	// Path generator: topojson coords -> svg paths
 	const path = geoPath().projection(null);
 
-	//export let selectedState;
-
-	let viewBox = '0 0 975 610';
-	let x0, y0, x1, y1;
-
 	let selectedStateObj;
 	let selectedStateName;
-	let cx, cy; // for location of city on state map
-	// for radius of circle marking location of city on map:
+	// To "zoom" in on states based on bounds
+	let viewBox = '0 0 975 610';
+	let x0, y0, x1, y1;
+	let cx, cy; // For location of city on state map
+	// For radius of circle marking location of city on map:
 	let radiusScale;
 	let yBoundsRadius;
 
