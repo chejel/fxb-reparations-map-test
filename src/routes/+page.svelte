@@ -28,14 +28,14 @@
 		);
 
 		reparationsData.update((data) => {
-			return data.map((d, i) => {
+			return data.map((d) => {
 				return {
 					type: 'Feature',
 					geometry: {
 						type: 'Point',
 						coordinates: [+d['Longitude'], +d['Latitude']]
 					},
-					properties: { ...d, index: i }
+					properties: { ...d }
 				};
 			});
 		});

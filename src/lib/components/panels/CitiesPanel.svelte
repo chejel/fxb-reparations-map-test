@@ -2,23 +2,33 @@
 	// Import components
 	import CitiesTable from '$lib/components/panels/CitiesTable.svelte';
 	import SelectedCityCard from '$lib/components/panels/SelectedCityCard.svelte';
+	import StateSortToggle from '$lib/components/panels/StateSortToggle.svelte';
 
 	// Import icon components
 	import ArrowLeft from '$lib/components/icons/ArrowLeft.svelte';
 
 	// Import stores
-	import { reparationsData, citiesPanelVisible, selectedCity } from '$lib/stores.js';
+	import { reparationsData, selectedCity } from '$lib/stores.js';
 
 	// Import transition
 	import { fade } from 'svelte/transition';
+
+	// Set variable for sort by state toggle
+	let sortByState = false;
 </script>
 
 {#if $reparationsData}
 	<!-- Table of matching city names, state, Wikipedia link-->
 	{#if !$selectedCity}
-		<p style="margin-bottom: 1rem">Select a city for information about their reparation efforts.</p>
+		<p>Select a city for information about their reparation efforts.</p>
+
+		<!-- Sort by state toggle -->
+		<div class="state-toggle-container">
+			<StateSortToggle bind:checked={sortByState} />
+		</div>
+
 		<section class="cities-table" in:fade>
-			<CitiesTable />
+			<CitiesTable {sortByState} />
 		</section>
 	{:else}
 		<section class="back-arrow">
@@ -33,6 +43,12 @@
 {/if}
 
 <style>
+	.state-toggle-container {
+		margin-bottom: 0.35rem;
+		margin-right: 0.25rem;
+		text-align: right;
+	}
+
 	.cities-table {
 		display: flex;
 		flex-direction: column;

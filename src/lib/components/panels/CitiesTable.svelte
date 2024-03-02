@@ -2,13 +2,20 @@
 	// Import stores
 	import { reparationsData, selectedCity } from '$lib/stores.js';
 
+	export let sortByState;
+
+	// Data for accordion order, sorted based on state of sortByStateVisible
+
 	const tableData = $reparationsData?.map((feature) => {
 		return {
-			index: feature.properties.index + 1,
 			City: feature.properties.City,
 			State: feature.properties.State
 		};
 	});
+
+	$: tableDataSort = !sortByState
+		? tableData.sort((a, b) => a['City'].localeCompare(b['City']))
+		: tableData.sort((a, b) => a['State'].localeCompare(b['State']));
 </script>
 
 <table cellpadding="0" cellspacing="0" border="0">
@@ -25,9 +32,9 @@
     </tr></thead
 > -->
 	<tbody>
-		{#each tableData as { index, City, State }}
+		{#each tableDataSort as { City, State }, index}
 			<tr>
-				<td class="index">{index}</td>
+				<td class="index">{index + 1}</td>
 				<td class="city">
 					<button
 						class:active={$selectedCity === City}
