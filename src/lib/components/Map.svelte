@@ -154,6 +154,7 @@
 			// Get city name from clicking marker/label
 			$map.on('click', ['cities-layer', 'cities-labels'], (e) => {
 				selectedCity.set(e.features[0].properties.City);
+				sidebarVisible = true;
 				$aboutPanelVisible = false;
 				$listPanelVisible = true;
 				$citiesPanelVisible = true;
