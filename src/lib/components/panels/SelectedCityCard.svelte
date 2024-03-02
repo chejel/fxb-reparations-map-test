@@ -3,7 +3,7 @@
 	import { reparationsData, selectedCity } from '$lib/stores.js';
 
 	// Import components
-	import StateMap from '$lib/components/StateMap.svelte';
+	import StateMap from '$lib/components/panels/StateMap.svelte';
 
 	// Import icon components
 	import XIcon from '$lib/components/icons/X.svelte';
@@ -47,7 +47,7 @@
 <!-- City details -->
 <div class="city-info">
 	{#each Object.entries(cityData.properties).filter((city) => city[0] !== 'City' && city[0] !== 'State' && city[0] !== 'Link') as city}
-		<table class="question">
+		<table class="questions">
 			<tr>
 				<td
 					>{#if city[1].includes('No')}
@@ -89,6 +89,11 @@
 		color: #fc915e;
 	}
 
+	.city-info {
+		position: relative;
+		z-index: 2;
+	}
+
 	.article-link {
 		display: flex;
 		align-items: center;
@@ -99,7 +104,7 @@
 		margin-bottom: 0.75rem;
 	}
 
-	.question {
+	.questions {
 		display: flex;
 		column-gap: 5px;
 		margin-bottom: 0.5rem;
@@ -116,9 +121,10 @@
 
 	.map-container {
 		position: absolute;
-		top: 210px;
+		top: 200px;
 		right: 10px;
 		width: 25%;
+		z-index: 1;
 	}
 
 	hr {
