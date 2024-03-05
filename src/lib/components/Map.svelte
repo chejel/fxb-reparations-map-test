@@ -28,17 +28,17 @@
 	// Set variables
 	let mapContainer;
 
-	// for resetting center of map
+	// For resetting center of map
 	let initialCenterLng;
 	let initialCenterLat;
 	let movedCenterLng;
 	let movedCenterLat;
 
-	// Set state of sidebar and map padding
+	// Set state of sidebar and map padding (on non-mobile devices)
 	export let sidebarVisible;
 	let mapPadding;
 
-	$: if (sidebarVisible) {
+	$: if (sidebarVisible && !window.matchMedia('(max-width: 480px)').matches) {
 		mapPadding = { left: 375 };
 	} else {
 		mapPadding = { left: 0 };
@@ -56,7 +56,7 @@
 				style: 'mapbox://styles/jenche/clt3p16ui003i01qph9fuhxoq',
 				center: [-95.7, 38.1],
 				zoom: 3.75,
-				minZoom: 3.75,
+				// minZoom: 3.75, // adds bounce when resetting map
 				maxZoom: 7,
 				maxBounds: [
 					[-190, 10], // SW corner
@@ -160,6 +160,13 @@
 				$citiesPanelVisible = true;
 			});
 
+			// Hide sidebar on mobile if map touched
+			$map.on('click', () => {
+				if (window.matchMedia('(max-width: 480px)').matches && sidebarVisible) {
+					sidebarVisible = false;
+				}
+			});
+
 			// Add layer for filtered cities
 			$map.addLayer({
 				id: 'filtered-layer',
@@ -231,9 +238,6 @@
 		top: 75px;
 		right: 10px;
 		z-index: 1;
-		/* display: flex;
-		justify-content: center;
-		align-items: center; */
 	}
 
 	.toggle-container {
@@ -243,5 +247,15 @@
 		display: flex;
 		flex-direction: column;
 		row-gap: 5px;
+	}
+
+	@media screen and (max-device-width: 480px) {
+		.toggle-container {
+			bottom: 30px;
+			left: 10px;
+			right: auto;
+			display: flex;
+			flex-direction: column;
+		}
 	}
 </style>
