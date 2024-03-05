@@ -97,7 +97,6 @@
 		margin-left: 0.2rem;
 		font-size: 0.9rem;
 		font-weight: 500;
-		color: #333;
 	}
 
 	input[type='checkbox'] {
@@ -142,7 +141,7 @@
 	}
 
 	input:checked + .switch {
-		background-color: #597e52; /* #40679e; */
+		background-color: var(--green); /* #40679e; */
 	}
 
 	input:checked + .switch:before {

@@ -117,14 +117,9 @@
 	}
 
 	button {
-		background-color: transparent;
 		padding: 0.35rem 0;
-		font-family: 'Barlow', sans-serif;
-		color: black;
 		font-size: 0.85rem;
 		font-weight: 500;
-		border: none;
-		cursor: pointer;
 		flex-grow: 1;
 		display: flex;
 		justify-content: center;
@@ -159,12 +154,12 @@
 	.active {
 		font-weight: 600;
 		background-color: rgba(255, 255, 253, 0.75);
-		border: 1px solid #ffab4d;
+		border: 1px solid var(--orange);
 		border-radius: 5px !important;
 	}
 
 	.btn-badge {
-		background-color: #ffab4d;
+		background-color: var(--orange);
 		color: #333;
 		font-size: 0.8rem;
 		margin-left: 0.5rem;

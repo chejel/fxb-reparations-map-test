@@ -10,7 +10,7 @@
 			duis.
 		</p>
 	</section>
-	<section class="stats">
+	<section class="card">
 		<h2>Stats</h2>
 		<hr />
 		<p>
@@ -21,19 +21,3 @@
 		</p>
 	</section>
 </main>
-
-<style>
-	h2 {
-		margin-top: 1rem;
-	}
-
-	.stats {
-		margin-top: 1rem;
-		background-color: rgba(255, 255, 253, 0.75);
-		/* border: 1px solid rgba(236, 194, 122, 0.5); */
-		/* border: 0.75px solid #ffb347; */
-		border: 0.75px solid #597e52;
-		padding: 0 0.75rem 0.75rem;
-		border-radius: 5px;
-	}
-</style>

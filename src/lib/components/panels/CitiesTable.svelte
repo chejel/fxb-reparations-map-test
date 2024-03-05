@@ -16,6 +16,9 @@
 	$: tableDataSort = !sortByState
 		? tableData.sort((a, b) => a['City'].localeCompare(b['City']))
 		: tableData.sort((a, b) => a['State'].localeCompare(b['State']));
+
+	// Import transition
+	import { slide } from 'svelte/transition';
 </script>
 
 <table cellpadding="0" cellspacing="0" border="0">
@@ -50,9 +53,6 @@
 
 <style>
 	button {
-		background-color: transparent;
-		border: none;
-		cursor: pointer;
 		font-size: 1rem;
 	}
 
@@ -85,7 +85,7 @@
 	}
 
 	.index {
-		color: #c70039;
+		color: var(--red);
 	}
 
 	/* for touch screens */

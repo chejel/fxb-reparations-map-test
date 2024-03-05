@@ -27,20 +27,17 @@
 <style>
 	.btn-container {
 		display: flex;
-		border-top: 0.75px solid #ffab4d;
+		border-top: 0.75px solid var(--orange);
 		border-bottom: 3px solid #eee;
 	}
 
 	button {
 		font-family: 'Barlow Condensed';
 		background-color: #fffffd;
-		color: black;
 		font-size: 1.1rem;
 		font-weight: 600;
 		text-transform: uppercase;
-		border: none;
 		padding: 10px 0;
-		cursor: pointer;
 		display: flex;
 		justify-content: center;
 		align-items: center;
@@ -53,7 +50,7 @@
 	}
 
 	.active {
-		box-shadow: inset 0px -3px 0px 0px #ffab4d;
+		box-shadow: inset 0px -3px 0px 0px var(--orange);
 		font-weight: 700;
 		cursor: auto;
 	}

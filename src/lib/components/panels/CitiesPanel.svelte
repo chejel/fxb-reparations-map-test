@@ -27,7 +27,7 @@
 			<StateSortToggle bind:checked={sortByState} />
 		</div>
 
-		<section class="cities-table" in:fade>
+		<section class="card cities-table" in:fade>
 			<CitiesTable {sortByState} />
 		</section>
 	{:else}
@@ -36,7 +36,7 @@
 				<ArrowLeft /> <span class="back-text">Return to list of cities</span>
 			</button>
 		</section>
-		<section class="selected-city" in:fade>
+		<section class="card selected-city" in:fade>
 			<SelectedCityCard />
 		</section>
 	{/if}
@@ -53,12 +53,8 @@
 		display: flex;
 		flex-direction: column;
 		align-items: flex-start;
-		overflow: auto;
-		font-size: 1rem;
-		background-color: rgba(255, 255, 253, 0.75);
-		border: 0.75px solid #597e52;
 		padding: 0.25rem;
-		border-radius: 5px;
+		margin-top: 0;
 	}
 
 	.back-button {
@@ -66,9 +62,6 @@
 		gap: 5px;
 		margin-left: 0.2rem;
 		margin-bottom: 0.5rem;
-		border: 0;
-		background-color: transparent;
-		cursor: pointer;
 	}
 
 	.back-text {
@@ -79,13 +72,8 @@
 	}
 
 	.selected-city {
-		background-color: rgba(255, 255, 253, 0.75);
-		/* border: 0.75px solid #ffb347; */
-		border: 0.75px solid #597e52;
 		padding: 0.75rem;
-		border-radius: 5px;
-		/* position: relative; */
-		overflow: auto;
+		margin-top: 0.25rem;
 	}
 
 	/* for touch screens */

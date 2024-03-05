@@ -59,7 +59,7 @@
 	}
 
 	input:checked + .switch {
-		background-color: #c70039;
+		background-color: var(--red);
 	}
 
 	input:checked + .switch:before {

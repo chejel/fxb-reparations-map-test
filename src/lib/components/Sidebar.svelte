@@ -76,13 +76,10 @@
 		overflow: hidden;
 	}
 
-	.close-button {
+	button.close-button {
 		position: absolute;
 		top: 4px;
 		right: 4px;
-		background-color: transparent;
-		border: 0;
-		cursor: pointer;
 		z-index: 100;
 	}
 </style>
