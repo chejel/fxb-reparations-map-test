@@ -2,7 +2,7 @@
 :root {
   --orange: rgb(255, 171, 77); /* #ffab4d */;
   --red: rgb(199, 0, 57); /* #c70039; */
-  --green: rgb(89, 126, 82); /* 597e52 */
+  --green: rgb(120, 148, 97); /* rgb(89, 126, 82); /* 597e52 */
 }
 
 * {
@@ -166,6 +166,12 @@ hr {
   border-top: 1px solid rgba(220, 220, 220, 1);
   margin-top: 0.5rem;
   margin-bottom: 0.5rem;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
 }
 
 /* Mapbox zoom controls */
