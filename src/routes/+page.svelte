@@ -104,4 +104,13 @@
 		bottom: 35px;
 		right: 10px;
 	}
+
+	/* Sidebar margins for mobile devices */
+	@media screen and (max-width: 480px) {
+		.sidebar-content {
+			max-width: 100svw;
+			max-height: 100svh;
+			margin: 0;
+		}
+	}
 </style>
