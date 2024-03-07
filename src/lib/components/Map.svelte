@@ -57,7 +57,7 @@
 				center: [-95.7, 38.1],
 				zoom: 3.75,
 				// minZoom: 3.75, // adds bounce when resetting map
-				maxZoom: 7,
+				maxZoom: 10,
 				maxBounds: [
 					[-190, 10], // SW corner
 					[-40, 72.5] // NE corner
