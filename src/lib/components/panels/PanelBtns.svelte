@@ -50,7 +50,7 @@
 	}
 
 	.active {
-		box-shadow: inset 0px -3px 0px 0px var(--orange);
+		box-shadow: inset 0px -3px 0px 0px var(--green);
 		font-weight: 700;
 		cursor: auto;
 	}
