@@ -33,7 +33,7 @@
 	{:else}
 		<section class="back-arrow">
 			<button on:click={() => ($selectedCity = undefined)} class="back-button">
-				<ArrowLeft /> <span class="back-text">Return to list of cities</span>
+				<ArrowLeft /> <span class="back-text">List of cities</span>
 			</button>
 		</section>
 		<section class="card selected-city" in:fade>
