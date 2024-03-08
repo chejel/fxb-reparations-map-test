@@ -34,11 +34,11 @@
 	let movedCenterLng;
 	let movedCenterLat;
 
-	// Set state of sidebar and map padding (on non-mobile devices)
+	// Set state of sidebar and map padding
 	export let sidebarVisible;
 	let mapPadding;
 
-	$: if (sidebarVisible && !window.matchMedia('(max-width: 480px)').matches) {
+	$: if (sidebarVisible && window.matchMedia('(min-width: 1200px)').matches) {
 		mapPadding = { left: 375 };
 	} else {
 		mapPadding = { left: 0 };
@@ -54,6 +54,7 @@
 				container: mapContainer,
 				accessToken: mapboxgl.accessToken,
 				style: 'mapbox://styles/jenche/clt3p16ui003i01qph9fuhxoq',
+				//style: 'mapbox://styles/mapbox/standard',
 				center: [-95.7, 38.1],
 				zoom: 3.75,
 				// minZoom: 3.75, // adds bounce when resetting map
@@ -91,6 +92,13 @@
 			$map.easeTo({
 				padding: mapPadding,
 				duration: 1000
+			});
+
+			// Hide sidebar on mobile if map touched
+			$map.on('click', () => {
+				if (window.matchMedia('(max-width: 480px)').matches && sidebarVisible) {
+					sidebarVisible = false;
+				}
 			});
 
 			// Add markers for cities
@@ -158,13 +166,6 @@
 				$aboutPanelVisible = false;
 				$listPanelVisible = true;
 				$citiesPanelVisible = true;
-			});
-
-			// Hide sidebar on mobile if map touched
-			$map.on('click', () => {
-				if (window.matchMedia('(max-width: 480px)').matches && sidebarVisible) {
-					sidebarVisible = false;
-				}
 			});
 
 			// Add layer for filtered cities
