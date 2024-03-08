@@ -13,7 +13,9 @@
 		selectedCity,
 		aboutPanelVisible,
 		listPanelVisible,
-		citiesPanelVisible
+		citiesPanelVisible,
+		countiesPanelVisible,
+		statesPanelVisible
 	} from '$lib/stores.js';
 
 	// Import components
@@ -166,6 +168,8 @@
 				$aboutPanelVisible = false;
 				$listPanelVisible = true;
 				$citiesPanelVisible = true;
+				$countiesPanelVisible = false;
+				$statesPanelVisible = false;
 			});
 
 			// Add layer for filtered cities
@@ -200,7 +204,7 @@
 </script>
 
 <!-- Reset map button -->
-{#if initialCenterLng?.toFixed(1) !== movedCenterLng?.toFixed(1) || initialCenterLat?.toFixed(1) !== movedCenterLat?.toFixed(1)}
+{#if initialCenterLng?.toFixed(1) !== movedCenterLng?.toFixed(1) || initialCenterLat?.toFixed(1) !== movedCenterLat?.toFixed(1) || $map?.getPitch() !== 0}
 	<div class="reset-container" transition:fade>
 		<ResetMap><ResetIcon /></ResetMap>
 	</div>

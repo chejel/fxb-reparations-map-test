@@ -8,7 +8,8 @@
 		$map.flyTo({
 			center: [-95.7, 38.1],
 			essential: true, // "this animation is considered essential with respect to prefers-reduced-motion"
-			zoom: 3.75
+			zoom: 3.75,
+			pitch: 0
 		});
 
 		// Add contiguous US bounding box
