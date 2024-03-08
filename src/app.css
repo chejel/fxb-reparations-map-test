@@ -182,9 +182,9 @@ img {
 
 .card {
   background-color: rgba(255, 255, 253, 0.75);
-		border: 0.75px solid #597e52;
-		padding: 0.75rem;
-		border-radius: 5px;
-    margin-top: 1rem;
-    overflow: auto;
+  border: 0.75px solid #597e52;
+  /* padding: 0.75rem; */
+  border-radius: 5px;
+  margin-top: 1rem;
+  overflow: auto;
 }
