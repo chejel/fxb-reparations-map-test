@@ -2,10 +2,10 @@
 	// Import stores
 	import { reparationsData, selectedCity } from '$lib/stores.js';
 
+	// Prop for sorting by state toggle
 	export let sortByState;
 
 	// Data for accordion order, sorted based on state of sortByStateVisible
-
 	const tableData = $reparationsData?.map((feature) => {
 		return {
 			City: feature.properties.City,
@@ -16,9 +16,6 @@
 	$: tableDataSort = !sortByState
 		? tableData.sort((a, b) => a['City'].localeCompare(b['City']))
 		: tableData.sort((a, b) => a['State'].localeCompare(b['State']));
-
-	// Import transition
-	import { slide } from 'svelte/transition';
 </script>
 
 <table cellpadding="0" cellspacing="0" border="0">
@@ -57,7 +54,6 @@
 	}
 
 	/* Table */
-
 	table {
 		width: 100%;
 	}

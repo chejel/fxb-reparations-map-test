@@ -18,7 +18,7 @@
 </script>
 
 {#if $reparationsData}
-	<!-- Table of matching city names, state, Wikipedia link-->
+	<!-- Table of matching city names, state -->
 	{#if !$selectedCity}
 		<p>Select a city for information about their reparation efforts.</p>
 
