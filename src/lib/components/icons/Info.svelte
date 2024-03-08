@@ -1,8 +1,8 @@
 <!-- Source: https://iconoir.com/ -->
 <svg
 	aria-hidden="true"
-	width="13px"
-	height="13px"
+	width="16px"
+	height="16px"
 	stroke-width="3"
 	viewBox="0 0 24 24"
 	fill="none"
