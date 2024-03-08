@@ -119,12 +119,12 @@
 		left: 0;
 		right: 0;
 		bottom: 0;
-		background-color: #ccc;
+		background-color: #dbdada; /* #ccc; */
 		border-radius: 20px;
 		-webkit-transition: 0.3s;
 		transition: 0.3s;
 		cursor: pointer;
-		border: 1px solid #fff;
+		border: 0.5px solid #333;
 	}
 
 	.switch:before {
@@ -135,6 +135,7 @@
 		top: 2px;
 		left: 3px;
 		background-color: #fff;
+		border: 0.5px solid #333;
 		-webkit-transition: 0.4s;
 		transition: 0.3s;
 		border-radius: 50%;
