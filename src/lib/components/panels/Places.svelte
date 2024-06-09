@@ -119,7 +119,7 @@
 	button {
 		padding: 0.35rem 0;
 		font-size: 0.85rem;
-		font-weight: 500;
+		font-weight: 400;
 		flex-grow: 1;
 		display: flex;
 		justify-content: center;
@@ -152,7 +152,7 @@
 	}
 
 	.active {
-		font-weight: 600;
+		font-weight: 700;
 		background-color: rgba(255, 255, 253, 0.75);
 		border: 1px solid var(--orange);
 		border-radius: 5px !important;
@@ -164,6 +164,6 @@
 		font-size: 0.8rem;
 		margin-left: 0.5rem;
 		border-radius: 50%;
-		font-weight: 500;
+		font-weight: 400;
 	}
 </style>

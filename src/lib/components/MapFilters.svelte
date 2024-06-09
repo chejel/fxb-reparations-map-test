@@ -96,7 +96,6 @@
 		font-family: 'Barlow Condensed', sans-serif;
 		margin-left: 0.2rem;
 		font-size: 0.9rem;
-		font-weight: 500;
 	}
 
 	input[type='checkbox'] {

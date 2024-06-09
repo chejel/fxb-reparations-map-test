@@ -217,7 +217,7 @@
 <!-- Toggle filters -->
 <div class="toggle-container">
 	<MapFilters />
-	<hr style="border-top: 1px solid rgba(255, 255, 255, 1);" />
+	<hr style="border-top: 0.5px solid rgba(255, 255, 255, 1);" />
 </div>
 
 <style>

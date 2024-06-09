@@ -63,7 +63,7 @@
 	}
 
 	tr:not(:last-child) td {
-		border-bottom: 1px solid #eee;
+		border-bottom: 1px solid var(--divider-gray);
 	}
 
 	/* index numbers */

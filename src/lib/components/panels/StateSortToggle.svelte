@@ -14,7 +14,6 @@
 		font-family: 'Barlow Condensed', sans-serif;
 		text-transform: uppercase;
 		font-size: 0.8rem;
-		font-weight: 500;
 	}
 
 	input[type='checkbox'] {

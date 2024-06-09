@@ -57,7 +57,7 @@
 </section>
 <!-- divider -->
 
-<hr style="border-top: 1px solid rgba(45, 45, 45, 0.35);" />
+<hr style="border-top: 0.5px solid rgba(45, 45, 45, 0.75);" />
 
 <table cellpadding="0" cellspacing="0" border="0">
 	<colgroup>

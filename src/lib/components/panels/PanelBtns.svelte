@@ -35,7 +35,6 @@
 		font-family: 'Barlow Condensed';
 		background-color: #fffffd;
 		font-size: 1.1rem;
-		font-weight: 600;
 		text-transform: uppercase;
 		padding: 10px 0;
 		display: flex;
