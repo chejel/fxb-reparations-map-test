@@ -8,7 +8,7 @@
 	import ArrowLeft from '$lib/components/icons/ArrowLeft.svelte';
 
 	// Import stores
-	import { reparationsData, selectedCity } from '$lib/stores.js';
+	import { reparationsCityData, selectedCity } from '$lib/stores.js';
 
 	// Import transition
 	import { fade } from 'svelte/transition';
@@ -17,7 +17,7 @@
 	let sortByState = false;
 </script>
 
-{#if $reparationsData}
+{#if $reparationsCityData}
 	<!-- Table of matching city names, state -->
 	{#if !$selectedCity}
 		<p>Select a city for information about their reparation efforts.</p>

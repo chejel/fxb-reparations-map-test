@@ -1,24 +1,21 @@
 <script>
 	// Import stores
 	import {
-		reparationsData,
+		reparationsCityData,
+		reparationsStateData,
 		citiesPanelVisible,
-		countiesPanelVisible,
 		statesPanelVisible,
 		selectedCity,
-		selectedCounty,
 		selectedState
 	} from '$lib/stores.js';
 
 	// Import components
 	import CitiesPanel from '$lib/components/panels/CitiesPanel.svelte';
-	import CountiesPanel from '$lib/components/panels/CountiesPanel.svelte';
 	import StatesPanel from '$lib/components/panels/StatesPanel.svelte';
 
 	// Number of cities
-	let citiesCount = $reparationsData?.length;
-	let countiesCount = 3;
-	let statesCount = 3;
+	let citiesCount = $reparationsCityData?.length;
+	let statesCount = $reparationsStateData?.length;
 
 	// Import transition
 	import { fade } from 'svelte/transition';
@@ -31,9 +28,7 @@
 			class:active={$citiesPanelVisible}
 			on:click={() => {
 				$citiesPanelVisible = true;
-				$countiesPanelVisible = false;
 				$statesPanelVisible = false;
-				$selectedCounty = undefined;
 				$selectedState = undefined;
 			}}
 			>Cities <span
@@ -42,30 +37,13 @@
 				>{citiesCount}</span
 			></button
 		>
-		<button
-			class:active={$countiesPanelVisible}
-			on:click={() => {
-				$citiesPanelVisible = false;
-				$countiesPanelVisible = true;
-				$statesPanelVisible = false;
-				$selectedCity = undefined;
-				$selectedState = undefined;
-			}}
-			>Counties <span
-				class="btn-badge"
-				style="padding: {statesCount < 10 ? '0.15rem 0.5rem' : '0.15rem 0.25rem'}"
-				>{countiesCount}</span
-			></button
-		>
 
 		<button
 			class:active={$statesPanelVisible}
 			on:click={() => {
 				$citiesPanelVisible = false;
-				$countiesPanelVisible = false;
 				$statesPanelVisible = true;
 				$selectedCity = undefined;
-				$selectedCounty = undefined;
 			}}
 			>States <span
 				class="btn-badge"
@@ -79,10 +57,6 @@
 	{#if $citiesPanelVisible}
 		<section class="location-container" in:fade>
 			<CitiesPanel />
-		</section>
-	{:else if $countiesPanelVisible}
-		<section class="location-container" in:fade>
-			<CountiesPanel />
 		</section>
 	{:else if $statesPanelVisible}
 		<section class="location-container" in:fade>

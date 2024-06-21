@@ -4,6 +4,7 @@ export let map = writable();
 
 // Reparations data
 export let reparationsData = writable();
+export let reparationsCityData = writable();
 export let reparationsStateData = writable();
 
 // Variables that will trigger sidebar to open

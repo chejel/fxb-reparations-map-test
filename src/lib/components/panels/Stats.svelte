@@ -1,43 +1,40 @@
 <script>
 	// Import stores
-	import { reparationsData, reparationsStateData } from '$lib/stores.js';
+	import { reparationsCityData, reparationsStateData } from '$lib/stores.js';
 
 	// # of cities
-	const numCities = $reparationsData?.length;
-
-	// # of counties
-	const numCounties = '#';
+	const numCities = $reparationsCityData?.length;
 
 	// # of states
-	const numStates = '#';
+	const numStates = $reparationsStateData?.length;
 
 	// # with reports
-	const numReports = $reparationsData?.filter((d) =>
+	const numReports = $reparationsCityData?.filter((d) =>
 		d.properties['Has the city released a report on reparations?'].includes('Yes')
 	).length;
 
 	// # with funding
-	const numFunding = $reparationsData?.filter((d) =>
+	const numFunding = $reparationsCityData?.filter((d) =>
 		d.properties['Has the city approved reparations funding?'].includes('Yes')
 	).length;
 
 	// # with funding source
-	const numSource = $reparationsData?.filter((d) =>
-		d.properties['Has the city decided where funding will come from?'].includes('Yes')
+	const numSource = $reparationsCityData?.filter((d) =>
+		d.properties['What is the potential funding source?'].includes('Yes')
 	).length;
 
 	// # with allocation
-	const numAllocation = $reparationsData?.filter((d) =>
+	const numAllocation = $reparationsCityData?.filter((d) =>
 		d.properties['Has the city begun allocating reparations?'].includes('Yes')
 	).length;
 
 	// # with direct payments
-	const numDirect = $reparationsData?.filter((d) =>
+	const numDirect = $reparationsCityData?.filter((d) =>
 		d.properties['Has the city determined if direct payments will be included?'].includes('Yes')
 	).length;
 
 	// # with eligibility determined
-	const numEligibility = $reparationsData?.filter((d) =>
+	const numEligibility = $reparationsCityData?.filter((d) =>
 		d.properties['Has the city determined who is eligible to receive direct payments?'].includes(
 			'Yes'
 		)
@@ -48,11 +45,13 @@
 	<div>
 		<span class="number top-number">{numCities}</span> <span class="top-label">Cities</span>
 	</div>
-	<div>
+	<!-- <div>
 		<span class="number top-number">{numCounties}</span> <span class="top-label">Counties</span>
-	</div>
+	</div> -->
+	<span style="font-size: 1.5rem; font-weight: 400; color: silver;">|</span>
 	<div>
-		<span class="number top-number">{numStates}</span> <span class="top-label">States</span>
+		<span class="number top-number" style="color: #588157;">{numStates}</span>
+		<span class="top-label">States</span>
 	</div>
 </section>
 <!-- divider -->
@@ -172,7 +171,9 @@
 <style>
 	.location-stats {
 		display: flex;
-		justify-content: space-between;
+		/* justify-content: space-between; */
+		align-items: center;
+		gap: 15px;
 		padding-bottom: 0.5rem;
 	}
 
@@ -191,7 +192,7 @@
 	}
 
 	.number {
-		font-size: 1.6rem;
+		font-size: 1.4rem;
 		color: var(--red);
 		text-align: right;
 		padding: 0 0.75rem 0 0;

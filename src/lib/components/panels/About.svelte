@@ -6,7 +6,7 @@
 	import StatsIcon from '$lib/components/icons/Stats.svelte';
 
 	// Import stores
-	import { reparationsData } from '$lib/stores.js';
+	import { reparationsCityData, reparationsStateData } from '$lib/stores.js';
 </script>
 
 <section class="introduction">
@@ -17,10 +17,11 @@
 		duis.
 	</p>
 </section>
-{#if $reparationsData}
+
+{#if $reparationsCityData}
 	<section class="card">
 		<p class="card-header"><StatsIcon /> Represented</p>
-		<!-- <hr /> -->
+
 		<div class="stats-table">
 			<Stats />
 		</div>

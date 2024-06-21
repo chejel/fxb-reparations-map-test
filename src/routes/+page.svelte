@@ -7,8 +7,10 @@
 	// Import icon components
 	import ListIcon from '$lib/components/icons/List.svelte';
 
-	// Import stores
-	import { reparationsData, reparationsStateData } from '$lib/stores.js';
+	// Import reparations data
+	import { onMount } from 'svelte';
+	export let data; // Airtable directory data
+	import { reparationsData, reparationsCityData, reparationsStateData } from '$lib/stores.js';
 
 	// Set state of sidebar
 	let sidebarVisible = true;
@@ -16,34 +18,34 @@
 	// Import transition
 	import { fade } from 'svelte/transition';
 
-	// Import reparations data
-	import { onMount } from 'svelte';
-	import { csv } from 'd3-fetch';
-
 	onMount(async () => {
-		reparationsData.set(
-			await csv(
-				'https://docs.google.com/spreadsheets/d/e/2PACX-1vT__H1c2RsZwADkEXXbVsqJD5G-GyeA9YrRG1-Y4oCBACYTNQyzWtDFTYxs7v9P5hJODeZz0jRnkcK3/pub?gid=0&single=true&output=csv'
-			)
-		);
-
-		reparationsData.update((data) => {
-			return data.map((d) => {
-				return {
+		reparationsData.set({
+			type: 'FeatureCollection',
+			features: data.airtableRecords.map((d) => {
+				const obj = {
 					type: 'Feature',
 					geometry: {
 						type: 'Point',
 						coordinates: [+d['Longitude'], +d['Latitude']]
 					},
-					properties: { ...d }
+					properties: {
+						...d
+					}
 				};
-			});
+				return obj;
+			})
 		});
 
+		reparationsCityData.set(
+			$reparationsData?.features.filter((feature) => {
+				return feature.properties.Geography === 'City';
+			})
+		);
+
 		reparationsStateData.set(
-			await csv(
-				'https://docs.google.com/spreadsheets/d/e/2PACX-1vT__H1c2RsZwADkEXXbVsqJD5G-GyeA9YrRG1-Y4oCBACYTNQyzWtDFTYxs7v9P5hJODeZz0jRnkcK3/pub?gid=1230514702&single=true&output=csv'
-			)
+			$reparationsData?.features.filter((feature) => {
+				return feature.properties.Geography === 'State';
+			})
 		);
 	});
 </script>

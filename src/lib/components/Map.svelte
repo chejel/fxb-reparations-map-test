@@ -9,7 +9,7 @@
 	// Stores
 	import {
 		map,
-		reparationsData,
+		reparationsCityData,
 		selectedCity,
 		aboutPanelVisible,
 		listPanelVisible,
@@ -108,7 +108,7 @@
 				type: 'geojson',
 				data: {
 					type: 'FeatureCollection',
-					features: $reparationsData
+					features: $reparationsCityData
 				}
 			});
 
@@ -130,7 +130,7 @@
 				type: 'symbol',
 				source: 'cities',
 				layout: {
-					'text-field': ['get', 'City'],
+					'text-field': ['get', 'Location'],
 					'text-variable-anchor': ['left'],
 					'text-radial-offset': 0.5,
 					'text-justify': 'auto',
@@ -163,7 +163,7 @@
 
 			// Get city name from clicking marker/label
 			$map.on('click', ['cities-layer', 'cities-labels'], (e) => {
-				selectedCity.set(e.features[0].properties.City);
+				selectedCity.set(e.features[0].properties.Location);
 				sidebarVisible = true;
 				$aboutPanelVisible = false;
 				$listPanelVisible = true;
@@ -186,7 +186,7 @@
 			});
 
 			// Hide US cities on initial load
-			$map.setFilter('filtered-layer', ['in', 'City', '']);
+			$map.setFilter('filtered-layer', ['in', 'Location', '']);
 		});
 	});
 

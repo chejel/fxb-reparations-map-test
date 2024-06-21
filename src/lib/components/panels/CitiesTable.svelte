@@ -1,14 +1,14 @@
 <script>
 	// Import stores
-	import { reparationsData, selectedCity } from '$lib/stores.js';
+	import { reparationsCityData, selectedCity } from '$lib/stores.js';
 
 	// Prop for sorting by state toggle
 	export let sortByState;
 
 	// Data for accordion order, sorted based on state of sortByStateVisible
-	const tableData = $reparationsData?.map((feature) => {
+	const tableData = $reparationsCityData?.map((feature) => {
 		return {
-			City: feature.properties.City,
+			City: feature.properties.Location,
 			State: feature.properties.State
 		};
 	});

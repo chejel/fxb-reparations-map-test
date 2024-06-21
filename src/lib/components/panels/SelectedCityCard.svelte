@@ -1,6 +1,6 @@
 <script>
 	// Import stores
-	import { reparationsData, selectedCity } from '$lib/stores.js';
+	import { reparationsCityData, selectedCity } from '$lib/stores.js';
 
 	// Import components
 	import StateMap from '$lib/components/panels/StateMap.svelte';
@@ -11,21 +11,25 @@
 	import LinkIcon from '$lib/components/icons/Link.svelte';
 
 	// Rename question variables
-	$: cityData = $reparationsData
+	$: cityData = $reparationsCityData
 		?.map((city) => ({
 			...city,
 			properties: {
-				City: city.properties.City,
+				City: city.properties.Location,
 				State: city.properties.State,
-				Link: city.properties.Link,
 				'Report released': city.properties['Has the city released a report on reparations?'],
 				'Funding approved': city.properties['Has the city approved reparations funding?'],
-				'Funding source': city.properties['Has the city decided where funding will come from?'],
+				'Funding source': city.properties['What is the potential funding source?'],
 				'Allocation started': city.properties['Has the city begun allocating reparations?'],
 				'Direct payments':
 					city.properties['Has the city determined if direct payments will be included?'],
 				'Eligibility determined':
-					city.properties['Has the city determined who is eligible to receive direct payments?']
+					city.properties['Has the city determined who is eligible to receive direct payments?'],
+				'Funding addresses health': city.properties['Is any of the funding addressing health?'],
+				'Funding directed to': city.properties['Where is funding directed?'],
+				'Other topics included':
+					city.properties['What other topic areas included in the reparation approach?'],
+				'Additional notes': city.properties['Additional Notes']
 			}
 		}))
 		.find((city) => city.properties.City === $selectedCity);
@@ -45,8 +49,9 @@
 <hr />
 
 <!-- City details -->
+<!-- && city[0] !== 'Link' -->
 <div class="city-info">
-	{#each Object.entries(cityData.properties).filter((city) => city[0] !== 'City' && city[0] !== 'State' && city[0] !== 'Link') as city}
+	{#each Object.entries(cityData.properties).filter((city) => city[0] !== 'City' && city[0] !== 'State') as city}
 		<table class="questions">
 			<tr>
 				<td
@@ -67,12 +72,12 @@
 </div>
 
 <!-- Link -->
-<div class="article-link">
+<!-- <div class="article-link">
 	<LinkIcon /><span><span class="question-bold">Article</span>:</span>
 	<a href={cityData.properties.Link}
 		>{cityData.properties.Link.match(/^(?:https?:\/\/)?(?:www\.)?([^\/]+)/)[1]}</a
 	>
-</div>
+</div> -->
 
 <style>
 	.header {
@@ -92,16 +97,6 @@
 	.city-info {
 		position: relative;
 		z-index: 2;
-	}
-
-	.article-link {
-		display: flex;
-		align-items: center;
-		gap: 4px;
-		background-color: #eee;
-		padding: 0.5rem;
-		border-radius: 4px;
-		margin-bottom: 0.75rem;
 	}
 
 	.questions {
