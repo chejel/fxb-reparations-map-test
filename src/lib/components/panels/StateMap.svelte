@@ -1,87 +1,119 @@
 <script>
-	import topoCounties from '$lib/data/counties-albers-10m.json';
+	import topoStates from '$lib/data/states-10m.json'; // unprojected US state geometries
 	import { onMount } from 'svelte';
-	import { geoAlbersUsa, geoPath } from 'd3-geo';
+	import { geoAlbersUsa, geoMercator, geoPath } from 'd3-geo';
 	import { scaleSqrt } from 'd3-scale';
 	import * as topojson from 'topojson-client';
 
-	// Declare variables for map </div>data
-	let counties = [];
+	// Declare variables for map data
 	let states = [];
 	let statesMesh = [];
+
 	// Declare variable for state selection
-	let selectedFeature;
 	export let cityCoords = null; // Get city data from SelectedCity
+	export let stateName = null; // Get state name from StatesTable
 
 	// Load map data
 	onMount(async () => {
-		counties = topojson.feature(topoCounties, topoCounties.objects.counties).features;
-		states = topojson.feature(topoCounties, topoCounties.objects.states).features;
-		statesMesh = topojson.mesh(topoCounties, topoCounties.objects.states, (a, b) => a !== b);
-		//nation = topojson.feature(topoCounties, topoCounties.objects.nation).features;
+		states = topojson.feature(topoStates, topoStates.objects.states).features;
+		statesMesh = topojson.mesh(topoStates, topoStates.objects.states, (a, b) => a !== b);
+		//nation = topojson.feature(topoStates, topoStates.objects.nation).features;
 	});
 
-	// Add projection for overlaying point data
-	const projection = geoAlbersUsa().scale(1300).translate([487.5, 305]);
+	// SVG dimensions for displaying state
+	let width = 975;
+	let height = stateName ? 510 : 1000;
 
-	// Path generator: topojson coords -> svg paths
-	const path = geoPath().projection(null);
+	// Declaring variables for drawing state proportionally (i.e. not filling up the svg container)
+	let selectedStateObj; // states data filtered to single selected state
 
-	let selectedStateObj;
-	let selectedStateName;
-	// To "zoom" in on states based on bounds
-	let viewBox = '0 0 975 610';
-	let x0, y0, x1, y1;
-	let cx, cy; // For location of city on state map
+	let projection; // dislaying state
+	let path;
+	let cx, cy; // displaying city
+
+	$: viewBox = `0 0 ${width} ${height}`;
+
 	// For radius of circle marking location of city on map:
 	let radiusScale;
-	let yBoundsRadius;
 
+	// Filter states data to only selected city
 	$: if (cityCoords) {
 		// Filter states array from json to only state of selected state
 		selectedStateObj = states.find((d) => d.properties.name === cityCoords.properties.State);
 
-		// And from there, get the name of the state
-		selectedStateName = selectedStateObj?.properties.name;
+		// Scale for radius of circles marking location of city on map
+		radiusScale = scaleSqrt().domain([0, 500]).range([1, 10]);
+	}
 
-		if (selectedStateObj) {
-			// Adding conditionals to account for differences in state sizes
-			const padding =
-				selectedStateName === 'Vermont' || selectedStateName === 'Illinois'
-					? '30'
-					: selectedStateName === 'Rhode Island'
-						? '10'
-						: '10';
-			[[x0, y0], [x1, y1]] = path.bounds(selectedStateObj);
-			viewBox = `${x0 - padding} ${y0 - padding} ${x1 - x0 + 2 * padding} ${y1 - y0 + 2 * padding}`;
+	// Filter states data to only selected state
+	$: if (stateName) {
+		selectedStateObj = states.find((d) => d.properties.name === stateName);
+	}
 
-			// Scale for radius of circles marking location of city on map
-			radiusScale = scaleSqrt().domain([0, 500]).range([1, 10]);
+	// Projection and path generator based on state map as a whole in order to get proportional sizes of individual states. This way, they don't fill up the svg container and end up with Texas and Massachusetts as the same size on the cards.
+	const baseProjection = geoAlbersUsa();
+	const basePath = geoPath(baseProjection);
+
+	// Using the "base" projection, determine height of largest and smallest US states to get proportion scale
+	let akHeightArr = [];
+	let riHeightArr = [];
+	let selStateHeightArr = []; // height of selected state (or state of selected city)
+
+	let selStateHeight; // number determined via subtracting highest and lowest y-values of state boundary
+	let stateHeightScale; // using d3-scale to map a proportional scale of state heights
+	let heightMultiplier = stateName ? 200 : 375;
+
+	// Once a city or state has been selected...
+	$: if (selectedStateObj) {
+		// base projections for largest and smallest states
+		akHeightArr = basePath.bounds(states.filter((d) => d.properties.name === 'Alaska')[0]);
+		riHeightArr = basePath.bounds(states.filter((d) => d.properties.name === 'Rhode Island')[0]);
+
+		// boundaries of selected state
+		selStateHeightArr = basePath.bounds(selectedStateObj);
+		// height of selected state based on boundary y-values
+		selStateHeight = selStateHeightArr[1][1] - selStateHeightArr[0][1];
+
+		// set up proportional scale
+		stateHeightScale = scaleSqrt()
+			.domain([riHeightArr[1][1] - riHeightArr[0][1], akHeightArr[1][1] - akHeightArr[0][1]])
+			.range([1, 2]);
+
+		// set height of viewbox based on selected state (as way to center state in state table row)
+		if (stateName) height = stateHeightScale(selStateHeight) * heightMultiplier;
+
+		// set up projection for displaying state on card
+		// use different projection for Alaska
+		if (selectedStateObj.properties.name === 'Alaska') {
+			projection = geoAlbersUsa().fitSize(
+				[width, stateHeightScale(selStateHeight) * heightMultiplier],
+				selectedStateObj
+			);
+		} else {
+			projection = geoMercator().fitSize(
+				[width, stateHeightScale(selStateHeight) * heightMultiplier],
+				selectedStateObj
+			);
+		}
+
+		// Path generator: topojson coords -> svg paths
+		path = geoPath(projection);
+		if (cityCoords) {
 			[cx, cy] = projection(cityCoords.geometry.coordinates);
-			yBoundsRadius =
-				selectedStateName === 'Rhode Island' ? radiusScale(y1 - y0) / 2 : radiusScale(y1 - y0);
 		}
 	}
 </script>
 
 <svg {viewBox}>
 	<!-- Draw state -->
-	<g fill="#ffc17e">
-		{#each [selectedStateObj] as feature}
-			<path d={path(feature)} on:click={() => (selectedFeature = feature)} aria-hidden="true" />
-		{/each}
-	</g>
+	{#if selectedStateObj}
+		<g fill="#ffc17e">
+			<path d={path(selectedStateObj)} aria-hidden="true" />
+		</g>
+	{/if}
 
 	<!-- Add point to show selected city on state map -->
 	{#if cityCoords}
-		<circle
-			{cx}
-			{cy}
-			r={yBoundsRadius}
-			opacity="1"
-			fill="#333"
-			fill-opacity="0.85"
-			aria-hidden="true"
-		/>
+		<circle {cx} {cy} r="25" opacity="1" fill="#333" fill-opacity="0.85" aria-hidden="true" />
 	{/if}
 </svg>
