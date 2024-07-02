@@ -16,7 +16,9 @@
 {#if $reparationsStateData}
 	<!-- Table of states -->
 	{#if !$selectedState}
-		<p>Select a state for information about their reparation efforts.</p>
+		<p style="margin-bottom: 0.35rem;">
+			Select a state for information about their reparation efforts.
+		</p>
 
 		<section class="card states-table" in:fade>
 			<StatesTable />
@@ -24,7 +26,7 @@
 	{:else}
 		<section class="back-arrow">
 			<button on:click={() => ($selectedState = undefined)} class="back-button">
-				<ArrowLeft /> <span class="back-text">List of cities</span>
+				<ArrowLeft /> <span class="back-text">List of states</span>
 			</button>
 		</section>
 		<section class="card selected-state" in:fade>

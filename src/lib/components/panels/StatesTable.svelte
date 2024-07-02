@@ -5,33 +5,29 @@
 	// Import components
 	import StateMap from '$lib/components/panels/StateMap.svelte';
 
-	const tableData = $reparationsStateData?.map((feature) => {
-		return {
-			State: feature.properties.Location
-		};
-	});
+	const tableData = $reparationsStateData?.map((d) => d.Location);
 </script>
 
 <table cellpadding="0" cellspacing="0" border="0">
 	<colgroup>
 		<col style="width: 20px" />
-		<col style="width: 180px" />
 		<col style="width: auto" />
+		<!-- <col style="width: auto" /> -->
 	</colgroup>
 	<tbody>
-		{#each tableData as { State }, index}
-			<tr style="height: 75px;">
+		{#each tableData as State, index}
+			<tr>
 				<td class="index">{index + 1}</td>
 				<td>
 					<button
 						class:active={$selectedState === State}
 						class="state"
-						style="font-size: 1rem;"
+						style="font-size: 1rem; height: 50px;"
 						on:click={() => {
 							$selectedState = State;
-						}}>{State}</button
+						}}>{State} <StateMap stateName={State} /></button
 					>
-				</td><td><StateMap stateName={State} /></td>
+				</td>
 			</tr>
 		{/each}
 	</tbody>
@@ -40,6 +36,9 @@
 <style>
 	button {
 		font-size: 1rem;
+		display: flex;
+		align-items: center;
+		width: 100%;
 	}
 
 	/* Table */
