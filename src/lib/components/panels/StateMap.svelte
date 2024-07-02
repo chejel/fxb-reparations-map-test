@@ -7,22 +7,26 @@
 
 	// Declare variables for map data
 	let states = [];
-	let statesMesh = [];
+	// let statesMesh = [];
+
+	// Import stores
+	import { statesMap } from '$lib/stores.js';
 
 	// Declare variable for state selection
 	export let cityCoords = null; // Get city data from SelectedCity
 	export let stateName = null; // Get state name from StatesTable
+	export let stateNameCard = null; // Get state name from SelectedStateCard
 
 	// Load map data
 	onMount(async () => {
-		states = topojson.feature(topoStates, topoStates.objects.states).features;
-		statesMesh = topojson.mesh(topoStates, topoStates.objects.states, (a, b) => a !== b);
-		//nation = topojson.feature(topoStates, topoStates.objects.nation).features;
+		// states = topojson.feature(topoStates, topoStates.objects.states).features;
+		// statesMesh = topojson.mesh(topoStates, topoStates.objects.states, (a, b) => a !== b);
+		// nation = topojson.feature(topoStates, topoStates.objects.nation).features;
 	});
 
 	// SVG dimensions for displaying state
 	let width = 975;
-	let height = stateName ? 510 : 1000;
+	let height = 1000;
 
 	// Declaring variables for drawing state proportionally (i.e. not filling up the svg container)
 	let selectedStateObj; // states data filtered to single selected state
@@ -39,15 +43,19 @@
 	// Filter states data to only selected city
 	$: if (cityCoords) {
 		// Filter states array from json to only state of selected state
-		selectedStateObj = states.find((d) => d.properties.name === cityCoords.properties.State);
+		selectedStateObj = $statesMap?.features.find(
+			(d) => d.properties.name === cityCoords.properties.State
+		);
 
 		// Scale for radius of circles marking location of city on map
 		radiusScale = scaleSqrt().domain([0, 500]).range([1, 10]);
 	}
 
 	// Filter states data to only selected state
-	$: if (stateName) {
-		selectedStateObj = states.find((d) => d.properties.name === stateName);
+	$: if (stateName || stateNameCard) {
+		selectedStateObj = $statesMap?.features.find(
+			(d) => d.properties.name === stateName || d.properties.name === stateNameCard
+		);
 	}
 
 	// Projection and path generator based on state map as a whole in order to get proportional sizes of individual states. This way, they don't fill up the svg container and end up with Texas and Massachusetts as the same size on the cards.
@@ -61,13 +69,17 @@
 
 	let selStateHeight; // number determined via subtracting highest and lowest y-values of state boundary
 	let stateHeightScale; // using d3-scale to map a proportional scale of state heights
-	let heightMultiplier = stateName ? 200 : 375;
+	let heightMultiplier = stateName ? 90 : 375;
 
 	// Once a city or state has been selected...
 	$: if (selectedStateObj) {
 		// base projections for largest and smallest states
-		akHeightArr = basePath.bounds(states.filter((d) => d.properties.name === 'Alaska')[0]);
-		riHeightArr = basePath.bounds(states.filter((d) => d.properties.name === 'Rhode Island')[0]);
+		akHeightArr = basePath.bounds(
+			$statesMap?.features.filter((d) => d.properties.name === 'Alaska')[0]
+		);
+		riHeightArr = basePath.bounds(
+			$statesMap?.features.filter((d) => d.properties.name === 'Rhode Island')[0]
+		);
 
 		// boundaries of selected state
 		selStateHeightArr = basePath.bounds(selectedStateObj);
@@ -80,7 +92,7 @@
 			.range([1, 2]);
 
 		// set height of viewbox based on selected state (as way to center state in state table row)
-		if (stateName) height = stateHeightScale(selStateHeight) * heightMultiplier;
+		if (stateName || stateNameCard) height = stateHeightScale(selStateHeight) * heightMultiplier;
 
 		// set up projection for displaying state on card
 		// use different projection for Alaska

@@ -9,12 +9,13 @@
 	// Stores
 	import {
 		map,
+		statePolygons,
 		reparationsCityData,
 		selectedCity,
+		selectedState,
 		aboutPanelVisible,
 		listPanelVisible,
 		citiesPanelVisible,
-		countiesPanelVisible,
 		statesPanelVisible
 	} from '$lib/stores.js';
 
@@ -26,6 +27,7 @@
 
 	// Import transition
 	import { fade } from 'svelte/transition';
+	import SelectedStateCard from './panels/SelectedStateCard.svelte';
 
 	// Set variables
 	let mapContainer;
@@ -90,7 +92,61 @@
 				movedCenterLat = $map?.getCenter().lat;
 			});
 
-			// Shift globe based on state of sidebar
+			///////////////////////////
+			// POLYGONS
+			///////////////////////////
+
+			// Add state polygons
+			$map.addSource('states', {
+				type: 'geojson',
+				data: $statePolygons
+			});
+
+			// Add border for county polygons
+			$map.addLayer({
+				id: 'state-layer',
+				type: 'line',
+				source: 'states',
+				layout: {},
+				paint: {
+					'line-color': 'rgb(120, 148, 97)',
+					'line-width': 1
+				}
+			});
+
+			// Add fill color for individual states
+			$map.addLayer({
+				id: 'state-fill-layer',
+				type: 'fill',
+				source: 'states',
+				layout: {},
+				paint: {
+					'fill-color': 'rgb(120, 148, 97)',
+					'fill-opacity': 0.15
+				}
+			});
+
+			// Clicking on state polygon brings up card on panel
+			$map.on('click', ['state-fill-layer'], (e) => {
+				selectedState.set(e.features[0].properties.name);
+				sidebarVisible = true;
+				$aboutPanelVisible = false;
+				$listPanelVisible = true;
+				$citiesPanelVisible = false;
+				$statesPanelVisible = true;
+			});
+
+			// Cursor becomes pointer when on polygon
+			$map.on('mouseenter', 'state-fill-layer', () => {
+				$map.getCanvas().style.cursor = 'pointer';
+			});
+
+			// Cursor goes back to default off point
+			$map.on('mouseleave', 'state-fill-layer', () => {
+				$map.getCanvas().style.cursor = '';
+			});
+
+			// Shift map based on state of sidebar
 			$map.easeTo({
 				padding: mapPadding,
 				duration: 1000
@@ -168,7 +224,6 @@
 				$aboutPanelVisible = false;
 				$listPanelVisible = true;
 				$citiesPanelVisible = true;
-				$countiesPanelVisible = false;
 				$statesPanelVisible = false;
 			});
 

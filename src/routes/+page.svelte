@@ -2,15 +2,23 @@
 	// Import components
 	import Map from '$lib/components/Map.svelte';
 	import Footer from '$lib/components/Footer.svelte';
+
 	// Sidebar components
 	import Sidebar from '$lib/components/Sidebar.svelte';
+
 	// Import icon components
 	import ListIcon from '$lib/components/icons/List.svelte';
 
 	// Import reparations data
 	import { onMount } from 'svelte';
 	export let data; // Airtable directory data
-	import { reparationsData, reparationsCityData, reparationsStateData } from '$lib/stores.js';
+	import {
+		statesMap,
+		statePolygons,
+		reparationsData,
+		reparationsCityData,
+		reparationsStateData
+	} from '$lib/stores.js';
 
 	// Set state of sidebar
 	let sidebarVisible = true;
@@ -18,7 +26,14 @@
 	// Import transition
 	import { fade } from 'svelte/transition';
 
+	import * as topojson from 'topojson-client';
+
+	// Declare variables for map data
+	//let states = [];
+	import topoStates from '$lib/data/states-10m.json'; // unprojected US state geometries
+
 	onMount(async () => {
+		// Reparations data via Airtable
 		reparationsData.set({
 			type: 'FeatureCollection',
 			features: data.airtableRecords.map((d) => {
@@ -32,21 +47,37 @@
 						...d
 					}
 				};
+
 				return obj;
 			})
 		});
 
+		// ...filtered to city data
 		reparationsCityData.set(
 			$reparationsData?.features.filter((feature) => {
 				return feature.properties.Geography === 'City';
 			})
 		);
 
+		// ...filtered to state data
 		reparationsStateData.set(
-			$reparationsData?.features.filter((feature) => {
-				return feature.properties.Geography === 'State';
-			})
+			$reparationsData?.features
+				.filter((feature) => {
+					return feature.properties.Geography === 'State';
+				})
+				.map((d) => d.properties)
 		);
+
+		// Map data for all states
+		statesMap.set(topojson.feature(topoStates, topoStates.objects.states));
+
+		// Filter to individual states (with reparation efforts) as feature collection for mapping
+		statePolygons.set({
+			type: 'FeatureCollection',
+			features: $statesMap?.features.filter((d) =>
+				$reparationsStateData.some((e) => d.properties['name'] === e.Location)
+			)
+		});
 	});
 </script>
 
