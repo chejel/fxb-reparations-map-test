@@ -1,6 +1,7 @@
 <script>
 	// Import components
 	import Stats from '$lib/components/panels/Stats.svelte';
+	import Legend from '$lib/components/panels/Legend.svelte';
 
 	// Import icon components
 	import StatsIcon from '$lib/components/icons/Stats.svelte';
@@ -9,6 +10,7 @@
 	import { reparationsCityData, reparationsStateData } from '$lib/stores.js';
 </script>
 
+<!-- Intro text -->
 <section class="introduction">
 	<p>
 		Viverra aliquet eget sit amet tellus cras adipiscing. Nullam ac tortor vitae purus. Mauris
@@ -16,12 +18,24 @@
 		montes nascetur ridiculus mus. Dictumst quisque sagittis purus sit. Eget arcu dictum varius
 		duis.
 	</p>
+	<div class="legend-container">
+		<div>
+			<span style="font-weight: 600; text-transform: uppercase;">Map legend</span> of reparation efforts
+		</div>
+		<div class="legend">
+			<span><Legend geoType="city" text="City-level" /></span>
+			<span><Legend geoType="state" text="State-level" /></span>
+		</div>
+	</div>
 </section>
 
+<!-- Stats card -->
 {#if $reparationsCityData}
 	<section class="card">
+		<!-- header -->
 		<p class="card-header"><StatsIcon /> Represented</p>
 
+		<!-- stats -->
 		<div class="stats-table">
 			<Stats />
 		</div>
@@ -45,7 +59,23 @@
 		padding: 0.5rem 0.75rem;
 	}
 
-	/* hr {
-		border-top: 1px solid rgba(45, 45, 45, 0.35);
-	} */
+	.legend-container {
+		margin-top: 10px;
+		font-size: 0.85rem;
+
+		font-family: 'Barlow Condensed', sans-serif;
+
+		color: var(--gray);
+		display: flex;
+		justify-content: space-between;
+		border: 1px solid silver;
+		padding: 5px 8px;
+		border-radius: 3px;
+	}
+
+	.legend {
+		display: flex;
+		align-items: center;
+		gap: 15px;
+	}
 </style>
