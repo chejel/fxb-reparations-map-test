@@ -9,53 +9,66 @@
 	const numStates = $reparationsStateData?.length;
 
 	// # with reports
-	const numReports = $reparationsCityData?.filter((d) =>
-		d.properties['Has the city released a report on reparations?'].includes('Yes')
-	).length;
+	const numReports = $reparationsCityData
+		?.filter((d) => d.properties['Has the location released a report on reparations?'])
+		.filter((d) =>
+			d.properties['Has the location released a report on reparations?'].includes('Yes')
+		).length;
 
 	// # with funding
-	const numFunding = $reparationsCityData?.filter((d) =>
-		d.properties['Has the city approved reparations funding?'].includes('Yes')
-	).length;
+	const numFunding = $reparationsCityData
+		?.filter((d) => d.properties['Has the location approved reparations funding?'])
+		.filter((d) =>
+			d.properties['Has the location approved reparations funding?'].includes('Yes')
+		).length;
 
 	// # with funding source
-	const numSource = $reparationsCityData?.filter((d) =>
-		d.properties['What is the potential funding source?'].includes('Yes')
-	).length;
+	const numSource = $reparationsCityData
+		?.filter((d) => d.properties['What is the potential funding source?'])
+		.filter((d) => d.properties['What is the potential funding source?'].includes('Yes')).length;
 
 	// # with allocation
-	const numAllocation = $reparationsCityData?.filter((d) =>
-		d.properties['Has the city begun allocating reparations?'].includes('Yes')
-	).length;
+	const numAllocation = $reparationsCityData
+		?.filter((d) => d.properties['Has the location begun allocating reparations?'])
+		.filter((d) =>
+			d.properties['Has the location begun allocating reparations?'].includes('Yes')
+		).length;
 
 	// # with direct payments
-	const numDirect = $reparationsCityData?.filter((d) =>
-		d.properties['Has the city determined if direct payments will be included?'].includes('Yes')
-	).length;
+	const numDirect = $reparationsCityData
+		?.filter(
+			(d) => d.properties['Has the location determined if direct payments will be included?']
+		)
+		.filter((d) =>
+			d.properties['Has the location determined if direct payments will be included?'].includes(
+				'Yes'
+			)
+		).length;
 
 	// # with eligibility determined
-	const numEligibility = $reparationsCityData?.filter((d) =>
-		d.properties['Has the city determined who is eligible to receive direct payments?'].includes(
-			'Yes'
+	const numEligibility = $reparationsCityData
+		?.filter(
+			(d) => d.properties['Has the location determined who is eligible to receive direct payments?']
 		)
-	).length;
+		.filter((d) =>
+			d.properties[
+				'Has the location determined who is eligible to receive direct payments?'
+			].includes('Yes')
+		).length;
 </script>
 
 <section class="location-stats">
 	<div>
 		<span class="number top-number">{numCities}</span> <span class="top-label">Cities</span>
 	</div>
-	<!-- <div>
-		<span class="number top-number">{numCounties}</span> <span class="top-label">Counties</span>
-	</div> -->
 	<span style="font-size: 1.5rem; font-weight: 400; color: silver;">|</span>
 	<div>
 		<span class="number top-number" style="color: #588157;">{numStates}</span>
 		<span class="top-label">States</span>
 	</div>
 </section>
-<!-- divider -->
 
+<!-- divider -->
 <hr style="border-top: 0.5px solid rgba(45, 45, 45, 0.75);" />
 
 <table cellpadding="0" cellspacing="0" border="0">
@@ -64,34 +77,6 @@
 		<col style="width: auto" />
 	</colgroup>
 	<tbody>
-		<!-- # of Cities -->
-		<!-- <tr>
-			<td class="number">{numCities}</td>
-			<td class="label"> Cities</td>
-		</tr> -->
-		<!-- divider -->
-		<!-- <tr>
-			<td colspan="2">
-				<hr />
-			</td>
-		</tr> -->
-		<!-- # of Counties -->
-		<!-- <tr>
-			<td class="number">{numCounties}</td>
-			<td class="label"> Counties</td>
-		</tr> -->
-		<!-- divider -->
-		<!-- <tr>
-			<td colspan="2">
-				<hr />
-			</td>
-		</tr> -->
-		<!-- # of States -->
-		<!-- <tr>
-			<td class="number">{numStates}</td>
-			<td class="label"> States</td>
-		</tr> -->
-
 		<!-- note about filters -->
 		<tr>
 			<td colspan="2" class="filters-note"
