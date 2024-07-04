@@ -1,5 +1,6 @@
 
 :root {
+  --yellow: rgb(244, 206, 20); /* #f4ce14 */
   --orange: rgb(255, 171, 77); /* #ffab4d */;
   --red: rgb(199, 0, 57); /* #c70039; */
   --green: rgb(120, 148, 97); /* rgb(89, 126, 82); /* 597e52 */
@@ -53,21 +54,21 @@ a {
   src: url('/fonts/barlow-v12-latin-regular.woff2') format('woff2');
 }
 /* barlow-500 - latin */
-@font-face {
+/* @font-face {
   font-display: swap;
   font-family: 'Barlow';
   font-style: normal;
   font-weight: 500;
   src: url('/fonts/barlow-v12-latin-500.woff2') format('woff2');
-}
+} */
 /* barlow-600 - latin */
-@font-face {
+/* @font-face {
   font-display: swap;
   font-family: 'Barlow';
   font-style: normal;
   font-weight: 600;
   src: url('/fonts/barlow-v12-latin-600.woff2') format('woff2');
-}
+} */
 /* barlow-700 - latin */
 @font-face {
   font-display: swap;
