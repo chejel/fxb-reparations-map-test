@@ -54,9 +54,13 @@
 
 		// ...filtered to city data
 		reparationsCityData.set(
-			$reparationsData?.features.filter((feature) => {
-				return feature.properties.Geography === 'City';
-			})
+			$reparationsData?.features.filter(
+				(feature) =>
+					feature.properties['Geography'] === 'City' &&
+					feature.properties['State'] &&
+					feature.properties['Latitude'] &&
+					feature.properties['Longitude']
+			)
 		);
 
 		// ...filtered to state data
