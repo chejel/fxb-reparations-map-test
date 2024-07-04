@@ -1,13 +1,7 @@
 <script>
-	import topoStates from '$lib/data/states-10m.json'; // unprojected US state geometries
 	import { onMount } from 'svelte';
 	import { geoAlbersUsa, geoMercator, geoPath } from 'd3-geo';
 	import { scaleSqrt } from 'd3-scale';
-	import * as topojson from 'topojson-client';
-
-	// Declare variables for map data
-	let states = [];
-	// let statesMesh = [];
 
 	// Import stores
 	import { statesMap } from '$lib/stores.js';
@@ -16,13 +10,6 @@
 	export let cityCoords = null; // Get city data from SelectedCity
 	export let stateName = null; // Get state name from StatesTable
 	export let stateNameCard = null; // Get state name from SelectedStateCard
-
-	// Load map data
-	onMount(async () => {
-		// states = topojson.feature(topoStates, topoStates.objects.states).features;
-		// statesMesh = topojson.mesh(topoStates, topoStates.objects.states, (a, b) => a !== b);
-		// nation = topojson.feature(topoStates, topoStates.objects.nation).features;
-	});
 
 	// SVG dimensions for displaying state
 	let width = 975;
