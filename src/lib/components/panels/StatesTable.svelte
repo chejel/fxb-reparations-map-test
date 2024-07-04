@@ -12,7 +12,6 @@
 	<colgroup>
 		<col style="width: 20px" />
 		<col style="width: auto" />
-		<!-- <col style="width: auto" /> -->
 	</colgroup>
 	<tbody>
 		{#each tableData as State, index}
@@ -22,10 +21,17 @@
 					<button
 						class:active={$selectedState === State}
 						class="state"
-						style="font-size: 1rem; height: 50px;"
+						style="position: relative; font-size: 1rem; height: 50px;"
 						on:click={() => {
 							$selectedState = State;
-						}}>{State} <StateMap stateName={State} /></button
+						}}
+						>{State}
+						<span
+							style="position: absolute;
+						
+						right: 0;
+						width: 85%;"><StateMap stateName={State} /></span
+						></button
 					>
 				</td>
 			</tr>
@@ -38,7 +44,7 @@
 		font-size: 1rem;
 		display: flex;
 		align-items: center;
-		width: 100%;
+		width: 90%;
 	}
 
 	/* Table */
@@ -47,7 +53,7 @@
 	}
 
 	td {
-		padding: 0.15rem 0;
+		padding: 0.25rem 0;
 	}
 
 	tr:not(:last-child) td {

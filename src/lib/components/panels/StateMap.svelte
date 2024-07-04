@@ -56,7 +56,7 @@
 
 	let selStateHeight; // number determined via subtracting highest and lowest y-values of state boundary
 	let stateHeightScale; // using d3-scale to map a proportional scale of state heights
-	let heightMultiplier = stateName ? 90 : 375;
+	let heightMultiplier = stateName ? 100 : 375;
 
 	// Once a city or state has been selected...
 	$: if (selectedStateObj) {
@@ -79,7 +79,8 @@
 			.range([1, 2]);
 
 		// set height of viewbox based on selected state (as way to center state in state table row)
-		if (stateName || stateNameCard) height = stateHeightScale(selStateHeight) * heightMultiplier;
+		if (stateName || stateNameCard)
+			height = stateHeightScale(selStateHeight) * heightMultiplier + 10;
 
 		// set up projection for displaying state on card
 		// use different projection for Alaska
@@ -106,8 +107,12 @@
 <svg {viewBox}>
 	<!-- Draw state -->
 	{#if selectedStateObj}
-		<g fill="#ffc17e">
-			<path d={path(selectedStateObj)} aria-hidden="true" />
+		<g fill="#ffc17e" stroke="#c54209" stroke-width="1.5">
+			<path
+				d={path(selectedStateObj)}
+				aria-hidden="true"
+				style="filter: drop-shadow(5px 5px 5px rgb(0.25 0.25 0.25 / 0.1));"
+			/>
 		</g>
 	{/if}
 
