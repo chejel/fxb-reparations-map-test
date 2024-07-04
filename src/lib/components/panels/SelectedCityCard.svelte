@@ -193,7 +193,7 @@
 <table class="city-info">
 	{#each Object.entries(cityData.properties).filter((city) => city[0] !== 'City' && city[0] !== 'State') as city}
 		{#if city[0] !== 'Funding directed' && city[0] !== 'Other topics' && city[0] !== 'Additional notes'}
-			<tr>
+			<tr class="qAndA">
 				<td>
 					{#if city[1].response?.includes('No')}
 						<XIcon />
@@ -202,15 +202,15 @@
 					{/if}</td
 				>
 				<td
-					><p class="qAndA">
+					><p>
 						<span class="question-bold">
 							{city[1].question}
 						</span>
 						<span class="response"
 							>{#if city[1].link}
 								{city[1].response}
-								<a href={city[1].link} class="link-btn" aria-label="See related link"
-									><ArrowExpandIcon /> Source</a
+								<a href={city[1].link} class="source-btn" aria-label="See related link"
+									><ArrowExpandIcon />Source</a
 								>
 							{:else}
 								{city[1].response}
@@ -222,15 +222,15 @@
 		{:else}
 			<tr class="additional">
 				<td>
-					<p class="qAndA">
+					<p>
 						<span class="question-bold">
 							{city[1].question}
 						</span>
 						<span class="response"
 							>{#if city[1].link}
 								{city[1].response}
-								<a href={city[1].link} class="link-btn" aria-label="See related link"
-									><ArrowExpandIcon /> Source</a
+								<a href={city[1].link} class="source-btn" aria-label="See related link"
+									><ArrowExpandIcon />Source</a
 								>
 							{:else}
 								{city[1].response}
@@ -248,6 +248,7 @@
 		display: flex;
 		align-items: baseline;
 		gap: 8px;
+		padding: 0.75rem 0.75rem 0;
 	}
 
 	.state-name {
@@ -269,8 +270,20 @@
 		margin-bottom: 0.9rem;
 	}
 
+	.qAndA {
+		padding: 0 0.75rem;
+	}
+
+	.qAndA:last-child {
+		padding-bottom: 0.75rem;
+	}
+
+	.response {
+		display: block;
+	}
+
 	tr.additional {
-		background-color: #eee;
+		background-color: #f1f1f1; /* #eee; */
 		width: 100%;
 		margin-bottom: 0;
 		padding-top: 1rem;
@@ -295,7 +308,7 @@
 
 	.map-container {
 		position: absolute;
-		top: 220px;
+		top: 200px;
 		right: 40px;
 		width: 25%;
 		z-index: 1;
@@ -304,26 +317,20 @@
 	hr {
 		padding-bottom: 0.75rem;
 	}
-
-	.qAndA {
-		display: flex;
-		flex-direction: column;
-	}
-
-	.response {
-		display: flex;
-		flex-direction: column;
-		row-gap: 2px;
-		margin-top: 1px;
-	}
-
-	.link-btn {
-		display: flex;
-		align-items: center;
-		column-gap: 2px;
+	.source-btn {
+		font-family: 'Barlow Condensed', sans-serif;
+		display: inline-block;
 		text-transform: uppercase;
 		text-decoration: none;
-		font-size: 0.8rem;
-		font-weight: 700;
+		font-size: 0.75rem;
+		font-weight: 500;
+		border: 1px solid #96c9f4;
+		padding: 0 6px 1.5px 6px;
+		margin-left: 3px;
+		border-radius: 10px;
+	}
+
+	a.source-btn {
+		color: #0d9aea;
 	}
 </style>
