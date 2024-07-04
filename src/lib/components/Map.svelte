@@ -270,7 +270,7 @@
 <div class="map" bind:this={mapContainer} />
 
 <!-- Toggle filters -->
-<div class="toggle-container">
+<div class="map-filters-container">
 	<MapFilters />
 	<hr style="border-top: 0.5px solid rgba(255, 255, 255, 1);" />
 </div>
@@ -300,17 +300,17 @@
 		z-index: 1;
 	}
 
-	.toggle-container {
+	.map-filters-container {
 		position: absolute;
 		bottom: 100px;
 		right: 10px;
 		display: flex;
 		flex-direction: column;
-		row-gap: 5px;
+		row-gap: 7px;
 	}
 
 	@media screen and (max-device-width: 480px) {
-		.toggle-container {
+		.map-filters-container {
 			bottom: 30px;
 			left: 10px;
 			right: auto;
