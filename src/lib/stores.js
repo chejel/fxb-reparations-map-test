@@ -19,3 +19,4 @@ export let listPanelVisible = writable(false);
 export let citiesPanelVisible = writable(true);
 export let countiesPanelVisible = writable(false)
 export let statesPanelVisible = writable(false);
+export let cardScroll = writable(false); // scroll to top of new card if user scrolled to bottom on previous card and then selected a city on the map

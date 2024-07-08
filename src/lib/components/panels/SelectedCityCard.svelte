@@ -1,6 +1,6 @@
 <script>
 	// Import stores
-	import { reparationsCityData, selectedCity } from '$lib/stores.js';
+	import { reparationsCityData, selectedCity, cardScroll } from '$lib/stores.js';
 
 	// Import components
 	import StateMap from '$lib/components/panels/StateMap.svelte';
@@ -173,6 +173,22 @@
 			}
 		}))
 		.find((city) => city.properties.City === $selectedCity);
+
+	// Scroll to top of card when loading a city
+	// Otherwise, if scrolling to bottom of a card and then loading a new city via selection of city on map, the new card will remain at the same bottom position
+	import { onMount } from 'svelte';
+	let sectionRef;
+	onMount(() => {
+		sectionRef = document.querySelector('.header');
+	});
+
+	function scrollToTop() {
+		if (sectionRef) {
+			sectionRef.scrollIntoView({ behavior: 'smooth' });
+		}
+	}
+
+	$: $cardScroll, scrollToTop();
 </script>
 
 <!-- State icon -->
@@ -189,7 +205,6 @@
 <hr />
 
 <!-- City details -->
-
 <table class="city-info">
 	{#each Object.entries(cityData.properties).filter((city) => city[0] !== 'City' && city[0] !== 'State') as city}
 		{#if city[0] !== 'Funding directed' && city[0] !== 'Other topics' && city[0] !== 'Additional notes'}

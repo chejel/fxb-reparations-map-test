@@ -16,7 +16,8 @@
 		aboutPanelVisible,
 		listPanelVisible,
 		citiesPanelVisible,
-		statesPanelVisible
+		statesPanelVisible,
+		cardScroll
 	} from '$lib/stores.js';
 
 	// Import components
@@ -27,7 +28,6 @@
 
 	// Import transition
 	import { fade } from 'svelte/transition';
-	import SelectedStateCard from './panels/SelectedStateCard.svelte';
 
 	// Set variables
 	let mapContainer;
@@ -47,7 +47,7 @@
 	} else {
 		mapPadding = { left: 0 };
 	}
-
+	$: console.log($cardScroll);
 	mapboxgl.accessToken =
 		'pk.eyJ1IjoiamVuY2hlIiwiYSI6ImNsdDlhNWNtdTBnOXEybW5wMmxxMDRneGMifQ.-aAXBbQZGsiJeZ-zvOXJQA';
 
@@ -57,7 +57,8 @@
 			new mapboxgl.Map({
 				container: mapContainer,
 				accessToken: mapboxgl.accessToken,
-				style: 'mapbox://styles/jenche/clt3p16ui003i01qph9fuhxoq',
+				//style: 'mapbox://styles/jenche/clt3p16ui003i01qph9fuhxoq',
+				style: 'mapbox://styles/fxb-center/cluiiae6003iv01qqb1p0970w',
 				//style: 'mapbox://styles/mapbox/standard',
 				center: [-95.7, 38.1],
 				zoom: 3.75,
@@ -128,6 +129,7 @@
 
 			// Clicking on state polygon brings up card on panel
 			$map.on('click', ['state-fill-layer'], (e) => {
+				$cardScroll ? cardScroll.set(false) : cardScroll.set(true); // if card has been scrolled to bottom, scroll card to top when another location has been selected on the map
 				selectedState.set(e.features[0].properties.name);
 				sidebarVisible = true;
 				$aboutPanelVisible = false;
@@ -219,6 +221,7 @@
 
 			// Get city name from clicking marker/label
 			$map.on('click', ['cities-layer', 'cities-labels'], (e) => {
+				$cardScroll ? cardScroll.set(false) : cardScroll.set(true);
 				selectedCity.set(e.features[0].properties.Location);
 				sidebarVisible = true;
 				$aboutPanelVisible = false;
