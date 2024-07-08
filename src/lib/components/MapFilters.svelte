@@ -71,49 +71,61 @@
 		}
 	];
 
-	//$: console.log(questionToggle ? 'Yes' : 'No');
+	import { slide } from 'svelte/transition';
+	let isOpen = false;
 </script>
 
-{#each data as { name, toggleValue, question }}
-	<div class="single-toggle-container">
-		<!-- Toggle switch based on https://www.w3.org/WAI/ARIA/apg/patterns/switch/examples/switch-checkbox/ -->
-		<label
-			for={toggleValue}
-			class="toggle"
-			aria-label={questionToggle
-				? questionToggle.includes(question)
-					? `Hide cities with ${toggleValue}`
-					: `Show cities with ${toggleValue}`
-				: `Show cities with ${toggleValue}`}
-		>
-			<input
-				type="checkbox"
-				role="switch"
-				id={toggleValue}
-				bind:group={questionToggle}
-				value={question}
-				on:change={() => {
-					if (questionToggle.length) {
-						toggleFilter(questionToggle);
-					} else {
-						resetFilter();
-					}
-				}}
-			/><span class="toggle-state">
-				<span class="toggle-container">
-					<span class="text" aria-hidden="true"
-						>{#if questionToggle?.includes(question)}On
-						{:else}Off{/if}</span
+<!-- accordion -->
+<details bind:open={isOpen}>
+	<summary>Filter cities</summary>
+	{#if isOpen}
+		<div in:slide out:slide>
+			{#each data as { name, toggleValue, question }}
+				<div class="single-toggle-container">
+					<!-- Toggle switch based on https://www.w3.org/WAI/ARIA/apg/patterns/switch/examples/switch-checkbox/ -->
+					<label
+						for={toggleValue}
+						class="toggle"
+						aria-label={questionToggle
+							? questionToggle.includes(question)
+								? `Hide cities with ${toggleValue}`
+								: `Show cities with ${toggleValue}`
+							: `Show cities with ${toggleValue}`}
 					>
-					<span class="switch"></span>
-				</span>
-				<span class="toggle-text">{name}</span>
-			</span></label
-		>
-	</div>
-{/each}
+						<input
+							type="checkbox"
+							role="switch"
+							id={toggleValue}
+							bind:group={questionToggle}
+							value={question}
+							on:change={() => {
+								if (questionToggle.length) {
+									toggleFilter(questionToggle);
+								} else {
+									resetFilter();
+								}
+							}}
+						/><span class="toggle-state">
+							<span class="toggle-container">
+								<span class="text" aria-hidden="true"
+									>{#if questionToggle?.includes(question)}On
+									{:else}Off{/if}</span
+								>
+								<span class="switch"></span>
+							</span>
+							<span class="toggle-text">{name}</span>
+						</span></label
+					>
+				</div>
+			{/each}
+		</div>
+	{/if}
+</details>
 
 <style>
+	.single-toggle-container {
+		padding: 0.1rem 0;
+	}
 	label {
 		/* display: block; */
 		padding: 4px 4px 6px 6px; /* prevents jumping */
@@ -212,5 +224,45 @@
 		-webkit-transform: translateX(12px);
 		-ms-transform: translateX(12px);
 		transform: translateX(12px);
+	} */
+
+	/* accordion */
+	/* accordion styles from https://css-tricks.com/how-to-animate-the-details-element/ */
+	details {
+		box-sizing: border-box;
+		background-color: var(--alice-blue-light);
+		width: 160px;
+	}
+
+	details > summary {
+		padding: 0.5rem;
+		background-color: var(--blue-gray);
+		font-weight: 600;
+		cursor: pointer;
+		font-family: 'Barlow Condensed', sans-serif;
+		font-size: 1rem;
+		text-transform: uppercase;
+	}
+
+	/* space between arrow and text */
+	summary::before {
+		content: '\2008';
+	}
+
+	/* style arrow marker */
+	summary::-webkit-details-marker {
+		color: var(--red);
+	}
+	summary::marker {
+		color: var(--red);
+	}
+	/* 
+	details[open] > summary:before {
+		transform: rotate(90deg);
+	} */
+
+	/* details > .content {
+		font-size: 0.8rem;
+		padding: 0.75rem;
 	} */
 </style>
