@@ -13,10 +13,10 @@
 	// Rename question variables
 	$: stateData = $reparationsStateData
 		?.map((state) => ({
-			State: state.Location,
+			State: state.properties.Location,
 			'Report released': (() => {
 				const question = 'Has the location released a report on reparations?';
-				const response = state[question];
+				const response = state.properties[question];
 				const link = response?.includes('[') ? response.match(/\[(.*?)\]\((.*?)\)/)?.[2] : null;
 
 				return {
@@ -31,7 +31,7 @@
 			})(),
 			'Funding approved': (() => {
 				const question = 'Has the location approved reparations funding?';
-				const response = state[question];
+				const response = state.properties[question];
 				const link = response?.includes('[') ? response.match(/\[(.*?)\]\((.*?)\)/)?.[2] : null;
 
 				return {
@@ -46,7 +46,7 @@
 			})(),
 			'Funding source': (() => {
 				const question = 'What is the potential funding source?';
-				const response = state[question];
+				const response = state.properties[question];
 				const link = response?.includes('[') ? response.match(/\[(.*?)\]\((.*?)\)/)?.[2] : null;
 
 				return {
@@ -61,7 +61,7 @@
 			})(),
 			'Allocation started': (() => {
 				const question = 'Has the location begun allocating reparations?';
-				const response = state[question];
+				const response = state.properties[question];
 				const link = response?.includes('[') ? response.match(/\[(.*?)\]\((.*?)\)/)?.[2] : null;
 
 				return {
@@ -76,7 +76,7 @@
 			})(),
 			'Direct payments': (() => {
 				const question = 'Has the location determined if direct payments will be included?';
-				const response = state[question];
+				const response = state.properties[question];
 				const link = response?.includes('[') ? response.match(/\[(.*?)\]\((.*?)\)/)?.[2] : null;
 
 				return {
@@ -91,7 +91,7 @@
 			})(),
 			'Eligibility determined': (() => {
 				const question = 'Has the location determined who is eligible to receive direct payments?';
-				const response = state[question];
+				const response = state.properties[question];
 				const link = response?.includes('[') ? response.match(/\[(.*?)\]\((.*?)\)/)?.[2] : null;
 
 				return {
@@ -106,7 +106,7 @@
 			})(),
 			'Health addressed': (() => {
 				const question = 'Is any of the funding addressing health?';
-				const response = state[question];
+				const response = state.properties[question];
 				const link = response?.includes('[') ? response.match(/\[(.*?)\]\((.*?)\)/)?.[2] : null;
 
 				return {
@@ -121,7 +121,7 @@
 			})(),
 			'Funding directed': (() => {
 				const question = 'Where is funding directed';
-				const response = state[question];
+				const response = state.properties[question];
 				const link = response?.includes('[') ? response.match(/\[(.*?)\]\((.*?)\)/)?.[2] : null;
 
 				return {
@@ -136,7 +136,7 @@
 			})(),
 			'Other topics': (() => {
 				const question = 'What other topic areas included in the reparation approach?';
-				const response = state[question];
+				const response = state.properties[question];
 				const link = response?.includes('[') ? response.match(/\[(.*?)\]\((.*?)\)/)?.[2] : null;
 
 				return {
@@ -151,7 +151,7 @@
 			})(),
 			'Additional notes': (() => {
 				const question = 'Additional Notes';
-				const response = state[question];
+				const response = state.properties[question];
 				const link = response?.includes('[') ? response.match(/\[(.*?)\]\((.*?)\)/)?.[2] : null;
 
 				return {

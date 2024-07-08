@@ -85,7 +85,7 @@
 
 	.btn-container {
 		display: flex;
-		background-color: rgba(220, 220, 220, 0.75);
+		background-color: rgba(220, 220, 220, 0.65);
 		border-radius: 5px;
 		border: 0.5px solid silver;
 	}
@@ -138,6 +138,5 @@
 		font-size: 0.8rem;
 		margin-left: 0.5rem;
 		border-radius: 50%;
-		font-weight: 400;
 	}
 </style>

@@ -5,7 +5,7 @@
 	// Import components
 	import StateMap from '$lib/components/panels/StateMap.svelte';
 
-	const tableData = $reparationsStateData?.map((d) => d.Location);
+	const tableData = $reparationsStateData?.map((d) => d.properties.Location).sort();
 </script>
 
 <table cellpadding="0" cellspacing="0" border="0">

@@ -5,7 +5,7 @@
 	// Prop for sorting by state toggle
 	export let sortByState;
 
-	// Data for accordion order, sorted based on state of sortByStateVisible
+	// Data for table order, sorted based on state of sortByStateVisible
 	const tableData = $reparationsCityData?.map((feature) => {
 		return {
 			City: feature.properties.Location,
@@ -24,13 +24,6 @@
 		<col style="width: 180px" />
 		<col style="width: auto" />
 	</colgroup>
-	<!-- <thead>
-    <tr>
-        <th scope="col">#</th>
-        <th scope="col">City</th>
-        <th scope="col">State</th>
-    </tr></thead
-> -->
 	<tbody>
 		{#each tableDataSort as { City, State }, index}
 			<tr>

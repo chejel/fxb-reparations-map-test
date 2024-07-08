@@ -72,7 +72,7 @@
 	}
 
 	.selected-city {
-		padding: 0.75rem;
+		/* padding: 0.75rem; */
 		margin-top: 0.25rem;
 	}
 

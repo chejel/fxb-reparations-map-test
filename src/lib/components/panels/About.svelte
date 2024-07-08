@@ -12,12 +12,7 @@
 
 <!-- Intro text -->
 <section class="introduction">
-	<p>
-		Viverra aliquet eget sit amet tellus cras adipiscing. Nullam ac tortor vitae purus. Mauris
-		rhoncus aenean vel elit. Et tortor consequat id porta nibh venenatis. Et magnis dis parturient
-		montes nascetur ridiculus mus. Dictumst quisque sagittis purus sit. Eget arcu dictum varius
-		duis.
-	</p>
+	<p>Zoom in or double click on the map to see any city names that do not initially appear.</p>
 	<div class="legend-container">
 		<div>
 			<span style="font-weight: 600; text-transform: uppercase;">Map legend</span> of reparation efforts

@@ -65,11 +65,10 @@
 
 		// ...filtered to state data
 		reparationsStateData.set(
-			$reparationsData?.features
-				.filter((feature) => {
-					return feature.properties.Geography === 'State';
-				})
-				.map((d) => d.properties)
+			$reparationsData?.features.filter((feature) => {
+				return feature.properties.Geography === 'State';
+			})
+			//.map((d) => d.properties)
 		);
 
 		// Map data for all states
@@ -79,7 +78,7 @@
 		statePolygons.set({
 			type: 'FeatureCollection',
 			features: $statesMap?.features.filter((d) =>
-				$reparationsStateData.some((e) => d.properties['name'] === e.Location)
+				$reparationsStateData.some((e) => d.properties['name'] === e.properties.Location)
 			)
 		});
 	});
