@@ -3,7 +3,7 @@
 </script>
 
 <label for="state-toggle" class="toggle">
-	<input type="checkbox" id="state-toggle" bind:checked />
+	<input type="checkbox" id="state-toggle" bind:checked role="switch" />
 	<span class="switch"></span>
 </label>
 <span class="toggle-text">Sort by State</span>
@@ -58,7 +58,7 @@
 	}
 
 	input:checked + .switch {
-		background-color: var(--red);
+		background-color: var(--green);
 	}
 
 	input:checked + .switch:before {
