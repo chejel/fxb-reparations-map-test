@@ -79,19 +79,11 @@
 <details bind:open={isOpen}>
 	<summary>Filter cities</summary>
 	{#if isOpen}
-		<div in:slide out:slide>
+		<div class="content" in:slide out:slide>
 			{#each data as { name, toggleValue, question }}
-				<div class="single-toggle-container">
+				<div class="single-toggle-switch">
 					<!-- Toggle switch based on https://www.w3.org/WAI/ARIA/apg/patterns/switch/examples/switch-checkbox/ -->
-					<label
-						for={toggleValue}
-						class="toggle"
-						aria-label={questionToggle
-							? questionToggle.includes(question)
-								? `Hide cities with ${toggleValue}`
-								: `Show cities with ${toggleValue}`
-							: `Show cities with ${toggleValue}`}
-					>
+					<label for={toggleValue} class="toggle">
 						<input
 							type="checkbox"
 							role="switch"
@@ -105,8 +97,8 @@
 									resetFilter();
 								}
 							}}
-						/><span class="toggle-state">
-							<span class="toggle-container">
+						/><span class="toggle-text-container">
+							<span class="toggle-switch">
 								<span class="text" aria-hidden="true"
 									>{#if questionToggle?.includes(question)}On
 									{:else}Off{/if}</span
@@ -123,16 +115,14 @@
 </details>
 
 <style>
-	.single-toggle-container {
-		padding: 0.1rem 0;
+	.single-toggle-switch {
+		padding: 2.25px 0;
 	}
+
 	label {
-		/* display: block; */
-		padding: 4px 4px 6px 6px; /* prevents jumping */
+		padding: 0 6px; /* prevents jumping */
 		border: 0 solid rgba(71, 147, 175, 0.75);
-		/* border-radius: 5px; */
 		cursor: pointer;
-		/* font-family: 'Roboto Condensed', 'sans-serif;'; */
 		font-family: 'Barlow Condensed', sans-serif;
 	}
 
@@ -148,11 +138,6 @@
 		font-size: 0.8rem;
 		font-weight: 500;
 	}
-	/* .toggle-state {
-		display: flex;
-		align-items: center;
-		column-gap: 4px;
-	} */
 
 	/* checkbox */
 	input[role='switch'] {
@@ -160,27 +145,28 @@
 		height: 0;
 	}
 
-	/* toggle-container */
-	label input[role='switch'] ~ .toggle-state > .toggle-container {
+	/* toggle-switch */
+	label input[role='switch'] ~ .toggle-text-container > .toggle-switch {
 		position: relative;
-		top: 0px;
+		top: 1px;
 		display: inline-block;
-		border: 0.75px solid #333;
+		border: 1.25px solid white;
 		background-color: #dbdada;
 		width: 40px;
-		height: 21px;
+		height: 20px;
 		border-radius: 10px;
 	}
 
-	/* toggle-container when switch checked */
-	label input[role='switch']:checked ~ .toggle-state > .toggle-container {
-		background-color: var(--yellow);
+	/* toggle-switch when switch checked */
+	label input[role='switch']:checked ~ .toggle-text-container > .toggle-switch {
+		background-color: #333;
+		opacity: 0.75;
 	}
 
 	/* switch */
-	label input[role='switch'] ~ .toggle-state > .toggle-container > .switch {
+	label input[role='switch'] ~ .toggle-text-container > .toggle-switch > .switch {
 		position: relative;
-		top: 2.5px;
+		top: 1.5px;
 		left: 2px;
 		display: inline-block;
 		border: 0.75px solid #333;
@@ -192,45 +178,51 @@
 		transition: 0.4s;
 	}
 
+	@media screen and (max-device-width: 480px) {
+		label input[role='switch'] ~ .toggle-text-container > .toggle-switch {
+			width: 42px;
+			height: 24px;
+			border-radius: 20px;
+		}
+
+		label input[role='switch'] ~ .toggle-text-container > .toggle-switch > .switch {
+			top: 2.5px;
+			width: 17px;
+			height: 17px;
+		}
+	}
+
 	/* switch checked, circle shifts */
-	label input[role='switch']:checked ~ .toggle-state > .toggle-container > .switch {
-		left: 22px;
+	label input[role='switch']:checked ~ .toggle-text-container > .toggle-switch > .switch {
+		left: 20px;
 	}
 
 	/* switch's on/off label */
-	label input[role='switch'] ~ .toggle-state > .toggle-container > .text {
+	label input[role='switch'] ~ .toggle-text-container > .toggle-switch > .text {
 		font-size: 0.7rem;
 		text-transform: uppercase;
 		position: absolute;
-		top: 3px;
-		/* left: auto;
-		right: 3px; */
+		top: 2px;
 	}
 
 	/* switch on/off label when not checked/off */
-	label input[role='switch'] ~ .toggle-state > .toggle-container > .text {
+	label input[role='switch'] ~ .toggle-text-container > .toggle-switch > .text {
 		left: auto;
-		right: 3px;
+		right: 4px;
 	}
 
 	/* switch on/off label when checked/on */
-	label input[role='switch']:checked ~ .toggle-state > .toggle-container > .text {
+	label input[role='switch']:checked ~ .toggle-text-container > .toggle-switch > .text {
 		left: 5px;
 		right: auto;
-		color: var(--white);
+		color: white;
 	}
 
-	/* input:checked + .switch:before {
-		-webkit-transform: translateX(12px);
-		-ms-transform: translateX(12px);
-		transform: translateX(12px);
-	} */
-
-	/* accordion */
 	/* accordion styles from https://css-tricks.com/how-to-animate-the-details-element/ */
 	details {
 		box-sizing: border-box;
-		background-color: var(--alice-blue-light);
+		background-color: rgba(255, 255, 255, 0.25);
+		border-radius: 3px;
 		width: 160px;
 	}
 
@@ -261,8 +253,7 @@
 		transform: rotate(90deg);
 	} */
 
-	/* details > .content {
-		font-size: 0.8rem;
-		padding: 0.75rem;
-	} */
+	details > .content {
+		padding-bottom: 0.5rem;
+	}
 </style>
