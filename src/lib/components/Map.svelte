@@ -47,7 +47,7 @@
 	} else {
 		mapPadding = { left: 0 };
 	}
-	$: console.log($cardScroll);
+
 	mapboxgl.accessToken =
 		'pk.eyJ1IjoiamVuY2hlIiwiYSI6ImNsdDlhNWNtdTBnOXEybW5wMmxxMDRneGMifQ.-aAXBbQZGsiJeZ-zvOXJQA';
 
@@ -94,7 +94,7 @@
 			});
 
 			///////////////////////////
-			// POLYGONS
+			// POLYGONS for states
 			///////////////////////////
 
 			// Add state polygons
@@ -103,19 +103,19 @@
 				data: $statePolygons
 			});
 
-			// Add border for county polygons
+			// Add border for state polygons
 			$map.addLayer({
 				id: 'state-layer',
 				type: 'line',
 				source: 'states',
 				layout: {},
 				paint: {
-					'line-color': 'rgb(120, 148, 97)',
-					'line-width': 1
+					'line-color': '#2b4518',
+					'line-width': 0.85
 				}
 			});
 
-			// Add fill color for individual states
+			// Add fill color for individual states with reparation efforts
 			$map.addLayer({
 				id: 'state-fill-layer',
 				type: 'fill',
@@ -160,6 +160,10 @@
 					sidebarVisible = false;
 				}
 			});
+
+			///////////////////////////
+			// POINTS for cities
+			///////////////////////////
 
 			// Add markers for cities
 			$map.addSource('cities', {
