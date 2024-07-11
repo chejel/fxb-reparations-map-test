@@ -8,7 +8,7 @@
 	// Import icon components
 	import XIcon from '$lib/components/icons/X.svelte';
 	import CheckIcon from '$lib/components/icons/Check.svelte';
-	import ArrowExpandIcon from '$lib/components/icons/ArrowExpand.svelte';
+	import LinkIcon from '$lib/components/icons/Link.svelte';
 
 	// Rename question variables
 	$: cityData = $reparationsCityData
@@ -225,7 +225,7 @@
 							>{#if city[1].link}
 								{city[1].response}
 								<a href={city[1].link} class="source-btn" aria-label="See related link"
-									><ArrowExpandIcon />Source</a
+									><LinkIcon />Source</a
 								>
 							{:else}
 								{city[1].response}
@@ -245,7 +245,7 @@
 							>{#if city[1].link}
 								{city[1].response}
 								<a href={city[1].link} class="source-btn" aria-label="See related link"
-									><ArrowExpandIcon />Source</a
+									><LinkIcon />Source</a
 								>
 							{:else}
 								{city[1].response}
@@ -298,7 +298,7 @@
 	}
 
 	tr.additional {
-		background-color: #f1f1f1; /* #eee; */
+		background-color: #fff1f1; /* #fdf3f4; /* #f1f1f1; */
 		width: 100%;
 		margin-bottom: 0;
 		padding-top: 1rem;
@@ -331,21 +331,5 @@
 
 	hr {
 		padding-bottom: 0.75rem;
-	}
-	.source-btn {
-		font-family: 'Barlow Condensed', sans-serif;
-		display: inline-block;
-		text-transform: uppercase;
-		text-decoration: none;
-		font-size: 0.75rem;
-		font-weight: 500;
-		border: 1px solid #96c9f4;
-		padding: 0 6px 1.5px 6px;
-		margin-left: 3px;
-		border-radius: 10px;
-	}
-
-	a.source-btn {
-		color: #0d9aea;
 	}
 </style>
