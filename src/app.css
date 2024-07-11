@@ -190,3 +190,21 @@ img {
   margin-top: 1rem;
   overflow: auto;
 }
+
+/* source button on cards */
+.source-btn {
+  font-family: 'Barlow Condensed', sans-serif;
+  display: inline-block;
+  text-transform: uppercase;
+  text-decoration: none;
+  font-size: 0.75rem;
+  font-weight: 500;
+  border: 1px solid #96c9f4;
+  padding: 0 6px 1.5px 6px;
+  margin-left: 3px;
+  border-radius: 10px;
+}
+
+a.source-btn {
+  color: #0d9aea;
+}
