@@ -8,9 +8,9 @@
 	// Import icon components
 	import XIcon from '$lib/components/icons/X.svelte';
 	import CheckIcon from '$lib/components/icons/Check.svelte';
-	import ArrowExpandIcon from '$lib/components/icons/ArrowExpand.svelte';
+	import LinkIcon from '$lib/components/icons/Link.svelte';
 
-	// Rename question variables
+	// Rename question variables and parse out text and link (if applicable), and set response to null if no response value
 	$: stateData = $reparationsStateData
 		?.map((state) => ({
 			State: state.properties.Location,
@@ -24,7 +24,9 @@
 					response: response
 						? response?.includes('[')
 							? response.match(/\[(.*?)\]\((.*?)\)/)?.[1]
-							: response
+							: response === '\n' // Check for response of "\n" and set it to null if true
+								? null
+								: response
 						: null,
 					link: link
 				};
@@ -39,7 +41,9 @@
 					response: response
 						? response?.includes('[')
 							? response.match(/\[(.*?)\]\((.*?)\)/)?.[1]
-							: response
+							: response === '\n'
+								? null
+								: response
 						: null,
 					link: link
 				};
@@ -54,7 +58,9 @@
 					response: response
 						? response?.includes('[')
 							? response.match(/\[(.*?)\]\((.*?)\)/)?.[1]
-							: response
+							: response === '\n'
+								? null
+								: response
 						: null,
 					link: link
 				};
@@ -69,7 +75,9 @@
 					response: response
 						? response?.includes('[')
 							? response.match(/\[(.*?)\]\((.*?)\)/)?.[1]
-							: response
+							: response === '\n'
+								? null
+								: response
 						: null,
 					link: link
 				};
@@ -84,7 +92,9 @@
 					response: response
 						? response?.includes('[')
 							? response.match(/\[(.*?)\]\((.*?)\)/)?.[1]
-							: response
+							: response === '\n'
+								? null
+								: response
 						: null,
 					link: link
 				};
@@ -99,7 +109,9 @@
 					response: response
 						? response?.includes('[')
 							? response.match(/\[(.*?)\]\((.*?)\)/)?.[1]
-							: response
+							: response === '\n'
+								? null
+								: response
 						: null,
 					link: link
 				};
@@ -114,7 +126,9 @@
 					response: response
 						? response?.includes('[')
 							? response.match(/\[(.*?)\]\((.*?)\)/)?.[1]
-							: response
+							: response === '\n'
+								? null
+								: response
 						: null,
 					link: link
 				};
@@ -129,7 +143,9 @@
 					response: response
 						? response?.includes('[')
 							? response.match(/\[(.*?)\]\((.*?)\)/)?.[1]
-							: response
+							: response === '\n'
+								? null
+								: response
 						: null,
 					link: link
 				};
@@ -144,7 +160,9 @@
 					response: response
 						? response?.includes('[')
 							? response.match(/\[(.*?)\]\((.*?)\)/)?.[1]
-							: response
+							: response === '\n'
+								? null
+								: response
 						: null,
 					link: link
 				};
@@ -159,7 +177,9 @@
 					response: response
 						? response?.includes('[')
 							? response.match(/\[(.*?)\]\((.*?)\)/)?.[1]
-							: response
+							: response === '\n'
+								? null
+								: response
 						: null,
 					link: link
 				};
@@ -186,7 +206,7 @@
 	{#each Object.entries(stateData).filter((state) => state[0] !== 'State') as state}
 		{#if state[1]?.response !== null}
 			{#if state[0] !== 'Funding directed' && state[0] !== 'Other topics' && state[0] !== 'Additional notes'}
-				<tr>
+				<tr class="qAndA">
 					<td>
 						{#if state[1].response?.includes('No')}
 							<XIcon />
@@ -195,15 +215,15 @@
 						{/if}</td
 					>
 					<td
-						><p class="qAndA">
+						><p>
 							<span class="question-bold">
 								{state[1].question}
 							</span>
 							<span class="response"
 								>{#if state[1].link}
 									{state[1].response}
-									<a href={state[1].link} class="link-btn" aria-label="See related link"
-										><ArrowExpandIcon /> Source</a
+									<a href={state[1].link} class="source-btn" aria-label="See related link"
+										><LinkIcon /> Source</a
 									>
 								{:else}
 									{state[1].response}
@@ -215,15 +235,15 @@
 			{:else}
 				<tr class="additional">
 					<td>
-						<p class="qAndA">
+						<p>
 							<span class="question-bold">
 								{state[1].question}
 							</span>
 							<span class="response"
 								>{#if state[1].link}
 									{state[1].response}
-									<a href={state[1].link} class="link-btn" aria-label="See related link"
-										><ArrowExpandIcon /> Source</a
+									<a href={state[1].link} class="source-btn" aria-label="See related link"
+										><LinkIcon /> Source</a
 									>
 								{:else}
 									{state[1].response}
@@ -242,6 +262,7 @@
 		display: flex;
 		align-items: baseline;
 		gap: 8px;
+		padding: 0.75rem 0.75rem 0;
 	}
 
 	/* .state-name {
@@ -270,7 +291,7 @@
 	}
 
 	tr.additional {
-		background-color: #eee;
+		background-color: #f4f9ec; /* #f1fafe; */
 		width: 100%;
 		margin-bottom: 0;
 		padding-top: 1rem;
@@ -306,24 +327,14 @@
 	}
 
 	.qAndA {
-		display: flex;
-		flex-direction: column;
+		padding: 0 0.75rem;
+	}
+
+	.qAndA:last-child {
+		padding-bottom: 0.75rem;
 	}
 
 	.response {
-		display: flex;
-		flex-direction: column;
-		row-gap: 2px;
-		margin-top: 1px;
-	}
-
-	.link-btn {
-		display: flex;
-		align-items: center;
-		column-gap: 2px;
-		text-transform: uppercase;
-		text-decoration: none;
-		font-size: 0.8rem;
-		font-weight: 700;
+		display: block;
 	}
 </style>
