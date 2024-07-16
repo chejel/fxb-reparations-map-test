@@ -57,10 +57,9 @@
 	.legend-container {
 		margin-top: 10px;
 		font-size: 0.85rem;
-
 		font-family: 'Barlow Condensed', sans-serif;
-
-		color: var(--gray);
+		/* color: var(--gray); */
+		background-color: rgba(255, 255, 255, 0.75);
 		display: flex;
 		justify-content: space-between;
 		border: 1px solid silver;

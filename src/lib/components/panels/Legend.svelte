@@ -13,7 +13,7 @@
 				height="12"
 				x="2"
 				y="2"
-				stroke="var(--green)"
+				stroke="#2b4518"
 				stroke-width="1"
 				fill="rgba(120, 148, 97, 0.15)"
 			/>

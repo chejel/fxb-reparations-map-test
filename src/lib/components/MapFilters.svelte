@@ -228,7 +228,7 @@
 
 	details > summary {
 		padding: 0.5rem;
-		background-color: var(--blue-gray);
+		background-color: rgba(238, 238, 238, 0.5);
 		font-weight: 600;
 		cursor: pointer;
 		font-family: 'Barlow Condensed', sans-serif;
@@ -254,6 +254,6 @@
 	} */
 
 	details > .content {
-		padding-bottom: 0.5rem;
+		padding: 0.5rem 0;
 	}
 </style>
