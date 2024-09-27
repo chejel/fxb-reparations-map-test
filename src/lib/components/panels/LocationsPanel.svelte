@@ -1,14 +1,19 @@
 <script>
 	// Import components
-	import CitiesTable from '$lib/components/panels/CitiesTable.svelte';
-	import SelectedCityCard from '$lib/components/panels/SelectedCityCard.svelte';
+	import LocationsTable from '$lib/components/panels/LocationsTable.svelte';
+	import SelectedLocationCard from '$lib/components/panels/SelectedLocationCard.svelte';
 	import StateSortToggle from '$lib/components/panels/StateSortToggle.svelte';
 
 	// Import icon components
 	import ArrowLeft from '$lib/components/icons/ArrowLeft.svelte';
 
 	// Import stores
-	import { reparationsCityData, selectedCity } from '$lib/stores.js';
+	import {
+		citiesPanelVisible,
+		selectedLocation,
+		reparationsCityData,
+		reparationsCountyData
+	} from '$lib/stores.js';
 
 	// Import transition
 	import { fade } from 'svelte/transition';
@@ -17,27 +22,30 @@
 	let sortByState = false;
 </script>
 
-{#if $reparationsCityData}
-	<!-- Table of matching city names, state -->
-	{#if !$selectedCity}
-		<p>Select a city for information about their reparation efforts.</p>
+{#if $reparationsCityData && $reparationsCountyData}
+	<!-- Table of matching county names, state -->
+	{#if !$selectedLocation}
+		<p>
+			Select a {$citiesPanelVisible ? 'city' : 'county'} for information about its reparations efforts.
+		</p>
 
 		<!-- Sort by state toggle -->
 		<div class="state-toggle-container">
 			<StateSortToggle bind:checked={sortByState} />
 		</div>
 
-		<section class="card cities-table" in:fade>
-			<CitiesTable {sortByState} />
+		<section class="card locations-table" in:fade>
+			<LocationsTable {sortByState} />
 		</section>
 	{:else}
 		<section class="back-arrow">
-			<button on:click={() => ($selectedCity = undefined)} class="back-button">
-				<ArrowLeft /> <span class="back-text">List of cities</span>
+			<button on:click={() => ($selectedLocation = undefined)} class="back-button">
+				<ArrowLeft />
+				<span class="back-text">List of {$citiesPanelVisible ? 'cities' : 'counties'}</span>
 			</button>
 		</section>
-		<section class="card selected-city" in:fade>
-			<SelectedCityCard />
+		<section class="card selected-location" in:fade>
+			<SelectedLocationCard />
 		</section>
 	{/if}
 {/if}
@@ -49,7 +57,7 @@
 		text-align: right;
 	}
 
-	.cities-table {
+	.locations-table {
 		display: flex;
 		flex-direction: column;
 		align-items: flex-start;
@@ -71,8 +79,7 @@
 		font-weight: 600;
 	}
 
-	.selected-city {
-		/* padding: 0.75rem; */
+	.selected-location {
 		margin-top: 0.25rem;
 	}
 

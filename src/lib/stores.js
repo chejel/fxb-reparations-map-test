@@ -13,8 +13,7 @@ export let reparationsCountyData = writable();
 export let reparationsStateData = writable();
 
 // Variables that will trigger sidebar to open
-export let selectedCity = writable(); // City selected
-export let selectedCounty = writable(); // County selected
+export let selectedLocation = writable(); // Object containing selected city/county and state name
 export let selectedState = writable(); // State selected
 
 // Panels

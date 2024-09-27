@@ -1,6 +1,11 @@
 <script>
 	// Import stores
-	import { reparationsCityData, selectedCity, cardScroll } from '$lib/stores.js';
+	import {
+		selectedLocation,
+		reparationsCityData,
+		reparationsCountyData,
+		cardScroll
+	} from '$lib/stores.js';
 
 	// Import components
 	import StateMap from '$lib/components/panels/StateMap.svelte';
@@ -11,17 +16,25 @@
 	import LinkIcon from '$lib/components/icons/Link.svelte';
 
 	// Rename question variables
-	$: cityData = $reparationsCityData
-		?.map((city) => ({
-			...city,
+
+	let data;
+	$: if ($selectedLocation.Geography === 'City') {
+		data = $reparationsCityData;
+	} else if ($selectedLocation.Geography === 'County') {
+		data = $reparationsCountyData;
+	}
+	$: locationData = data
+		?.map((location) => ({
+			...location,
 			properties: {
-				City: city.properties.Location,
-				State: city.properties.State,
+				Location: location.properties.Location,
+				Geography: location.properties.Geography,
+				State: location.properties.State,
 				'Report released': (() => {
 					// if the field for the question is linked, the string appears in Markdown format ([text](link)) so code below extracts the text and link
 					// and if the field has no value, the response is null
 					const question = 'Has the location released a report on reparations?';
-					const response = city.properties[question];
+					const response = location.properties[question];
 					const link = response?.includes('[') ? response.match(/\[(.*?)\]\((.*?)\)/)?.[2] : null;
 
 					return {
@@ -36,7 +49,7 @@
 				})(),
 				'Funding approved': (() => {
 					const question = 'Has the location approved reparations funding?';
-					const response = city.properties[question];
+					const response = location.properties[question];
 					const link = response?.includes('[') ? response.match(/\[(.*?)\]\((.*?)\)/)?.[2] : null;
 
 					return {
@@ -51,7 +64,7 @@
 				})(),
 				'Funding source': (() => {
 					const question = 'What is the potential funding source?';
-					const response = city.properties[question];
+					const response = location.properties[question];
 					const link = response?.includes('[') ? response.match(/\[(.*?)\]\((.*?)\)/)?.[2] : null;
 
 					return {
@@ -66,7 +79,7 @@
 				})(),
 				'Allocation started': (() => {
 					const question = 'Has the location begun allocating reparations?';
-					const response = city.properties[question];
+					const response = location.properties[question];
 					const link = response?.includes('[') ? response.match(/\[(.*?)\]\((.*?)\)/)?.[2] : null;
 
 					return {
@@ -81,7 +94,7 @@
 				})(),
 				'Direct payments': (() => {
 					const question = 'Has the location determined if direct payments will be included?';
-					const response = city.properties[question];
+					const response = location.properties[question];
 					const link = response?.includes('[') ? response.match(/\[(.*?)\]\((.*?)\)/)?.[2] : null;
 
 					return {
@@ -97,7 +110,7 @@
 				'Eligibility determined': (() => {
 					const question =
 						'Has the location determined who is eligible to receive direct payments?';
-					const response = city.properties[question];
+					const response = location.properties[question];
 					const link = response?.includes('[') ? response.match(/\[(.*?)\]\((.*?)\)/)?.[2] : null;
 
 					return {
@@ -112,7 +125,7 @@
 				})(),
 				'Health addressed': (() => {
 					const question = 'Is any of the funding addressing health?';
-					const response = city.properties[question];
+					const response = location.properties[question];
 					const link = response?.includes('[') ? response.match(/\[(.*?)\]\((.*?)\)/)?.[2] : null;
 
 					return {
@@ -127,7 +140,7 @@
 				})(),
 				'Funding directed': (() => {
 					const question = 'Where is funding directed?';
-					const response = city.properties[question];
+					const response = location.properties[question];
 					const link = response?.includes('[') ? response.match(/\[(.*?)\]\((.*?)\)/)?.[2] : null;
 
 					return {
@@ -142,7 +155,7 @@
 				})(),
 				'Other topics': (() => {
 					const question = 'What other topic areas included in the reparation approach?';
-					const response = city.properties[question];
+					const response = location.properties[question];
 					const link = response?.includes('[') ? response.match(/\[(.*?)\]\((.*?)\)/)?.[2] : null;
 
 					return {
@@ -157,7 +170,7 @@
 				})(),
 				'Additional notes': (() => {
 					const question = 'Additional Notes';
-					const response = city.properties[question];
+					const response = location.properties[question];
 					const link = response?.includes('[') ? response.match(/\[(.*?)\]\((.*?)\)/)?.[2] : null;
 
 					return {
@@ -172,7 +185,11 @@
 				})()
 			}
 		}))
-		.find((city) => city.properties.City === $selectedCity);
+		.find(
+			(location) =>
+				location.properties.Location === $selectedLocation.Location &&
+				location.properties.State === $selectedLocation.State
+		);
 
 	// Scroll to top of card when loading a city
 	// Otherwise, if scrolling to bottom of a card and then loading a new city via selection of city on map, the new card will remain at the same bottom position
@@ -193,24 +210,27 @@
 
 <!-- State icon -->
 <div class="map-container">
-	<StateMap cityCoords={cityData} />
+	<StateMap {locationData} locationType={$selectedLocation.Geography} />
 </div>
 
 <!-- State name -->
 <div class="header">
-	<h2>{cityData.properties.City.split(',', 1)}</h2>
-	<span class="state-name">{cityData.properties.State}</span>
+	<h2>
+		{locationData.properties.Location}
+		{locationData.properties.Geography === 'County' ? 'County' : ''}
+	</h2>
+	<span class="state-name">{locationData.properties.State}</span>
 </div>
 
 <hr />
 
 <!-- City details -->
 <table class="city-info">
-	{#each Object.entries(cityData.properties).filter((city) => city[0] !== 'City' && city[0] !== 'State') as city}
-		{#if city[0] !== 'Funding directed' && city[0] !== 'Other topics' && city[0] !== 'Additional notes'}
+	{#each Object.entries(locationData.properties).filter((location) => location[0] !== 'Location' && location[0] !== 'Geography' && location[0] !== 'State') as location}
+		{#if location[0] !== 'Funding directed' && location[0] !== 'Other topics' && location[0] !== 'Additional notes'}
 			<tr class="qAndA">
 				<td>
-					{#if city[1].response?.includes('No')}
+					{#if location[1].response?.includes('No')}
 						<XIcon />
 					{:else}
 						<CheckIcon />
@@ -219,16 +239,16 @@
 				<td
 					><p>
 						<span class="question-bold">
-							{city[1].question}
+							{location[1].question}
 						</span>
 						<span class="response"
-							>{#if city[1].link}
-								{city[1].response}
-								<a href={city[1].link} class="source-btn" aria-label="See related link"
+							>{#if location[1].link}
+								{location[1].response}
+								<a href={location[1].link} class="source-btn" aria-label="See related link"
 									><LinkIcon />Source</a
 								>
 							{:else}
-								{city[1].response}
+								{location[1].response}
 							{/if}
 						</span>
 					</p></td
@@ -239,16 +259,16 @@
 				<td>
 					<p>
 						<span class="question-bold">
-							{city[1].question}
+							{location[1].question}
 						</span>
 						<span class="response"
-							>{#if city[1].link}
-								{city[1].response}
-								<a href={city[1].link} class="source-btn" aria-label="See related link"
+							>{#if location[1].link}
+								{location[1].response}
+								<a href={location[1].link} class="source-btn" aria-label="See related link"
 									><LinkIcon />Source</a
 								>
 							{:else}
-								{city[1].response}
+								{location[1].response}
 							{/if}
 						</span>
 					</p>
@@ -277,8 +297,6 @@
 	.city-info {
 		display: flex;
 		flex-direction: column;
-		/* column-gap: 5px; */
-		/* margin-bottom: 0.5rem; */
 	}
 
 	.city-info > tr {
@@ -298,7 +316,7 @@
 	}
 
 	tr.additional {
-		background-color: #fff1f1; /* #fdf3f4; /* #f1f1f1; */
+		background-color: #faf3f3; /* #fff1f1; /* #fdf3f4; /* #f1f1f1; */
 		width: 100%;
 		margin-bottom: 0;
 		padding-top: 1rem;

@@ -1,20 +1,28 @@
 <script>
 	// Import stores
-	import { reparationsCityData, selectedCity } from '$lib/stores.js';
+	import {
+		reparationsCityData,
+		citiesPanelVisible,
+		reparationsCountyData,
+		selectedLocation
+	} from '$lib/stores.js';
 
 	// Prop for sorting by state toggle
 	export let sortByState;
 
 	// Data for table order, sorted based on state of sortByStateVisible
-	const tableData = $reparationsCityData?.map((feature) => {
-		return {
-			City: feature.properties.Location,
-			State: feature.properties.State
-		};
-	});
+	$: tableData = ($citiesPanelVisible ? $reparationsCityData : $reparationsCountyData)?.map(
+		(feature) => {
+			return {
+				Location: feature.properties.Location,
+				Geography: feature.properties.Geography,
+				State: feature.properties.State
+			};
+		}
+	);
 
 	$: tableDataSort = !sortByState
-		? tableData.sort((a, b) => a['City'].localeCompare(b['City']))
+		? tableData.sort((a, b) => a['Location'].localeCompare(b['Location']))
 		: tableData.sort((a, b) => a['State'].localeCompare(b['State']));
 </script>
 
@@ -25,16 +33,19 @@
 		<col style="width: auto" />
 	</colgroup>
 	<tbody>
-		{#each tableDataSort as { City, State }, index}
+		{#each tableDataSort as { Location, Geography, State }, index}
 			<tr>
 				<td class="index">{index + 1}</td>
 				<td class="city">
 					<button
-						class:active={$selectedCity === City}
+						class:active={$selectedLocation}
 						on:click={() => {
-							$selectedCity = City;
-						}}>{City.split(',', 1)}</button
+							selectedLocation.set({ Location, Geography, State });
+						}}
 					>
+						{Location}
+						<!-- Location.split(',', 1) for "Amherst, MA" -->
+					</button>
 				</td><td class="state">{State}</td>
 			</tr>
 		{/each}

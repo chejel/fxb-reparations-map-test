@@ -9,13 +9,15 @@
 	// Stores
 	import {
 		map,
+		countyPolygons,
 		statePolygons,
 		reparationsCityData,
-		selectedCity,
+		selectedLocation,
 		selectedState,
 		aboutPanelVisible,
 		listPanelVisible,
 		citiesPanelVisible,
+		countiesPanelVisible,
 		statesPanelVisible,
 		cardScroll
 	} from '$lib/stores.js';
@@ -63,7 +65,7 @@
 				center: [-95.7, 38.1],
 				zoom: 3.75,
 				// minZoom: 3.75, // adds bounce when resetting map
-				maxZoom: 10,
+				maxZoom: 6,
 				maxBounds: [
 					[-190, 10], // SW corner
 					[-40, 72.5] // NE corner
@@ -103,18 +105,6 @@
 				data: $statePolygons
 			});
 
-			// Add border for state polygons
-			$map.addLayer({
-				id: 'state-layer',
-				type: 'line',
-				source: 'states',
-				layout: {},
-				paint: {
-					'line-color': '#2b4518',
-					'line-width': 0.85
-				}
-			});
-
 			// Add fill color for individual states with reparation efforts
 			$map.addLayer({
 				id: 'state-fill-layer',
@@ -127,6 +117,18 @@
 				}
 			});
 
+			// Add border for state polygons
+			$map.addLayer({
+				id: 'state-layer',
+				type: 'line',
+				source: 'states',
+				layout: {},
+				paint: {
+					'line-color': '#2b4518',
+					'line-width': 0.85
+				}
+			});
+
 			// Clicking on state polygon brings up card on panel
 			$map.on('click', ['state-fill-layer'], (e) => {
 				$cardScroll ? cardScroll.set(false) : cardScroll.set(true); // if card has been scrolled to bottom, scroll card to top when another location has been selected on the map
@@ -135,6 +137,7 @@
 				$aboutPanelVisible = false;
 				$listPanelVisible = true;
 				$citiesPanelVisible = false;
+				$countiesPanelVisible = false;
 				$statesPanelVisible = true;
 			});
 
@@ -148,17 +151,93 @@
 				$map.getCanvas().style.cursor = '';
 			});
 
-			// Shift map based on state of sidebar
-			$map.easeTo({
-				padding: mapPadding,
-				duration: 1000
+			///////////////////////////
+			// POLYGONS for counties
+			///////////////////////////
+
+			// Add county polygons
+			$map.addSource('counties', {
+				type: 'geojson',
+				data: $countyPolygons
 			});
 
-			// Hide sidebar on mobile if map touched
-			$map.on('click', () => {
-				if (window.matchMedia('(max-width: 480px)').matches && sidebarVisible) {
-					sidebarVisible = false;
+			// Add fill color for counties with reparation efforts
+			$map.addLayer({
+				id: 'county-fill-layer',
+				type: 'fill',
+				source: 'counties',
+				layout: {},
+				paint: {
+					//'fill-color': 'rgb(120, 148, 97)',
+					'fill-color': '#2b4518',
+					'fill-opacity': 0.8
 				}
+			});
+
+			// Add border for county polygons
+			$map.addLayer({
+				id: 'county-layer',
+				type: 'line',
+				source: 'counties',
+				layout: {},
+				paint: {
+					//'line-color': '#2b4518',
+					'line-color': 'white', // '#789461',
+					'line-width': 0.65
+				}
+			});
+
+			// Clicking on county polygon brings up card on panel
+			$map.on('click', ['county-fill-layer'], (e) => {
+				$cardScroll ? cardScroll.set(false) : cardScroll.set(true); // if card has been scrolled to bottom, scroll card to top when another location has been selected on the map
+				selectedLocation.set({
+					Location: e.features[0].properties.name,
+					Geography: 'County',
+					State: e.features[0].properties.state
+				});
+				sidebarVisible = true;
+				$aboutPanelVisible = false;
+				$listPanelVisible = true;
+				$citiesPanelVisible = false;
+				$countiesPanelVisible = true;
+				$statesPanelVisible = false;
+			});
+
+			// Add county labels
+			$map.addLayer({
+				id: 'county-labels',
+				type: 'symbol',
+				source: 'counties',
+				layout: {
+					//'text-field': ['concat', ['get', 'name'], ' County'],
+					'text-field': ['format', ['upcase', ['concat', ['get', 'name'], ' County']], {}],
+					'text-variable-anchor': ['left'],
+					'text-radial-offset': 0.5,
+					'text-justify': 'auto',
+					'text-font': ['League Spartan Bold'],
+					'text-size': {
+						stops: [
+							[3, 10],
+							[5, 12],
+							[7, 14]
+						]
+					}
+				},
+				paint: {
+					'text-color': '#5d5d5d',
+					'text-halo-color': 'white',
+					'text-halo-width': 1
+				}
+			});
+
+			// Cursor becomes pointer when on polygon
+			$map.on('mouseenter', 'county-fill-layer', () => {
+				$map.getCanvas().style.cursor = 'pointer';
+			});
+
+			// Cursor goes back to default off point
+			$map.on('mouseleave', 'county-fill-layer', () => {
+				$map.getCanvas().style.cursor = '';
 			});
 
 			///////////////////////////
@@ -226,11 +305,16 @@
 			// Get city name from clicking marker/label
 			$map.on('click', ['cities-layer', 'cities-labels'], (e) => {
 				$cardScroll ? cardScroll.set(false) : cardScroll.set(true);
-				selectedCity.set(e.features[0].properties.Location);
+				selectedLocation.set({
+					Location: e.features[0].properties.Location,
+					Geography: e.features[0].properties.Geography,
+					State: e.features[0].properties.State
+				});
 				sidebarVisible = true;
 				$aboutPanelVisible = false;
 				$listPanelVisible = true;
 				$citiesPanelVisible = true;
+				$countiesPanelVisible = false;
 				$statesPanelVisible = false;
 			});
 
@@ -249,6 +333,23 @@
 
 			// Hide US cities on initial load
 			$map.setFilter('filtered-layer', ['in', 'Location', '']);
+
+			///////////////////////////
+			// GENERAL MAP SETTINGS
+			///////////////////////////
+
+			// Shift map based on state of sidebar
+			$map.easeTo({
+				padding: mapPadding,
+				duration: 1000
+			});
+
+			// Hide sidebar on mobile if map touched
+			$map.on('click', () => {
+				if (window.matchMedia('(max-width: 480px)').matches && sidebarVisible) {
+					sidebarVisible = false;
+				}
+			});
 		});
 	});
 
@@ -279,7 +380,7 @@
 <!-- Toggle filters -->
 <div class="map-filters-container">
 	<MapFilters />
-	<hr style="border-top: 0.5px solid rgba(255, 255, 255, 1);" />
+	<!-- <hr style="border-top: 0.5px solid rgba(255, 255, 255, 1);" /> -->
 </div>
 
 <style>
