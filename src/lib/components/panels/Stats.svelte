@@ -1,9 +1,12 @@
 <script>
 	// Import stores
-	import { reparationsCityData, reparationsStateData } from '$lib/stores.js';
+	import { reparationsCityData, reparationsCountyData, reparationsStateData } from '$lib/stores.js';
 
-	// # of locations
-	const numlocations = $reparationsCityData?.length;
+	// # of cities
+	const numCities = $reparationsCityData?.length;
+
+	// # of counties
+	const numCounties = $reparationsCountyData?.length;
 
 	// # of states
 	const numStates = $reparationsStateData?.length;
@@ -73,7 +76,12 @@
 
 <section class="location-stats">
 	<div>
-		<span class="number top-number">{numlocations}</span> <span class="top-label">Cities</span>
+		<span class="number top-number">{numCities}</span> <span class="top-label">Cities</span>
+	</div>
+	<span style="font-size: 1.5rem; font-weight: 400; color: silver;">|</span>
+	<div>
+		<span class="number top-number" style="color: #588157;">{numCounties}</span>
+		<span class="top-label">Counties</span>
 	</div>
 	<span style="font-size: 1.5rem; font-weight: 400; color: silver;">|</span>
 	<div>
