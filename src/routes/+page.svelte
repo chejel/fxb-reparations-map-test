@@ -13,12 +13,18 @@
 	import { onMount } from 'svelte';
 	export let data; // Airtable directory data
 	import {
+		countiesMap,
 		statesMap,
+		countyPolygons,
 		statePolygons,
 		reparationsData,
 		reparationsCityData,
+		reparationsCountyData,
 		reparationsStateData
 	} from '$lib/stores.js';
+
+	// County FIPS codes
+	import fipsCodes from '$lib/data/fipsCodes.json';
 
 	// Set state of sidebar
 	let sidebarVisible = true;
@@ -29,8 +35,7 @@
 	import * as topojson from 'topojson-client';
 
 	// Declare variables for map data
-	//let states = [];
-	import topoStates from '$lib/data/states-10m.json'; // unprojected US state geometries
+	import topoCounties from '$lib/data/counties-10m.json'; // unprojected US county geometries
 
 	onMount(async () => {
 		// Reparations data via Airtable
@@ -63,16 +68,58 @@
 			)
 		);
 
+		// ...filtered to counties data
+		reparationsCountyData.set(
+			$reparationsData?.features.filter(
+				(feature) => feature.properties['Geography'] === 'County' && feature.properties['State']
+			)
+			// .map((feature) => {
+			// 	feature.properties['Location'] = feature.properties['Location'].replace(/^County\s*/, '');
+			// })
+		);
+
 		// ...filtered to state data
 		reparationsStateData.set(
 			$reparationsData?.features.filter((feature) => {
 				return feature.properties.Geography === 'State';
 			})
-			//.map((d) => d.properties)
 		);
 
+		// Map data for all counties
+		countiesMap.set(topojson.feature(topoCounties, topoCounties.objects.counties));
+
+		// In fipsCodes, convert fips_code to string value
+		fipsCodes.forEach((d) => {
+			d.fips_code = String(d.fips_code);
+		});
+
+		countiesMap.update((d) => {
+			d.features.forEach((feature) => {
+				// Exclude feature with id of 02261 (Valdez–Cordova Census Area, Alaska which has been replaced as of 2019; map data is 2017, fips data is 2020)
+
+				if (feature.id !== '02261') {
+					const fips = feature.id;
+					const state = fipsCodes.find((d) => d.fips_code === fips);
+					feature.properties['state'] = state.state_name;
+				}
+			});
+			return d;
+		});
+
+		// Filter to counties (with reparation efforts) as feature collection for mapping
+		countyPolygons.set({
+			type: 'FeatureCollection',
+			features: $countiesMap?.features.filter((d) =>
+				$reparationsCountyData.some(
+					(e) =>
+						d.properties['name'] === e.properties.Location &&
+						d.properties['state'] === e.properties.State
+				)
+			)
+		});
+
 		// Map data for all states
-		statesMap.set(topojson.feature(topoStates, topoStates.objects.states));
+		statesMap.set(topojson.feature(topoCounties, topoCounties.objects.states));
 
 		// Filter to individual states (with reparation efforts) as feature collection for mapping
 		statePolygons.set({
