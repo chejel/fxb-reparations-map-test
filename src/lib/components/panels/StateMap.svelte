@@ -1,13 +1,13 @@
 <script>
-	import { onMount } from 'svelte';
 	import { geoAlbersUsa, geoMercator, geoPath } from 'd3-geo';
 	import { scaleSqrt } from 'd3-scale';
 
 	// Import stores
-	import { statesMap } from '$lib/stores.js';
+	import { statesMap, countiesMap } from '$lib/stores.js';
 
 	// Declare variable for state selection
-	export let cityCoords = null; // Get city data from SelectedCity
+	export let locationData = null; // Get data from selected location
+	export let locationType = null; // City or county
 	export let stateName = null; // Get state name from StatesTable
 	export let stateNameCard = null; // Get state name from SelectedStateCard
 
@@ -17,6 +17,7 @@
 
 	// Declaring variables for drawing state proportionally (i.e. not filling up the svg container)
 	let selectedStateObj; // states data filtered to single selected state
+	let selectedCountyObj; // counties data filtered to single selected county
 
 	let projection; // dislaying state
 	let path;
@@ -27,11 +28,11 @@
 	// For radius of circle marking location of city on map:
 	let radiusScale;
 
-	// Filter states data to only selected city
-	$: if (cityCoords) {
+	// Filter states data to only state containing selected city or county
+	$: if (locationData) {
 		// Filter states array from json to only state of selected state
 		selectedStateObj = $statesMap?.features.find(
-			(d) => d.properties.name === cityCoords.properties.State
+			(d) => d.properties.name === locationData.properties.State
 		);
 
 		// Scale for radius of circles marking location of city on map
@@ -58,7 +59,7 @@
 	let stateHeightScale; // using d3-scale to map a proportional scale of state heights
 	let heightMultiplier = stateName ? 100 : 375;
 
-	// Once a city or state has been selected...
+	// Once a city, county or state has been selected...
 	$: if (selectedStateObj) {
 		// base projections for largest and smallest states
 		akHeightArr = basePath.bounds(
@@ -98,9 +99,19 @@
 
 		// Path generator: topojson coords -> svg paths
 		path = geoPath(projection);
-		if (cityCoords) {
-			[cx, cy] = projection(cityCoords.geometry.coordinates);
+
+		if (locationData) {
+			[cx, cy] = projection(locationData.geometry.coordinates);
 		}
+	}
+
+	// When county is selected, generate state map showing only that county
+	$: if (locationType === 'County') {
+		selectedCountyObj = $countiesMap?.features.find(
+			(d) =>
+				d.properties.name === locationData.properties.Location &&
+				d.properties.state === locationData.properties.State
+		);
 	}
 </script>
 
@@ -116,8 +127,35 @@
 		</g>
 	{/if}
 
+	{#if selectedCountyObj}
+		<g fill="#333" opacity="0.75" stroke="white" stroke-width="3">
+			<path d={path(selectedCountyObj)} aria-hidden="true" />
+		</g>
+	{/if}
+
 	<!-- Add point to show selected city on state map -->
-	{#if cityCoords}
-		<circle {cx} {cy} r="25" opacity="1" fill="#333" fill-opacity="0.85" aria-hidden="true" />
+	{#if locationType === 'City'}
+		<circle
+			{cx}
+			{cy}
+			r="40"
+			opacity="1"
+			fill="#333"
+			fill-opacity="0.85"
+			stroke="white"
+			stroke-width="7"
+			aria-hidden="true"
+		/>
+		<!-- <circle
+			{cx}
+			{cy}
+			r="40"
+			opacity="1"
+			fill="#C70039"
+			fill-opacity="0.95"
+			stroke="white"
+			stroke-width="12"
+			aria-hidden="true"
+		/> -->
 	{/if}
 </svg>
