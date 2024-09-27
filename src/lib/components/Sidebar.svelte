@@ -5,7 +5,7 @@
 	// Sidebar components
 	import PanelBtns from '$lib/components/panels/PanelBtns.svelte';
 	import AboutPanel from '$lib/components/panels/About.svelte';
-	import PlacesPanel from '$lib/components/panels/Places.svelte';
+	import PlacesPanel from '$lib/components/panels/PlacesBtnGrp.svelte';
 
 	// Import stores
 	import { aboutPanelVisible, listPanelVisible } from '$lib/stores.js';
