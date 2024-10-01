@@ -30,7 +30,7 @@
 	let sidebarVisible = true;
 
 	// Import transition
-	import { fade } from 'svelte/transition';
+	import { fly } from 'svelte/transition';
 
 	import * as topojson from 'topojson-client';
 
@@ -59,29 +59,46 @@
 
 		// ...filtered to city data
 		reparationsCityData.set(
-			$reparationsData?.features.filter(
-				(feature) =>
-					feature.properties['Geography'] === 'City' &&
-					feature.properties['State'] &&
-					feature.properties['Latitude'] &&
-					feature.properties['Longitude']
-			)
+			$reparationsData?.features
+				.filter(
+					(feature) =>
+						feature.properties['Geography'] === 'City' &&
+						feature.properties['State'] &&
+						feature.properties['Latitude'] &&
+						feature.properties['Longitude']
+				)
+				.map((feature) => {
+					// If feature contains a commma, remove including everything after
+					if (feature.properties['Location']?.includes(',')) {
+						feature.properties['Location'] = feature.properties['Location'].split(',', 1)[0];
+					}
+					return feature;
+				})
 		);
 
 		// ...filtered to counties data
 		reparationsCountyData.set(
-			$reparationsData?.features.filter(
-				(feature) => feature.properties['Geography'] === 'County' && feature.properties['State']
-			)
-			// .map((feature) => {
-			// 	feature.properties['Location'] = feature.properties['Location'].replace(/^County\s*/, '');
-			// })
+			$reparationsData?.features
+				.filter(
+					(feature) => feature.properties['Geography'] === 'County' && feature.properties['State']
+				)
+				.map((feature) => {
+					// If feature contains a commma, remove including everything after
+					if (feature.properties['Location']?.includes(',')) {
+						feature.properties['Location'] = feature.properties['Location'].split(',', 1)[0];
+					}
+					// If feature contains " County", remove the string
+					if (feature.properties['Location']?.includes(' County')) {
+						feature.properties['Location'] = feature.properties['Location'].replace(' County', '');
+					}
+					return feature;
+				})
 		);
 
 		// ...filtered to state data
 		reparationsStateData.set(
 			$reparationsData?.features.filter((feature) => {
-				return feature.properties.Geography === 'State';
+				return feature.properties['Geography'] === 'State' && feature.properties['State'];
 			})
 		);
 
@@ -129,6 +146,10 @@
 			)
 		});
 	});
+
+	// Message when on mobile landscape mode
+	import Modal from '$lib/components/Modal.svelte';
+	let showModal = true;
 </script>
 
 <!-- Map -->
@@ -138,7 +159,8 @@
 
 <!-- Sidebar -->
 {#if sidebarVisible}
-	<div class="sidebar-content" transition:fade={{ duration: 300 }}>
+	<div class="sidebar-content" transition:fly={{ x: -200, duration: 1000 }}>
+		<!-- <div class="sidebar-content" transition:fade> -->
 		<Sidebar bind:sidebarVisible></Sidebar>
 	</div>
 {:else}
@@ -155,6 +177,18 @@
 <footer class="footer-container">
 	<Footer />
 </footer>
+
+<!-- Message when on mobile landscape mode -->
+<div class="mobile-landscape-container">
+	<Modal bind:showModal>
+		<p>Please rotate your device to access the</p>
+		<p
+			style="font-size: 1.35em; text-transform: uppercase; font-weight: 700; color: var(--orange);"
+		>
+			Black Reparations Map
+		</p>
+	</Modal>
+</div>
 
 <style>
 	.sidebar-content {
@@ -193,6 +227,20 @@
 		.sidebar-content {
 			margin-left: auto;
 			margin-right: auto;
+		}
+	}
+
+	.mobile-landscape-container {
+		display: none;
+	}
+
+	@media only screen and (max-device-width: 812px) and (orientation: landscape) {
+		.sidebar-content {
+			display: none;
+		}
+
+		.mobile-landscape-container {
+			display: block;
 		}
 	}
 </style>
