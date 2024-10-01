@@ -13,7 +13,6 @@
 
 	// Import components
 	import LocationsPanel from '$lib/components/panels/LocationsPanel.svelte';
-	import StatesPanel from '$lib/components/panels/StatesPanel.svelte';
 
 	// Number of places
 	let citiesCount = $reparationsCityData?.length;
@@ -91,7 +90,8 @@
 		</section> -->
 	{:else if $statesPanelVisible}
 		<section class="location-container" in:fade>
-			<StatesPanel />
+			<!-- <StatesPanel /> -->
+			<LocationsPanel />
 		</section>
 	{/if}
 </main>

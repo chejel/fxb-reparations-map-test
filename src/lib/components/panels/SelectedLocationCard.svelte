@@ -4,6 +4,7 @@
 		selectedLocation,
 		reparationsCityData,
 		reparationsCountyData,
+		reparationsStateData,
 		cardScroll
 	} from '$lib/stores.js';
 
@@ -22,7 +23,10 @@
 		data = $reparationsCityData;
 	} else if ($selectedLocation.Geography === 'County') {
 		data = $reparationsCountyData;
+	} else if ($selectedLocation.Geography === 'State') {
+		data = $reparationsStateData;
 	}
+
 	$: locationData = data
 		?.map((location) => ({
 			...location,
@@ -191,8 +195,8 @@
 				location.properties.State === $selectedLocation.State
 		);
 
-	// Scroll to top of card when loading a city
-	// Otherwise, if scrolling to bottom of a card and then loading a new city via selection of city on map, the new card will remain at the same bottom position
+	// Scroll to top of card when loading a location
+	// Otherwise, if scrolling to bottom of a card and then loading a new location via selection of location on map, the new card will remain at the same bottom position
 	import { onMount } from 'svelte';
 	let sectionRef;
 	onMount(() => {
@@ -210,7 +214,11 @@
 
 <!-- State icon -->
 <div class="map-container">
-	<StateMap {locationData} locationType={$selectedLocation.Geography} />
+	<StateMap
+		{locationData}
+		locationType={$selectedLocation.Geography}
+		stateNameCard={$selectedLocation.State}
+	/>
 </div>
 
 <!-- State name -->
@@ -224,8 +232,8 @@
 
 <hr />
 
-<!-- City details -->
-<table class="city-info">
+<!-- Location details -->
+<table class="location-info">
 	{#each Object.entries(locationData.properties).filter((location) => location[0] !== 'Location' && location[0] !== 'Geography' && location[0] !== 'State') as location}
 		{#if location[0] !== 'Funding directed' && location[0] !== 'Other topics' && location[0] !== 'Additional notes'}
 			<tr class="qAndA">
@@ -294,12 +302,12 @@
 		color: #fc915e;
 	}
 
-	.city-info {
+	.location-info {
 		display: flex;
 		flex-direction: column;
 	}
 
-	.city-info > tr {
+	.location-info > tr {
 		margin-bottom: 0.9rem;
 	}
 

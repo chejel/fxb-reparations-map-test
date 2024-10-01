@@ -8,8 +8,8 @@
 	// Declare variable for state selection
 	export let locationData = null; // Get data from selected location
 	export let locationType = null; // City or county
-	export let stateName = null; // Get state name from StatesTable
-	export let stateNameCard = null; // Get state name from SelectedStateCard
+	export let stateNameTable = null; // Get state name from table
+	export let stateNameCard = null; // Get state name from card
 
 	// SVG dimensions for displaying state
 	let width = 975;
@@ -40,9 +40,9 @@
 	}
 
 	// Filter states data to only selected state
-	$: if (stateName || stateNameCard) {
+	$: if (stateNameTable || stateNameCard) {
 		selectedStateObj = $statesMap?.features.find(
-			(d) => d.properties.name === stateName || d.properties.name === stateNameCard
+			(d) => d.properties.name === stateNameTable || d.properties.name === stateNameCard
 		);
 	}
 
@@ -57,7 +57,7 @@
 
 	let selStateHeight; // number determined via subtracting highest and lowest y-values of state boundary
 	let stateHeightScale; // using d3-scale to map a proportional scale of state heights
-	let heightMultiplier = stateName ? 100 : 375;
+	let heightMultiplier = stateNameTable ? 100 : 375; // adjust for states appearing on panel table (vs. card)
 
 	// Once a city, county or state has been selected...
 	$: if (selectedStateObj) {
@@ -80,7 +80,7 @@
 			.range([1, 2]);
 
 		// set height of viewbox based on selected state (as way to center state in state table row)
-		if (stateName || stateNameCard)
+		if (stateNameTable || stateNameCard)
 			height = stateHeightScale(selStateHeight) * heightMultiplier + 10;
 
 		// set up projection for displaying state on card
@@ -100,7 +100,7 @@
 		// Path generator: topojson coords -> svg paths
 		path = geoPath(projection);
 
-		if (locationData) {
+		if (locationType === 'City') {
 			[cx, cy] = projection(locationData.geometry.coordinates);
 		}
 	}

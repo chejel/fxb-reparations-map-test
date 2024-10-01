@@ -10,9 +10,12 @@
 	// Import stores
 	import {
 		citiesPanelVisible,
+		countiesPanelVisible,
+		statesPanelVisible,
 		selectedLocation,
 		reparationsCityData,
-		reparationsCountyData
+		reparationsCountyData,
+		reparationsStateData
 	} from '$lib/stores.js';
 
 	// Import transition
@@ -22,26 +25,37 @@
 	let sortByState = false;
 </script>
 
-{#if $reparationsCityData && $reparationsCountyData}
+{#if $reparationsCityData && $reparationsCountyData && $reparationsStateData}
 	<!-- Table of matching county names, state -->
 	{#if !$selectedLocation}
-		<p>
-			Select a {$citiesPanelVisible ? 'city' : 'county'} for information about its reparations efforts.
+		<p style="margin-bottom: {$statesPanelVisible ? '0.35rem' : '0'}">
+			Select a {$citiesPanelVisible ? 'city' : $countiesPanelVisible ? 'county' : 'state'} for information
+			about its reparations efforts.
 		</p>
 
 		<!-- Sort by state toggle -->
-		<div class="state-toggle-container">
-			<StateSortToggle bind:checked={sortByState} />
-		</div>
+		{#if $citiesPanelVisible || $countiesPanelVisible}
+			<div class="state-toggle-container">
+				<StateSortToggle bind:checked={sortByState} />
+			</div>
+		{/if}
 
 		<section class="card locations-table" in:fade>
-			<LocationsTable {sortByState} />
+			<LocationsTable
+				sortByState={$citiesPanelVisible || $countiesPanelVisible ? sortByState : null}
+			/>
 		</section>
 	{:else}
 		<section class="back-arrow">
 			<button on:click={() => ($selectedLocation = undefined)} class="back-button">
 				<ArrowLeft />
-				<span class="back-text">List of {$citiesPanelVisible ? 'cities' : 'counties'}</span>
+				<span class="back-text"
+					>List of {$citiesPanelVisible
+						? 'cities'
+						: $countiesPanelVisible
+							? 'counties'
+							: 'states'}</span
+				>
 			</button>
 		</section>
 		<section class="card selected-location" in:fade>
