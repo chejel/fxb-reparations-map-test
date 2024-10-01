@@ -79,7 +79,7 @@
 <details bind:open={isOpen}>
 	<summary>Filter cities</summary>
 	{#if isOpen}
-		<div class="content" in:slide out:slide>
+		<div class="content" in:slide={{ duration: 750 }}>
 			{#each data as { name, toggleValue, question }}
 				<div class="single-toggle-switch">
 					<!-- Toggle switch based on https://www.w3.org/WAI/ARIA/apg/patterns/switch/examples/switch-checkbox/ -->
@@ -190,6 +190,10 @@
 			width: 17px;
 			height: 17px;
 		}
+
+		details {
+			margin-bottom: 1rem;
+		}
 	}
 
 	/* switch checked, circle shifts */
@@ -221,9 +225,10 @@
 	/* accordion styles from https://css-tricks.com/how-to-animate-the-details-element/ */
 	details {
 		box-sizing: border-box;
-		background-color: rgba(255, 255, 255, 0.25);
-		border-radius: 3px;
-		width: 160px;
+		background-color: rgba(255, 255, 255, 0.2);
+		border: 1px solid #3f9ab8;
+		border-radius: 1px;
+		width: 175px;
 	}
 
 	details > summary {
@@ -248,12 +253,8 @@
 	summary::marker {
 		color: var(--red);
 	}
-	/* 
-	details[open] > summary:before {
-		transform: rotate(90deg);
-	} */
 
 	details > .content {
-		padding: 0.5rem 0;
+		padding: 0.35rem;
 	}
 </style>
