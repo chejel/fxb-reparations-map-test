@@ -27,7 +27,8 @@
 
 {#await dataLoaded}
 	<div class="page-container">
-		<div class="text-container">Loading...</div>
+		<p>Loading...</p>
+		<div class="loader"></div>
 	</div>
 {:then}
 	<slot />
@@ -37,11 +38,33 @@
 	.page-container {
 		display: block;
 		height: 100vh;
-	}
-	.text-container {
 		display: flex;
+		flex-direction: column;
 		justify-content: center;
 		align-items: center;
 		height: 80vh;
+	}
+
+	p {
+		margin: 8px;
+	}
+
+	/* loader */
+	.loader {
+		height: 20px;
+		width: 20px;
+		border-radius: 100%;
+		border: 3px solid;
+		border-color: #eee #eee rgb(255, 171, 77) #eee;
+		animation: spin 2s linear infinite;
+	}
+
+	@keyframes spin {
+		0% {
+			transform: rotate(0deg);
+		}
+		100% {
+			transform: rotate(360deg);
+		}
 	}
 </style>
