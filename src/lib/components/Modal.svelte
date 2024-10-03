@@ -1,9 +1,9 @@
 <script>
-	export let showModal; // boolean
+	export let isLandscapeMode;
 
 	let dialog; // HTMLDialogElement
 
-	$: if (dialog && showModal) dialog.showModal();
+	$: if (dialog && isLandscapeMode) dialog.showModal();
 </script>
 
 <!-- Source: https://svelte.dev/examples/modal -->

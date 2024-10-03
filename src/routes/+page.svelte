@@ -149,7 +149,33 @@
 
 	// Message when on mobile landscape mode
 	import Modal from '$lib/components/Modal.svelte';
-	let showModal = true;
+	let isLandscapeMode = false;
+
+	// Check if using mobile in landscape mode
+	function checkMobileLandscape() {
+		const isMobile =
+			/Android|BlackBerry|IEMobile|iPad|iPod|iPhone|Opera Mini|webOS/i.test(navigator.userAgent) &&
+			window.matchMedia('(max-width: 932px)').matches;
+		const isLandscape = window.matchMedia('(orientation: landscape)').matches;
+		const isTouchDevice = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+
+		isLandscapeMode = isMobile && isLandscape && isTouchDevice;
+	}
+
+	// Detect orientation change and resize
+	onMount(() => {
+		checkMobileLandscape();
+
+		// Event listeners for change in screen size and orientation
+		window.addEventListener('resize', checkMobileLandscape);
+		window.addEventListener('orientationchange', checkMobileLandscape);
+
+		// Remove event listeners when component destroyed
+		return () => {
+			window.removeEventListener('resize', checkMobileLandscape);
+			window.removeEventListener('orientationchange', checkMobileLandscape);
+		};
+	});
 </script>
 
 <!-- Map -->
@@ -158,7 +184,7 @@
 {/if}
 
 <!-- Sidebar -->
-{#if sidebarVisible}
+{#if sidebarVisible && !isLandscapeMode}
 	<div class="sidebar-content" transition:fly={{ x: -200, duration: 1000 }}>
 		<!-- <div class="sidebar-content" transition:fade> -->
 		<Sidebar bind:sidebarVisible></Sidebar>
@@ -178,9 +204,9 @@
 	<Footer />
 </footer>
 
-<!-- Message when on mobile landscape mode -->
-<div class="mobile-landscape-container">
-	<Modal bind:showModal>
+<!-- Message when in mobile landscape mode -->
+{#if isLandscapeMode}
+	<Modal bind:isLandscapeMode>
 		<p>Please rotate your device to access the</p>
 		<p
 			style="font-size: 1.35em; text-transform: uppercase; font-weight: 700; color: var(--orange);"
@@ -188,7 +214,7 @@
 			Black Reparations Map
 		</p>
 	</Modal>
-</div>
+{/if}
 
 <style>
 	.sidebar-content {
@@ -222,7 +248,7 @@
 		right: 10px;
 	}
 
-	/* Sidebar margins for mobile devices */
+	/* Center sidebar on mobile devices */
 	@media screen and (max-width: 480px) {
 		.sidebar-content {
 			margin-left: auto;
@@ -230,17 +256,9 @@
 		}
 	}
 
-	.mobile-landscape-container {
-		display: none;
-	}
-
-	@media only screen and (max-device-width: 812px) and (orientation: landscape) {
+	/* @media only screen and (max-device-width: 812px) and (orientation: landscape) {
 		.sidebar-content {
 			display: none;
 		}
-
-		.mobile-landscape-container {
-			display: block;
-		}
-	}
+	} */
 </style>
