@@ -9,11 +9,10 @@
 	// Stores
 	import {
 		map,
-		countyPolygons,
-		statePolygons,
 		reparationsCityData,
+		reparationsCountyData,
+		reparationsStateData,
 		selectedLocation,
-		selectedState,
 		aboutPanelVisible,
 		listPanelVisible,
 		citiesPanelVisible,
@@ -102,7 +101,10 @@
 			// Add state polygons
 			$map.addSource('states', {
 				type: 'geojson',
-				data: $statePolygons
+				data: {
+					type: 'FeatureCollection',
+					features: $reparationsStateData
+				}
 			});
 
 			// Add fill color for individual states with reparation efforts
@@ -119,7 +121,7 @@
 
 			// Add border for state polygons
 			$map.addLayer({
-				id: 'state-layer',
+				id: 'state-border-layer',
 				type: 'line',
 				source: 'states',
 				layout: {},
@@ -132,7 +134,12 @@
 			// Clicking on state polygon brings up card on panel
 			$map.on('click', ['state-fill-layer'], (e) => {
 				$cardScroll ? cardScroll.set(false) : cardScroll.set(true); // if card has been scrolled to bottom, scroll card to top when another location has been selected on the map
-				selectedState.set(e.features[0].properties.name);
+				selectedLocation.set({
+					Location: e.features[0].properties.Location, // pulls from $statePolygons
+					Geography: 'State',
+					State: e.features[0].properties.State
+				});
+				//selectedState.set(e.features[0].properties.name);
 				sidebarVisible = true;
 				$aboutPanelVisible = false;
 				$listPanelVisible = true;
@@ -140,6 +147,34 @@
 				$countiesPanelVisible = false;
 				$statesPanelVisible = true;
 			});
+
+			// Add layer for filtered states (fill)
+			$map.addLayer({
+				id: 'filtered-state-fill-layer',
+				type: 'fill',
+				source: 'states',
+				paint: {
+					'fill-color': 'rgb(120, 148, 97)',
+					'fill-opacity': 0.15
+				}
+			});
+
+			// Hide states on initial load on filtered layer (fill)
+			$map.setFilter('filtered-state-fill-layer', ['in', 'Location', '']);
+
+			// Add layer for filtered states (border)
+			$map.addLayer({
+				id: 'filtered-state-border-layer',
+				type: 'line',
+				source: 'states',
+				paint: {
+					'line-color': '#2b4518',
+					'line-width': 0.85
+				}
+			});
+
+			// Hide states on initial load on filtered layer (border)
+			$map.setFilter('filtered-state-border-layer', ['in', 'Location', '']);
 
 			// Cursor becomes pointer when on polygon
 			$map.on('mouseenter', 'state-fill-layer', () => {
@@ -158,7 +193,10 @@
 			// Add county polygons
 			$map.addSource('counties', {
 				type: 'geojson',
-				data: $countyPolygons
+				data: {
+					type: 'FeatureCollection',
+					features: $reparationsCountyData
+				}
 			});
 
 			// Add fill color for counties with reparation efforts
@@ -176,7 +214,7 @@
 
 			// Add border for county polygons
 			$map.addLayer({
-				id: 'county-layer',
+				id: 'county-border-layer',
 				type: 'line',
 				source: 'counties',
 				layout: {},
@@ -187,30 +225,14 @@
 				}
 			});
 
-			// Clicking on county polygon brings up card on panel
-			$map.on('click', ['county-fill-layer'], (e) => {
-				$cardScroll ? cardScroll.set(false) : cardScroll.set(true); // if card has been scrolled to bottom, scroll card to top when another location has been selected on the map
-				selectedLocation.set({
-					Location: e.features[0].properties.name,
-					Geography: 'County',
-					State: e.features[0].properties.state
-				});
-				sidebarVisible = true;
-				$aboutPanelVisible = false;
-				$listPanelVisible = true;
-				$citiesPanelVisible = false;
-				$countiesPanelVisible = true;
-				$statesPanelVisible = false;
-			});
-
 			// Add county labels
 			$map.addLayer({
-				id: 'county-labels',
+				id: 'county-labels-layer',
 				type: 'symbol',
 				source: 'counties',
 				layout: {
 					//'text-field': ['concat', ['get', 'name'], ' County'],
-					'text-field': ['format', ['upcase', ['concat', ['get', 'name'], ' County']], {}],
+					'text-field': ['format', ['upcase', ['concat', ['get', 'Location'], ' County']], {}],
 					'text-variable-anchor': ['left'],
 					'text-radial-offset': 0.5,
 					'text-justify': 'auto',
@@ -230,13 +252,57 @@
 				}
 			});
 
+			// Clicking on county polygon brings up card on panel
+			$map.on('click', ['county-fill-layer', 'county-labels-layer'], (e) => {
+				$cardScroll ? cardScroll.set(false) : cardScroll.set(true); // if card has been scrolled to bottom, scroll card to top when another location has been selected on the map
+				selectedLocation.set({
+					Location: e.features[0].properties.Location,
+					Geography: 'County',
+					State: e.features[0].properties.State
+				});
+				sidebarVisible = true;
+				$aboutPanelVisible = false;
+				$listPanelVisible = true;
+				$citiesPanelVisible = false;
+				$countiesPanelVisible = true;
+				$statesPanelVisible = false;
+			});
+
+			// Add layer for filtered counties (fill)
+			$map.addLayer({
+				id: 'filtered-county-fill-layer',
+				type: 'fill',
+				source: 'counties',
+				paint: {
+					//'fill-color': 'rgb(120, 148, 97)',
+					'fill-color': '#2b4518',
+					'fill-opacity': 0.8
+				}
+			});
+			// Hide counties on initial load on filtered layer (fill)
+			$map.setFilter('filtered-county-fill-layer', ['in', 'Location', '']);
+
+			// Add layer for filtered counties (line)
+			$map.addLayer({
+				id: 'filtered-county-border-layer',
+				type: 'line',
+				source: 'counties',
+				paint: {
+					//'line-color': '#2b4518',
+					'line-color': 'white', // '#789461',
+					'line-width': 0.65
+				}
+			});
+			// Hide counties on initial load on filtered layer
+			$map.setFilter('filtered-county-border-layer', ['in', 'Location', '']);
+
 			// Cursor becomes pointer when on polygon
-			$map.on('mouseenter', 'county-fill-layer', () => {
+			$map.on('mouseenter', ['county-fill-layer', 'county-labels-layer'], () => {
 				$map.getCanvas().style.cursor = 'pointer';
 			});
 
 			// Cursor goes back to default off point
-			$map.on('mouseleave', 'county-fill-layer', () => {
+			$map.on('mouseleave', ['county-fill-layer', 'county-labels-layer'], () => {
 				$map.getCanvas().style.cursor = '';
 			});
 
@@ -254,7 +320,7 @@
 			});
 
 			$map.addLayer({
-				id: 'cities-layer',
+				id: 'city-markers-layer',
 				type: 'circle',
 				source: 'cities',
 				paint: {
@@ -267,7 +333,7 @@
 
 			// Add city labels:
 			$map.addLayer({
-				id: 'cities-labels',
+				id: 'city-labels-layer',
 				type: 'symbol',
 				source: 'cities',
 				layout: {
@@ -292,18 +358,8 @@
 				}
 			});
 
-			// Change cursor to pointer when hovering over marker
-			$map.on('mouseenter', ['cities-layer', 'cities-labels'], () => {
-				$map.getCanvas().style.cursor = 'pointer';
-			});
-
-			// cursor goes back to default off point
-			$map.on('mouseleave', ['cities-layer', 'cities-labels'], () => {
-				$map.getCanvas().style.cursor = 'auto';
-			});
-
-			// Get city name from clicking marker/label
-			$map.on('click', ['cities-layer', 'cities-labels'], (e) => {
+			// Bring up card from clicking city marker/label
+			$map.on('click', ['city-markers-layer', 'city-labels-layer'], (e) => {
 				$cardScroll ? cardScroll.set(false) : cardScroll.set(true);
 				selectedLocation.set({
 					Location: e.features[0].properties.Location,
@@ -320,7 +376,7 @@
 
 			// Add layer for filtered cities
 			$map.addLayer({
-				id: 'filtered-layer',
+				id: 'filtered-city-layer',
 				type: 'circle',
 				source: 'cities',
 				paint: {
@@ -331,8 +387,18 @@
 				}
 			});
 
-			// Hide US cities on initial load
-			$map.setFilter('filtered-layer', ['in', 'Location', '']);
+			// Hide US cities on initial load on filtered layer
+			$map.setFilter('filtered-city-layer', ['in', 'Location', '']);
+
+			// Change cursor to pointer when hovering over marker
+			$map.on('mouseenter', ['city-markers-layer', 'city-labels-layer'], () => {
+				$map.getCanvas().style.cursor = 'pointer';
+			});
+
+			// cursor goes back to default off point
+			$map.on('mouseleave', ['city-markers-layer', 'city-labels-layer'], () => {
+				$map.getCanvas().style.cursor = 'auto';
+			});
 
 			///////////////////////////
 			// GENERAL MAP SETTINGS
@@ -350,6 +416,23 @@
 					sidebarVisible = false;
 				}
 			});
+
+			// If sidebar "hidden" and locations touched, sidebar appears with location info
+			$map.on(
+				'click',
+				[
+					'city-layer',
+					'city-labels-layer',
+					'county-fill-layer',
+					'county-labels-layer',
+					'state-fill-layer'
+				],
+				() => {
+					if (window.matchMedia('(max-width: 480px)').matches && !sidebarVisible) {
+						sidebarVisible = true;
+					}
+				}
+			);
 		});
 	});
 

@@ -5,24 +5,34 @@
 	// Set variables for toggle
 	let questionToggle;
 
-	function toggleFilter(question) {
-		$map.setFilter('cities-layer', filterQuestions(question));
-		$map.setFilter('cities-labels', filterQuestions(question));
+	// Layers to filter based on toggle selections
+	const layers = [
+		'city-markers-layer',
+		'city-labels-layer',
+		'county-fill-layer',
+		'county-border-layer',
+		'county-labels-layer',
+		'state-fill-layer',
+		'state-border-layer'
+	];
 
-		function filterQuestions(questions) {
-			const words = ['Yes', 'but']; // search for multiple words in the response field
-			const quesArrItems = questions.map((question) => {
-				const conditions = words.map((word) => ['in', word, ['string', ['get', question]]]);
-				return ['any'].concat(conditions);
-			});
-			return ['all'].concat(quesArrItems);
-		}
+	function toggleFilter(question) {
+		const filter = filterQuestions(question);
+		layers.forEach((layer) => $map.setFilter(layer, filter));
+	}
+
+	function filterQuestions(questions) {
+		const words = ['Yes', 'but']; // search for multiple words in the response field
+		const quesArrItems = questions.map((question) => {
+			const conditions = words.map((word) => ['in', word, ['string', ['get', question]]]);
+			return ['any'].concat(conditions);
+		});
+		return ['all'].concat(quesArrItems);
 	}
 
 	function resetFilter() {
 		if ($map) {
-			$map.setFilter('cities-layer', null);
-			$map.setFilter('cities-labels', null);
+			layers.forEach((layer) => $map.setFilter(layer, null));
 		}
 	}
 
@@ -77,7 +87,7 @@
 
 <!-- accordion -->
 <details bind:open={isOpen}>
-	<summary>Filter cities</summary>
+	<summary>Filter locations</summary>
 	{#if isOpen}
 		<div class="content" in:slide={{ duration: 750 }}>
 			{#each data as { name, toggleValue, question }}
@@ -150,7 +160,7 @@
 		position: relative;
 		top: 1px;
 		display: inline-block;
-		border: 1.25px solid white;
+		border: 1px solid gray;
 		background-color: #dbdada;
 		width: 40px;
 		height: 20px;
@@ -225,15 +235,18 @@
 	/* accordion styles from https://css-tricks.com/how-to-animate-the-details-element/ */
 	details {
 		box-sizing: border-box;
-		background-color: rgba(255, 255, 255, 0.2);
-		border: 1px solid #3f9ab8;
+		background-color: rgba(255, 255, 255, 0.75);
+		/* border: 1px solid #3f9ab8; */
+		border: 0.75px solid #333;
 		border-radius: 1px;
 		width: 175px;
 	}
 
 	details > summary {
 		padding: 0.5rem;
-		background-color: rgba(238, 238, 238, 0.5);
+		/* background-color: rgba(238, 238, 238, 0.5); */
+		background-color: rgba(199, 0, 57, 0.95);
+		color: white;
 		font-weight: 600;
 		cursor: pointer;
 		font-family: 'Barlow Condensed', sans-serif;
@@ -248,10 +261,12 @@
 
 	/* style arrow marker */
 	summary::-webkit-details-marker {
-		color: var(--red);
+		/* color: var(--red); */
+		color: white;
 	}
 	summary::marker {
-		color: var(--red);
+		/* color: var(--red); */
+		color: white;
 	}
 
 	details > .content {
