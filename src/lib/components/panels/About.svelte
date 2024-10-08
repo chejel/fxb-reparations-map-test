@@ -4,21 +4,24 @@
 	import Legend from '$lib/components/panels/Legend.svelte';
 
 	// Import icon components
+	import MarkerIcon from '$lib/components/icons/MapMarker.svelte';
 	import StatsIcon from '$lib/components/icons/Stats.svelte';
 
 	// Import stores
-	import { reparationsCityData, reparationsCountyData } from '$lib/stores.js';
+	import { reparationsCityData } from '$lib/stores.js';
 </script>
 
 <!-- Intro text -->
 <section class="introduction">
 	<p>Zoom in or double click on the map to see any city names that do not initially appear.</p>
 	<div class="legend-container">
-		<div>
-			<span style="font-weight: 600; text-transform: uppercase;">Map legend</span> of reparation efforts
-		</div>
+		<p class="legend-header">
+			<MarkerIcon />
+			<span><span style="font-weight: 600;">Map legend</span> of reparation efforts</span>
+		</p>
 		<div class="legend">
 			<span><Legend geoType="city" text="City-level" /></span>
+			<span><Legend geoType="county" text="County-level" /></span>
 			<span><Legend geoType="state" text="State-level" /></span>
 		</div>
 	</div>
@@ -38,6 +41,41 @@
 {/if}
 
 <style>
+	.legend-container {
+		margin-top: 10px;
+		font-size: 0.85rem;
+		font-family: 'Barlow Condensed', sans-serif;
+		background-color: rgba(255, 255, 255, 0.75);
+		display: flex;
+		flex-direction: column;
+		justify-content: space-between;
+		/* border: 0.75px solid #feb746; */
+		border: 0.75px solid #597e52;
+		border-radius: 5px;
+		/* overflow: auto; */
+	}
+
+	/* .legend-container hr {
+		margin: 5px 0;
+	} */
+
+	.legend-header {
+		padding: 7px 10px;
+		text-transform: uppercase;
+		background-color: rgba(254, 183, 70, 0.75);
+		display: flex;
+		gap: 2px;
+		align-items: center;
+	}
+
+	.legend {
+		padding: 7px 10px;
+		display: flex;
+		align-items: center;
+		/* justify-content: space-between; */
+		gap: 25px;
+	}
+
 	.card-header {
 		font-family: 'Barlow Condensed', sans-serif;
 		font-size: 1rem;
@@ -52,24 +90,5 @@
 	.stats-table {
 		/* margin-top: 0.5rem; */
 		padding: 0.5rem 0.75rem;
-	}
-
-	.legend-container {
-		margin-top: 10px;
-		font-size: 0.85rem;
-		font-family: 'Barlow Condensed', sans-serif;
-		/* color: var(--gray); */
-		background-color: rgba(255, 255, 255, 0.75);
-		display: flex;
-		justify-content: space-between;
-		border: 1px solid silver;
-		padding: 5px 8px;
-		border-radius: 3px;
-	}
-
-	.legend {
-		display: flex;
-		align-items: center;
-		gap: 15px;
 	}
 </style>
