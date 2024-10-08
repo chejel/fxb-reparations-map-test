@@ -15,8 +15,6 @@
 	import {
 		countiesMap,
 		statesMap,
-		countyPolygons,
-		statePolygons,
 		reparationsData,
 		reparationsCityData,
 		reparationsCountyData,
@@ -82,6 +80,11 @@
 				.filter(
 					(feature) => feature.properties['Geography'] === 'County' && feature.properties['State']
 				)
+				// remove non-applicable point geometry data (long/lat) from county data
+				.map((feature) => {
+					delete feature.geometry;
+					return feature;
+				})
 				.map((feature) => {
 					// If feature contains a commma, remove including everything after
 					if (feature.properties['Location']?.includes(',')) {
@@ -97,9 +100,15 @@
 
 		// ...filtered to state data
 		reparationsStateData.set(
-			$reparationsData?.features.filter((feature) => {
-				return feature.properties['Geography'] === 'State' && feature.properties['State'];
-			})
+			$reparationsData?.features
+				.filter((feature) => {
+					return feature.properties['Geography'] === 'State' && feature.properties['State'];
+				})
+				// remove non-applicable point geometry data (long/lat) from state data
+				.map((feature) => {
+					delete feature.geometry;
+					return feature;
+				})
 		);
 
 		// Map data for all counties
@@ -113,7 +122,6 @@
 		countiesMap.update((d) => {
 			d.features.forEach((feature) => {
 				// Exclude feature with id of 02261 (Valdez–Cordova Census Area, Alaska which has been replaced as of 2019; map data is 2017, fips data is 2020)
-
 				if (feature.id !== '02261') {
 					const fips = feature.id;
 					const state = fipsCodes.find((d) => d.fips_code === fips);
@@ -124,31 +132,60 @@
 		});
 
 		// Filter to counties (with reparation efforts) as feature collection for mapping
-		countyPolygons.set({
-			type: 'FeatureCollection',
-			features: $countiesMap?.features.filter((d) =>
-				$reparationsCountyData.some(
-					(e) =>
-						d.properties['name'] === e.properties.Location &&
-						d.properties['state'] === e.properties.State
-				)
-			)
+		// countyPolygons.set({
+		// 	type: 'FeatureCollection',
+		// 	features: $countiesMap?.features.filter((d) =>
+		// 		$reparationsCountyData.some(
+		// 			(e) =>
+		// 				d.properties['name'] === e.properties.Location &&
+		// 				d.properties['state'] === e.properties.State
+		// 		)
+		// 	)
+		// });
+
+		// For reparationsCountyData, pull in county polygon data from countiesMap
+		reparationsCountyData.update((data) => {
+			return data.map((feature) => {
+				const county = $countiesMap?.features.find(
+					(d) =>
+						d.properties['name'] === feature.properties['Location'] &&
+						d.properties['state'] === feature.properties['State']
+				);
+				if (county) {
+					feature.geometry = county.geometry;
+				}
+				return feature;
+			});
 		});
 
 		// Map data for all states
 		statesMap.set(topojson.feature(topoCounties, topoCounties.objects.states));
 
 		// Filter to individual states (with reparation efforts) as feature collection for mapping
-		statePolygons.set({
-			type: 'FeatureCollection',
-			features: $statesMap?.features.filter((d) =>
-				$reparationsStateData.some((e) => d.properties['name'] === e.properties.Location)
-			)
+		// statePolygons.set({
+		// 	type: 'FeatureCollection',
+		// 	features: $statesMap?.features.filter((d) =>
+		// 		$reparationsStateData.some((e) => d.properties['name'] === e.properties.Location)
+		// 	)
+		// });
+
+		// For reparationsStateData, pull in county polygon data from statesMap
+		reparationsStateData.update((data) => {
+			return data.map((feature) => {
+				const state = $statesMap?.features.find(
+					(d) => d.properties['name'] === feature.properties['Location']
+				);
+				if (state) {
+					feature.geometry = state.geometry;
+				}
+				return feature;
+			});
 		});
 	});
 
 	// Message when on mobile landscape mode
 	import Modal from '$lib/components/Modal.svelte';
+	import rotateIcon from '$lib/images/rotate-device-icon.png';
 	let isLandscapeMode = false;
 
 	// Check if using mobile in landscape mode
@@ -207,6 +244,7 @@
 <!-- Message when in mobile landscape mode -->
 {#if isLandscapeMode}
 	<Modal bind:isLandscapeMode>
+		<img src={rotateIcon} alt="" width="50" style="margin: auto; padding-bottom: 5px;" />
 		<p>Please rotate your device to access the</p>
 		<p
 			style="font-size: 1.35em; text-transform: uppercase; font-weight: 700; color: var(--orange);"
