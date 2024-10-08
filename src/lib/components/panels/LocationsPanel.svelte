@@ -40,7 +40,7 @@
 			</div>
 		{/if}
 
-		<section class="card locations-table" in:fade>
+		<section class="card locations-table-container" in:fade>
 			<LocationsTable
 				sortByState={$citiesPanelVisible || $countiesPanelVisible ? sortByState : null}
 			/>
@@ -71,12 +71,13 @@
 		text-align: right;
 	}
 
-	.locations-table {
+	.locations-table-container {
 		display: flex;
 		flex-direction: column;
 		align-items: flex-start;
-		padding: 0.25rem;
+		/* padding: 0.25rem; */
 		margin-top: 0;
+		overflow: auto;
 	}
 
 	.back-button {

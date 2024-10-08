@@ -7,8 +7,7 @@
 		citiesPanelVisible,
 		countiesPanelVisible,
 		statesPanelVisible,
-		selectedLocation,
-		selectedState
+		selectedLocation
 	} from '$lib/stores.js';
 
 	// Import components
@@ -35,7 +34,6 @@
 				$statesPanelVisible = false;
 				// Selecting any of the buttons will clear the card and show the table
 				$selectedLocation = undefined;
-				$selectedState = undefined;
 			}}
 			>Cities <span
 				class="btn-badge"
@@ -52,7 +50,6 @@
 				$countiesPanelVisible = true;
 				$statesPanelVisible = false;
 				$selectedLocation = undefined;
-				$selectedState = undefined;
 			}}
 			>Counties <span
 				class="btn-badge"
@@ -69,7 +66,6 @@
 				$countiesPanelVisible = false;
 				$statesPanelVisible = true;
 				$selectedLocation = undefined;
-				$selectedState = undefined;
 			}}
 			>States <span
 				class="btn-badge"

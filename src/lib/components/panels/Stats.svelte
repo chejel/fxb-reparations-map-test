@@ -99,7 +99,7 @@
 		<!-- divider -->
 		<tr>
 			<td colspan="2">
-				<hr style="margin-bottom: 1rem; border-top: 0.5px solid rgba(45, 45, 45, 0.75);" />
+				<hr style="margin-bottom: 0.25rem; border-top: 0.5px solid rgba(45, 45, 45, 0.75);" />
 			</td></tr
 		>
 		<!-- # with reports -->
@@ -183,7 +183,7 @@
 		<!-- divider -->
 		<tr>
 			<td colspan="2">
-				<hr style="margin-top: 1rem; border-top: 0.5px solid rgba(45, 45, 45, 0.75);" />
+				<hr style="margin-top: 0.25rem; border-top: 0.5px solid rgba(45, 45, 45, 0.75);" />
 			</td></tr
 		>
 		<!-- note about filters -->

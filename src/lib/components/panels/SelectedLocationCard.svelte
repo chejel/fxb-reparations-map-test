@@ -16,8 +16,6 @@
 	import CheckIcon from '$lib/components/icons/Check.svelte';
 	import LinkIcon from '$lib/components/icons/Link.svelte';
 
-	// Rename question variables
-
 	let data;
 	$: if ($selectedLocation.Geography === 'City') {
 		data = $reparationsCityData;
@@ -34,14 +32,22 @@
 				Location: location.properties.Location,
 				Geography: location.properties.Geography,
 				State: location.properties.State,
-				'Report released': (() => {
-					// if the field for the question is linked, the string appears in Markdown format ([text](link)) so code below extracts the text and link
-					// and if the field has no value, the response is null
-					const question = 'Has the location released a report on reparations?';
+				...[
+					'Has the location released a report on reparations?',
+					'Has the location approved reparations funding?',
+					'What is the potential funding source?',
+					'Has the location begun allocating reparations?',
+					'Has the location determined if direct payments will be included?',
+					'Has the location determined who is eligible to receive direct payments?',
+					'Is any of the funding addressing health?',
+					'Where is funding directed?',
+					'What other topic areas included in the reparation approach?',
+					'Additional Notes'
+				].reduce((acc, question) => {
 					const response = location.properties[question];
 					const link = response?.includes('[') ? response.match(/\[(.*?)\]\((.*?)\)/)?.[2] : null;
 
-					return {
+					acc[question] = {
 						question: question,
 						response: response
 							? response?.includes('[')
@@ -50,143 +56,8 @@
 							: null,
 						link: link
 					};
-				})(),
-				'Funding approved': (() => {
-					const question = 'Has the location approved reparations funding?';
-					const response = location.properties[question];
-					const link = response?.includes('[') ? response.match(/\[(.*?)\]\((.*?)\)/)?.[2] : null;
-
-					return {
-						question: question,
-						response: response
-							? response?.includes('[')
-								? response.match(/\[(.*?)\]\((.*?)\)/)?.[1]
-								: response.trim()
-							: null,
-						link: link
-					};
-				})(),
-				'Funding source': (() => {
-					const question = 'What is the potential funding source?';
-					const response = location.properties[question];
-					const link = response?.includes('[') ? response.match(/\[(.*?)\]\((.*?)\)/)?.[2] : null;
-
-					return {
-						question: question,
-						response: response
-							? response?.includes('[')
-								? response.match(/\[(.*?)\]\((.*?)\)/)?.[1]
-								: response.trim()
-							: null,
-						link: link
-					};
-				})(),
-				'Allocation started': (() => {
-					const question = 'Has the location begun allocating reparations?';
-					const response = location.properties[question];
-					const link = response?.includes('[') ? response.match(/\[(.*?)\]\((.*?)\)/)?.[2] : null;
-
-					return {
-						question: question,
-						response: response
-							? response?.includes('[')
-								? response.match(/\[(.*?)\]\((.*?)\)/)?.[1]
-								: response.trim()
-							: null,
-						link: link
-					};
-				})(),
-				'Direct payments': (() => {
-					const question = 'Has the location determined if direct payments will be included?';
-					const response = location.properties[question];
-					const link = response?.includes('[') ? response.match(/\[(.*?)\]\((.*?)\)/)?.[2] : null;
-
-					return {
-						question: question,
-						response: response
-							? response?.includes('[')
-								? response.match(/\[(.*?)\]\((.*?)\)/)?.[1]
-								: response.trim()
-							: null,
-						link: link
-					};
-				})(),
-				'Eligibility determined': (() => {
-					const question =
-						'Has the location determined who is eligible to receive direct payments?';
-					const response = location.properties[question];
-					const link = response?.includes('[') ? response.match(/\[(.*?)\]\((.*?)\)/)?.[2] : null;
-
-					return {
-						question: question,
-						response: response
-							? response?.includes('[')
-								? response.match(/\[(.*?)\]\((.*?)\)/)?.[1]
-								: response.trim()
-							: null,
-						link: link
-					};
-				})(),
-				'Health addressed': (() => {
-					const question = 'Is any of the funding addressing health?';
-					const response = location.properties[question];
-					const link = response?.includes('[') ? response.match(/\[(.*?)\]\((.*?)\)/)?.[2] : null;
-
-					return {
-						question: question,
-						response: response
-							? response?.includes('[')
-								? response.match(/\[(.*?)\]\((.*?)\)/)?.[1]
-								: response.trim()
-							: null,
-						link: link
-					};
-				})(),
-				'Funding directed': (() => {
-					const question = 'Where is funding directed?';
-					const response = location.properties[question];
-					const link = response?.includes('[') ? response.match(/\[(.*?)\]\((.*?)\)/)?.[2] : null;
-
-					return {
-						question: question,
-						response: response
-							? response?.includes('[')
-								? response.match(/\[(.*?)\]\((.*?)\)/)?.[1]
-								: response.trim()
-							: null,
-						link: link
-					};
-				})(),
-				'Other topics': (() => {
-					const question = 'What other topic areas included in the reparation approach?';
-					const response = location.properties[question];
-					const link = response?.includes('[') ? response.match(/\[(.*?)\]\((.*?)\)/)?.[2] : null;
-
-					return {
-						question: question,
-						response: response
-							? response?.includes('[')
-								? response.match(/\[(.*?)\]\((.*?)\)/)?.[1]
-								: response.trim()
-							: null,
-						link: link
-					};
-				})(),
-				'Additional notes': (() => {
-					const question = 'Additional Notes';
-					const response = location.properties[question];
-					const link = response?.includes('[') ? response.match(/\[(.*?)\]\((.*?)\)/)?.[2] : null;
-
-					return {
-						question: question,
-						response: response
-							? response?.includes('[')
-								? response.match(/\[(.*?)\]\((.*?)\)/)?.[1]
-								: response.trim()
-							: null,
-						link: link
-					};
-				})()
+					return acc;
+				}, {})
 			}
 		}))
 		.find(
@@ -235,7 +106,7 @@
 <!-- Location details -->
 <table class="location-info">
 	{#each Object.entries(locationData.properties).filter((location) => location[0] !== 'Location' && location[0] !== 'Geography' && location[0] !== 'State') as location}
-		{#if location[0] !== 'Funding directed' && location[0] !== 'Other topics' && location[0] !== 'Additional notes'}
+		{#if location[0] !== 'Where is funding directed?' && location[0] !== 'What other topic areas included in the reparation approach?' && location[0] !== 'Additional Notes'}
 			<tr class="qAndA">
 				<td>
 					{#if location[1].response?.includes('No')}
@@ -320,11 +191,18 @@
 	}
 
 	.response {
-		display: block;
+		display: flex;
+		flex-wrap: wrap;
+		row-gap: 3px;
+		column-gap: 5px;
+		/* display: inline-flex;
+		flex-wrap: wrap;
+		row-gap: 3px;
+		column-gap: 5px; */
 	}
 
 	tr.additional {
-		background-color: #faf3f3; /* #fff1f1; /* #fdf3f4; /* #f1f1f1; */
+		background-color: #f6f5f2; /* #faf3f3; /* #fff1f1; /* #fdf3f4; /* #f1f1f1; */
 		width: 100%;
 		margin-bottom: 0;
 		padding-top: 1rem;
