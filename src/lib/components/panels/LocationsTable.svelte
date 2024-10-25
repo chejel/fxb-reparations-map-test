@@ -103,6 +103,14 @@
 	table {
 		width: 100%;
 		text-align: left;
+		border-collapse: collapse;
+	}
+
+	/* Sticky table header */
+	thead {
+		position: sticky;
+		top: 0;
+		z-index: 2;
 	}
 
 	th {
@@ -112,9 +120,6 @@
 		text-transform: uppercase;
 		font-size: 0.85rem;
 		font-weight: 800;
-		/* Sticky table header */
-		position: sticky;
-		top: 0;
 		box-shadow: 0 1px 2px -1px rgba(0, 0, 0, 0.4);
 	}
 
