@@ -181,6 +181,19 @@
 				return feature;
 			});
 		});
+
+		// Detect orientation change and resize
+		checkMobileLandscape();
+
+		// Event listeners for change in screen size and orientation
+		window.addEventListener('resize', checkMobileLandscape);
+		window.addEventListener('orientationchange', checkMobileLandscape);
+
+		// Remove event listeners when component destroyed
+		return () => {
+			window.removeEventListener('resize', checkMobileLandscape);
+			window.removeEventListener('orientationchange', checkMobileLandscape);
+		};
 	});
 
 	// Message when on mobile landscape mode
@@ -198,21 +211,6 @@
 
 		isLandscapeMode = isMobile && isLandscape && isTouchDevice;
 	}
-
-	// Detect orientation change and resize
-	onMount(() => {
-		checkMobileLandscape();
-
-		// Event listeners for change in screen size and orientation
-		window.addEventListener('resize', checkMobileLandscape);
-		window.addEventListener('orientationchange', checkMobileLandscape);
-
-		// Remove event listeners when component destroyed
-		return () => {
-			window.removeEventListener('resize', checkMobileLandscape);
-			window.removeEventListener('orientationchange', checkMobileLandscape);
-		};
-	});
 </script>
 
 <!-- Map -->

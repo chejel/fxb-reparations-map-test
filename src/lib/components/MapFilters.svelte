@@ -81,6 +81,7 @@
 		}
 	];
 
+	// Transition effect for accordion
 	import { slide } from 'svelte/transition';
 	let isOpen = false;
 </script>
