@@ -4,7 +4,7 @@
 	import ListIcon from '$lib/components/icons/List.svelte';
 
 	// Import stores
-	import { aboutPanelVisible, listPanelVisible } from '$lib/stores.js';
+	import { aboutPanelVisible, listPanelVisible, map } from '$lib/stores.js';
 </script>
 
 <div class="btn-container">
@@ -13,6 +13,11 @@
 		on:click|stopPropagation={() => {
 			$aboutPanelVisible = true;
 			$listPanelVisible = false;
+			// Clear any location highlights on map:
+			$map.setFilter('panel-city-selected-layer', ['==', 'Location', '']);
+			$map.setFilter('panel-county-selected-layer', ['==', 'Location', '']);
+			$map.setFilter('panel-county-selected-layer', ['==', 'State', '']);
+			$map.setFilter('panel-state-selected-layer', ['==', 'State', '']);
 		}}><InfoIcon />About the Project</button
 	>
 	<button
@@ -20,6 +25,11 @@
 		on:click|stopPropagation={() => {
 			$listPanelVisible = true;
 			$aboutPanelVisible = false;
+			// Clear any location highlights on map:
+			$map.setFilter('panel-city-selected-layer', ['==', 'Location', '']);
+			$map.setFilter('panel-county-selected-layer', ['==', 'Location', '']);
+			$map.setFilter('panel-county-selected-layer', ['==', 'State', '']);
+			$map.setFilter('panel-state-selected-layer', ['==', 'State', '']);
 		}}><ListIcon />List of Places</button
 	>
 </div>

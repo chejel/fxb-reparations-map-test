@@ -7,7 +7,8 @@
 		citiesPanelVisible,
 		countiesPanelVisible,
 		statesPanelVisible,
-		selectedLocation
+		selectedLocation,
+		map
 	} from '$lib/stores.js';
 
 	// Import components
@@ -20,73 +21,45 @@
 
 	// Import transition
 	import { fade } from 'svelte/transition';
+
+	// Data array for buttons
+	const buttonData = [
+		{ label: 'Cities', count: citiesCount, visible: $citiesPanelVisible },
+		{ label: 'Counties', count: countiesCount, visible: $countiesPanelVisible },
+		{ label: 'States', count: statesCount, visible: $statesPanelVisible }
+	];
 </script>
 
 <main class="places-body">
 	<!-- Buttons: Cities, Counties, States -->
 	<section class="btn-container">
-		<!-- Cities button -->
-		<button
-			class:active={$citiesPanelVisible}
-			on:click={() => {
-				$citiesPanelVisible = true;
-				$countiesPanelVisible = false;
-				$statesPanelVisible = false;
-				// Selecting any of the buttons will clear the card and show the table
-				$selectedLocation = undefined;
-			}}
-			>Cities <span
-				class="btn-badge"
-				style="padding: {citiesCount < 10 ? '0.15rem 0.5rem' : '0.15rem 0.25rem'}"
-				>{citiesCount}</span
-			></button
-		>
-
-		<!-- Counties button -->
-		<button
-			class:active={$countiesPanelVisible}
-			on:click={() => {
-				$citiesPanelVisible = false;
-				$countiesPanelVisible = true;
-				$statesPanelVisible = false;
-				$selectedLocation = undefined;
-			}}
-			>Counties <span
-				class="btn-badge"
-				style="padding: {countiesCount < 10 ? '0.15rem 0.5rem' : '0.15rem 0.25rem'}"
-				>{countiesCount}</span
-			></button
-		>
-
-		<!-- States button -->
-		<button
-			class:active={$statesPanelVisible}
-			on:click={() => {
-				$citiesPanelVisible = false;
-				$countiesPanelVisible = false;
-				$statesPanelVisible = true;
-				$selectedLocation = undefined;
-			}}
-			>States <span
-				class="btn-badge"
-				style="padding: {statesCount < 10 ? '0.15rem 0.5rem' : '0.15rem 0.25rem'}"
-				>{statesCount}</span
-			></button
-		>
+		<!-- Button template -->
+		{#each buttonData as { label, count, visible }, i}
+			<button
+				class:active={visible}
+				on:click={() => {
+					$citiesPanelVisible = i === 0;
+					$countiesPanelVisible = i === 1;
+					$statesPanelVisible = i === 2;
+					$selectedLocation = undefined;
+					// Clear any highlighted location on map:
+					$map.setFilter('panel-city-selected-layer', ['==', 'Location', '']);
+					$map.setFilter('panel-county-selected-layer', ['==', 'Location', '']);
+					$map.setFilter('panel-county-selected-layer', ['==', 'State', '']);
+					$map.setFilter('panel-state-selected-layer', ['==', 'State', '']);
+				}}
+			>
+				{label}
+				<span class="btn-badge" style="padding: {count < 10 ? '0.15rem 0.5rem' : '0.15rem 0.25rem'}"
+					>{count}</span
+				>
+			</button>
+		{/each}
 	</section>
 
 	<!-- Cities / Counties / States panel -->
-	{#if $citiesPanelVisible || $countiesPanelVisible}
+	{#if $citiesPanelVisible || $countiesPanelVisible || $statesPanelVisible}
 		<section class="location-container" in:fade>
-			<LocationsPanel />
-		</section>
-		<!-- {:else if $countiesPanelVisible}
-		<section class="location-container" in:fade>
-			<CountiesPanel />
-		</section> -->
-	{:else if $statesPanelVisible}
-		<section class="location-container" in:fade>
-			<!-- <StatesPanel /> -->
 			<LocationsPanel />
 		</section>
 	{/if}

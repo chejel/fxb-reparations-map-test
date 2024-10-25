@@ -15,7 +15,8 @@
 		selectedLocation,
 		reparationsCityData,
 		reparationsCountyData,
-		reparationsStateData
+		reparationsStateData,
+		map
 	} from '$lib/stores.js';
 
 	// Import transition
@@ -47,7 +48,17 @@
 		</section>
 	{:else}
 		<section class="back-arrow">
-			<button on:click={() => ($selectedLocation = undefined)} class="back-button">
+			<button
+				on:click={() => {
+					$selectedLocation = undefined;
+					// Clear any location highlights on map:
+					$map.setFilter('panel-city-selected-layer', ['==', 'Location', '']);
+					$map.setFilter('panel-county-selected-layer', ['==', 'Location', '']);
+					$map.setFilter('panel-county-selected-layer', ['==', 'State', '']);
+					$map.setFilter('panel-state-selected-layer', ['==', 'State', '']);
+				}}
+				class="back-button"
+			>
 				<ArrowLeft />
 				<span class="back-text"
 					>List of {$citiesPanelVisible
@@ -82,6 +93,7 @@
 
 	.back-button {
 		display: flex;
+		align-items: center;
 		gap: 5px;
 		margin-left: 0.2rem;
 		margin-bottom: 0.5rem;
