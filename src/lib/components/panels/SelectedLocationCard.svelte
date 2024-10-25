@@ -5,7 +5,8 @@
 		reparationsCityData,
 		reparationsCountyData,
 		reparationsStateData,
-		cardScroll
+		cardScroll,
+		map
 	} from '$lib/stores.js';
 
 	// Import components
@@ -73,6 +74,26 @@
 	onMount(() => {
 		sectionRef = document.querySelector('.header');
 	});
+
+	// When location is selected on panel, highlight on map
+	$: if ($selectedLocation?.Geography === 'City') {
+		$map.setFilter('panel-city-selected-layer', [
+			'any',
+			['==', $selectedLocation.Location, ['get', 'Location']]
+			// Use `==` for single values, `in` for arrays
+		]);
+	} else if ($selectedLocation?.Geography === 'County') {
+		$map.setFilter('panel-county-selected-layer', [
+			'all',
+			['==', $selectedLocation.Location, ['get', 'Location']],
+			['==', $selectedLocation.State, ['get', 'State']]
+		]);
+	} else if ($selectedLocation?.Geography === 'State') {
+		$map.setFilter('panel-state-selected-layer', [
+			'any',
+			['==', $selectedLocation.State, ['get', 'State']]
+		]);
+	}
 
 	function scrollToTop() {
 		if (sectionRef) {

@@ -160,7 +160,8 @@
 			});
 
 			// Hide states on initial load on filtered layer (fill)
-			$map.setFilter('filtered-state-fill-layer', ['in', 'Location', '']);
+			$map.setFilter('filtered-state-fill-layer', ['==', 'Location', '']);
+			// Use `==` for single values, `in` for arrays
 
 			// Add layer for filtered states (border)
 			$map.addLayer({
@@ -174,7 +175,7 @@
 			});
 
 			// Hide states on initial load on filtered layer (border)
-			$map.setFilter('filtered-state-border-layer', ['in', 'Location', '']);
+			$map.setFilter('filtered-state-border-layer', ['==', 'Location', '']);
 
 			// Cursor becomes pointer when on polygon
 			$map.on('mouseenter', 'state-fill-layer', () => {
@@ -185,6 +186,25 @@
 			$map.on('mouseleave', 'state-fill-layer', () => {
 				$map.getCanvas().style.cursor = '';
 			});
+
+			///////////////////////////
+			// HIGHLIGHTED STATE from panel selection
+			///////////////////////////
+
+			$map.addLayer({
+				id: 'panel-state-selected-layer',
+				type: 'fill',
+				source: 'states',
+				layout: {},
+				paint: {
+					'fill-color': '#e9ed10',
+					'fill-opacity': 0.25
+				}
+			});
+
+			// Initially hide all markers in panel-state-selected-layer
+			$map.setFilter('panel-state-selected-layer', ['==', 'State', '']);
+			// When location is selected via panel, polygon will have a yellow glow
 
 			///////////////////////////
 			// POLYGONS for counties
@@ -225,33 +245,6 @@
 				}
 			});
 
-			// Add county labels
-			$map.addLayer({
-				id: 'county-labels-layer',
-				type: 'symbol',
-				source: 'counties',
-				layout: {
-					//'text-field': ['concat', ['get', 'name'], ' County'],
-					'text-field': ['format', ['upcase', ['concat', ['get', 'Location'], ' County']], {}],
-					'text-variable-anchor': ['left'],
-					'text-radial-offset': 0.5,
-					'text-justify': 'auto',
-					'text-font': ['League Spartan Bold'],
-					'text-size': {
-						stops: [
-							[3, 10],
-							[5, 12],
-							[7, 14]
-						]
-					}
-				},
-				paint: {
-					'text-color': '#5d5d5d',
-					'text-halo-color': 'white',
-					'text-halo-width': 1
-				}
-			});
-
 			// Clicking on county polygon brings up card on panel
 			$map.on('click', ['county-fill-layer', 'county-labels-layer'], (e) => {
 				$cardScroll ? cardScroll.set(false) : cardScroll.set(true); // if card has been scrolled to bottom, scroll card to top when another location has been selected on the map
@@ -280,7 +273,7 @@
 				}
 			});
 			// Hide counties on initial load on filtered layer (fill)
-			$map.setFilter('filtered-county-fill-layer', ['in', 'Location', '']);
+			$map.setFilter('filtered-county-fill-layer', ['==', 'Location', '']);
 
 			// Add layer for filtered counties (line)
 			$map.addLayer({
@@ -294,7 +287,7 @@
 				}
 			});
 			// Hide counties on initial load on filtered layer
-			$map.setFilter('filtered-county-border-layer', ['in', 'Location', '']);
+			$map.setFilter('filtered-county-border-layer', ['==', 'Location', '']);
 
 			// Cursor becomes pointer when on polygon
 			$map.on('mouseenter', ['county-fill-layer', 'county-labels-layer'], () => {
@@ -304,6 +297,53 @@
 			// Cursor goes back to default off point
 			$map.on('mouseleave', ['county-fill-layer', 'county-labels-layer'], () => {
 				$map.getCanvas().style.cursor = '';
+			});
+
+			///////////////////////////
+			// HIGHLIGHTED COUNTY from panel selection
+			///////////////////////////
+
+			$map.addLayer({
+				id: 'panel-county-selected-layer',
+				type: 'line',
+				source: 'counties',
+				layout: {},
+				paint: {
+					//'line-color': '#2b4518',
+					'line-color': 'yellow', // '#789461',
+					'line-width': 2
+				}
+			});
+
+			// Initially hide all markers in panel-county-selected-layer
+			$map.setFilter('panel-county-selected-layer', ['==', 'Location', '']);
+			// When location is selected via panel, polygon will have a yellow glow
+
+			// Add county labels (that appear above any highlighted county)
+			$map.addLayer({
+				id: 'county-labels-layer',
+				type: 'symbol',
+				source: 'counties',
+				layout: {
+					//'text-field': ['concat', ['get', 'name'], ' County'],
+					'text-field': ['format', ['upcase', ['concat', ['get', 'Location'], ' County']], {}],
+					'text-variable-anchor': ['left'],
+					'text-radial-offset': 0.5,
+					'text-justify': 'auto',
+					'text-font': ['League Spartan Bold'],
+					'text-size': {
+						stops: [
+							[3, 10],
+							[5, 12],
+							[7, 14]
+						]
+					}
+				},
+				paint: {
+					'text-color': '#5d5d5d',
+					'text-halo-color': 'white',
+					'text-halo-width': 1
+				}
 			});
 
 			///////////////////////////
@@ -374,7 +414,7 @@
 				$statesPanelVisible = false;
 			});
 
-			// Add layer for filtered cities
+			// Add layer for filtered cities (via toggles)
 			$map.addLayer({
 				id: 'filtered-city-layer',
 				type: 'circle',
@@ -388,7 +428,7 @@
 			});
 
 			// Hide US cities on initial load on filtered layer
-			$map.setFilter('filtered-city-layer', ['in', 'Location', '']);
+			$map.setFilter('filtered-city-layer', ['==', 'Location', '']);
 
 			// Change cursor to pointer when hovering over marker
 			$map.on('mouseenter', ['city-markers-layer', 'city-labels-layer'], () => {
@@ -399,6 +439,26 @@
 			$map.on('mouseleave', ['city-markers-layer', 'city-labels-layer'], () => {
 				$map.getCanvas().style.cursor = 'auto';
 			});
+
+			///////////////////////////
+			// HIGHLIGHTED CITY from panel selection
+			///////////////////////////
+
+			$map.addLayer({
+				id: 'panel-city-selected-layer',
+				type: 'circle',
+				source: 'cities',
+				paint: {
+					'circle-radius': 4,
+					'circle-stroke-width': 3,
+					'circle-color': '#C70039',
+					'circle-stroke-color': 'yellow'
+				}
+			});
+
+			// Initially hide all markers in panel-city-selected-layer
+			$map.setFilter('panel-city-selected-layer', ['==', 'Location', '']);
+			// When location is selected via panel, marker will have a yellow glow
 
 			///////////////////////////
 			// GENERAL MAP SETTINGS
