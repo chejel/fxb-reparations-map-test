@@ -1,15 +1,18 @@
 <script>
 	import { map } from '$lib/stores.js';
+	export let centerMapPt;
 </script>
 
 <button
 	class="reset-map"
 	on:click|stopPropagation={() => {
 		$map.flyTo({
-			center: [-95.7, 38.1],
+			center: [centerMapPt.lng, centerMapPt.lat],
 			essential: true, // "this animation is considered essential with respect to prefers-reduced-motion"
 			zoom: 3.75,
-			pitch: 0
+			pitch: 0,
+			speed: 1,
+			curve: 1
 		});
 
 		// Add contiguous US bounding box
@@ -23,8 +26,7 @@
 <style>
 	button.reset-map {
 		background-color: #fff;
-		/* border: 1px solid #f5a64c; */
-		border: 1px solid rgb(199, 127, 127);
+		border: 1px solid rgba(199, 127, 127, 1);
 		padding: 5px 6px;
 		border-radius: 4px;
 		font-size: 0.9rem;
@@ -33,8 +35,9 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		width: 29px;
-		height: 29px;
+		width: 30px;
+		height: 30px;
 		box-shadow: 0 0 2px 1px rgba(0, 0, 0, 0.15);
+		margin-left: auto;
 	}
 </style>

@@ -22,7 +22,7 @@
 	} from '$lib/stores.js';
 
 	// Import components
-	import ResetMap from '$lib/components/ResetMap.svelte';
+	import ResetMapBtn from '$lib/components/ResetMapBtn.svelte';
 	import MapFilters from '$lib/components/MapFilters.svelte';
 	// Import icon components
 	import ResetIcon from '$lib/components/icons/Reset.svelte';
@@ -52,6 +52,10 @@
 	mapboxgl.accessToken =
 		'pk.eyJ1IjoiamVuY2hlIiwiYSI6ImNsdDlhNWNtdTBnOXEybW5wMmxxMDRneGMifQ.-aAXBbQZGsiJeZ-zvOXJQA';
 
+	// Center point of map
+	const centerMapPt = { lng: -95.7, lat: 38.1 };
+	const initialZoom = 3.75;
+
 	onMount(async () => {
 		// Set up map via store
 		map.set(
@@ -61,8 +65,8 @@
 				//style: 'mapbox://styles/jenche/clt3p16ui003i01qph9fuhxoq',
 				style: 'mapbox://styles/fxb-center/cluiiae6003iv01qqb1p0970w',
 				//style: 'mapbox://styles/mapbox/standard',
-				center: [-95.7, 38.1],
-				zoom: 3.75,
+				center: [centerMapPt.lng, centerMapPt.lat],
+				zoom: initialZoom,
 				// minZoom: 3.75, // adds bounce when resetting map
 				maxZoom: 6,
 				maxBounds: [
@@ -98,7 +102,7 @@
 			// POLYGONS for states
 			///////////////////////////
 
-			// Add state polygons
+			// Add state polygons data
 			$map.addSource('states', {
 				type: 'geojson',
 				data: {
@@ -210,7 +214,7 @@
 			// POLYGONS for counties
 			///////////////////////////
 
-			// Add county polygons
+			// Add county polygons data
 			$map.addSource('counties', {
 				type: 'geojson',
 				data: {
@@ -350,7 +354,7 @@
 			// POINTS for cities
 			///////////////////////////
 
-			// Add markers for cities
+			// Add city data
 			$map.addSource('cities', {
 				type: 'geojson',
 				data: {
@@ -359,6 +363,7 @@
 				}
 			});
 
+			// Add markers for cities
 			$map.addLayer({
 				id: 'city-markers-layer',
 				type: 'circle',
@@ -510,9 +515,11 @@
 </script>
 
 <!-- Reset map button -->
-{#if initialCenterLng?.toFixed(1) !== movedCenterLng?.toFixed(1) || initialCenterLat?.toFixed(1) !== movedCenterLat?.toFixed(1) || $map?.getPitch() !== 0}
-	<div class="reset-container" transition:fade>
-		<ResetMap><ResetIcon /></ResetMap>
+{#if (initialCenterLng?.toFixed(1) !== movedCenterLng?.toFixed(1) || initialCenterLat?.toFixed(1) !== movedCenterLat?.toFixed(1) || $map?.getPitch() !== 0) && $map?.getZoom() !== 3.75}
+	<div class="reset-container" transition:fade={{ duration: 100 }}>
+		Reset
+		<ResetMapBtn {centerMapPt}><ResetIcon /></ResetMapBtn>
+		Map
 	</div>
 	<div class="btn-container"></div>
 {/if}
@@ -549,6 +556,11 @@
 		top: 75px;
 		right: 10px;
 		z-index: 1;
+		text-transform: uppercase;
+		font-family: 'Barlow Condensed', sans-serif;
+		font-weight: 600;
+		text-align: center;
+		color: darkslategray;
 	}
 
 	.map-filters-container {
@@ -558,6 +570,11 @@
 		display: flex;
 		flex-direction: column;
 		row-gap: 7px;
+
+		font-size: 12px;
+		font-weight: 600;
+		gap: 1px;
+		font-family: 'Roboto Condensed', sans-serif;
 	}
 
 	@media screen and (max-device-width: 480px) {
