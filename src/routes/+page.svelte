@@ -91,9 +91,9 @@
 						feature.properties['Location'] = feature.properties['Location'].split(',', 1)[0];
 					}
 					// If feature contains " County", remove the string
-					if (feature.properties['Location']?.includes(' County')) {
-						feature.properties['Location'] = feature.properties['Location'].replace(' County', '');
-					}
+					// if (feature.properties['Location']?.includes(' County')) {
+					// 	feature.properties['Location'] = feature.properties['Location'].replace(' County', '');
+					// }
 					return feature;
 				})
 		);
@@ -148,7 +148,8 @@
 			return data.map((feature) => {
 				const county = $countiesMap?.features.find(
 					(d) =>
-						d.properties['name'] === feature.properties['Location'] &&
+						d.properties['name'] ===
+							feature.properties['Location'].replace(/County|Borough|Parish/g, '').trim() &&
 						d.properties['state'] === feature.properties['State']
 				);
 				if (county) {

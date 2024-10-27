@@ -30,7 +30,7 @@
 		?.map((location) => ({
 			...location,
 			properties: {
-				Location: location.properties.Location,
+				Location: location.properties.Location, //.replace(/County|Borough|Parish/g, '').trim(),
 				Geography: location.properties.Geography,
 				State: location.properties.State,
 				...[
@@ -63,7 +63,7 @@
 		}))
 		.find(
 			(location) =>
-				location.properties.Location === $selectedLocation.Location &&
+				location.properties.Location === $selectedLocation.Location && //.replace(/County|Borough|Parish/g, '').trim()
 				location.properties.State === $selectedLocation.State
 		);
 
@@ -116,8 +116,21 @@
 <!-- State name -->
 <div class="header">
 	<h2>
-		{locationData.properties.Location}
-		{locationData.properties.Geography === 'County' ? 'County' : ''}
+		{#if locationData.properties.State === 'Alaska'}
+			{locationData.properties.Location}
+			{!locationData.properties.Location.includes('Borough') ? 'Borough' : ''}
+		{:else if locationData.properties.State === 'Louisiana'}
+			{locationData.properties.Location}
+			{!locationData.properties.Location.includes('Parish') ? 'Parish' : ''}
+		{:else}
+			{locationData.properties.Location}
+			{!locationData.properties.Location.includes('County') ? 'County' : ''}
+		{/if}
+		<!-- {locationData.properties.Location}
+		{locationData.properties.Geography === 'County' &&
+		!locationData.properties.Location.includes('County')
+			? 'County'
+			: ''} -->
 	</h2>
 	<span class="state-name">{locationData.properties.State}</span>
 </div>
@@ -223,7 +236,7 @@
 	}
 
 	tr.additional {
-		background-color: #f6f5f2; /* #faf3f3; /* #fff1f1; /* #fdf3f4; /* #f1f1f1; */
+		background-color: #eeeeee; /* #f6f5f2; /* #faf3f3; /* #fff1f1; /* #fdf3f4; /* #f1f1f1; */
 		width: 100%;
 		margin-bottom: 0;
 		padding-top: 1rem;
