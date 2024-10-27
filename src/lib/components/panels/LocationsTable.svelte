@@ -7,7 +7,8 @@
 		reparationsCityData,
 		reparationsCountyData,
 		reparationsStateData,
-		selectedLocation
+		selectedLocation,
+		map
 	} from '$lib/stores.js';
 
 	// Prop for sorting by state toggle
@@ -34,6 +35,23 @@
 	$: tableDataSort = !sortByState
 		? tableData.sort((a, b) => a['Location'].localeCompare(b['Location']))
 		: tableData.sort((a, b) => a['State'].localeCompare(b['State']));
+
+	// Zoom to AK or HI when state or location in state is selected
+	function flyTo(state) {
+		if (state === 'Hawaii') {
+			$map.fitBounds([
+				[-154.80833743387433, 22.23238695135951],
+				[-160.24970712717126, 18.91727560534605]
+			]);
+		} else if (state === 'Alaska') {
+			$map.fitBounds([
+				[-155.95894737171596, 71.5388],
+				[-115.02205262828487, 51.214183]
+			]);
+		}
+	}
+
+	const centerMapPt = { lng: -95.7, lat: 38.1 };
 </script>
 
 <table cellpadding="0" cellspacing="0" border="0">
@@ -61,10 +79,34 @@
 							class:active={$selectedLocation}
 							on:click={() => {
 								selectedLocation.set({ Location, Geography, State });
+
+								// If state is AK or HI, zoom to state
+								if (State === 'Alaska' || State === 'Hawaii') {
+									flyTo(State);
+								} else {
+									$map.flyTo({
+										center: [centerMapPt.lng, centerMapPt.lat],
+										essential: true,
+										zoom: 3.75,
+										pitch: 0,
+										speed: 1,
+										curve: 1
+									});
+								}
 							}}
 						>
 							{#if $countiesPanelVisible}
-								{Location} County
+								{#if Geography === 'County'}
+									{#if State === 'Alaska'}
+										{Location} {!Location.includes('Borough') ? 'Borough' : ''}
+									{:else if State === 'Louisiana'}
+										{Location} {!Location.includes('Parish') ? 'Parish' : ''}
+									{:else}
+										{Location} {!Location.includes('County') ? 'County' : ''}
+									{/if}
+								{:else}
+									{Location}
+								{/if}
 							{:else}
 								{Location}
 							{/if}
@@ -132,7 +174,7 @@
 	}
 
 	/* index numbers */
-	tr td:first-child {
+	td:first-child {
 		padding: 0 0.5rem;
 		text-align: right;
 	}
@@ -140,6 +182,10 @@
 	td {
 		padding: 0.2rem 0;
 	}
+
+	/* tr:last-child td {
+		padding-bottom: 0.2rem;
+	} */
 
 	/* additional padding for states table */
 	td.states {
