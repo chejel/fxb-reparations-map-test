@@ -24,30 +24,34 @@
 
 	// Data array for buttons
 	const buttonData = [
-		{ label: 'Cities', count: citiesCount, visible: $citiesPanelVisible },
-		{ label: 'Counties', count: countiesCount, visible: $countiesPanelVisible },
-		{ label: 'States', count: statesCount, visible: $statesPanelVisible }
+		{ label: 'Cities', count: citiesCount },
+		{ label: 'Counties', count: countiesCount },
+		{ label: 'States', count: statesCount }
 	];
+
+	function handlePlacesBtnClick(label) {
+		$citiesPanelVisible = label === 'Cities';
+		$countiesPanelVisible = label === 'Counties';
+		$statesPanelVisible = label === 'States';
+		$selectedLocation = undefined;
+		// Clear any highlighted location on map:
+		$map.setFilter('panel-city-selected-layer', ['==', 'Location', '']);
+		$map.setFilter('panel-county-selected-layer', ['==', 'Location', '']);
+		$map.setFilter('panel-county-selected-layer', ['==', 'State', '']);
+		$map.setFilter('panel-state-selected-layer', ['==', 'State', '']);
+	}
 </script>
 
 <main class="places-body">
 	<!-- Buttons: Cities, Counties, States -->
 	<section class="btn-container">
 		<!-- Button template -->
-		{#each buttonData as { label, count, visible }, i}
+		{#each buttonData as { label, count }}
 			<button
-				class:active={visible}
-				on:click={() => {
-					$citiesPanelVisible = i === 0;
-					$countiesPanelVisible = i === 1;
-					$statesPanelVisible = i === 2;
-					$selectedLocation = undefined;
-					// Clear any highlighted location on map:
-					$map.setFilter('panel-city-selected-layer', ['==', 'Location', '']);
-					$map.setFilter('panel-county-selected-layer', ['==', 'Location', '']);
-					$map.setFilter('panel-county-selected-layer', ['==', 'State', '']);
-					$map.setFilter('panel-state-selected-layer', ['==', 'State', '']);
-				}}
+				class:active={($citiesPanelVisible && label === 'Cities') ||
+					($countiesPanelVisible && label === 'Counties') ||
+					($statesPanelVisible && label === 'States')}
+				on:click|stopPropagation={() => handlePlacesBtnClick(label)}
 			>
 				{label}
 				<span class="btn-badge" style="padding: {count < 10 ? '0.15rem 0.5rem' : '0.15rem 0.25rem'}"
@@ -92,12 +96,13 @@
 
 	button {
 		padding: 0.35rem 0;
-		font-size: 0.85rem;
+		font-size: 0.9rem;
 		font-weight: 400;
 		flex-grow: 1;
 		display: flex;
 		justify-content: center;
 		align-items: center;
+		font-family: 'Outfit', sans-serif;
 	}
 
 	button:first-child {
