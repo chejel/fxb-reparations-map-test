@@ -8,7 +8,14 @@
 		{#if geoType === 'city'}
 			<circle r="5" cx="8" cy="8" stroke="white" stroke-width="1.5" fill="var(--red)" />
 		{:else if geoType == 'county'}
-			<rect width="12" height="12" x="2" y="2" stroke="#2b4518" stroke-width="1" fill="#2b4518"
+			<rect
+				width="12"
+				height="12"
+				x="2"
+				y="2"
+				stroke="#2b4518"
+				stroke-width="1"
+				fill="rgba(43, 69, 24, 0.75)"
 			></rect>
 		{:else}
 			<rect

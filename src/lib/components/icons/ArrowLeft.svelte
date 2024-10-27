@@ -1,6 +1,6 @@
 <!-- Source: https://iconoir.com/ --><svg
-	width="15px"
-	height="15px"
+	width="14px"
+	height="14px"
 	viewBox="0 0 25 20"
 	stroke-width="4"
 	fill="none"

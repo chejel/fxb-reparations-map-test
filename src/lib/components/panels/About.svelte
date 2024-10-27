@@ -66,6 +66,7 @@
 		display: flex;
 		gap: 2px;
 		align-items: center;
+		border-radius: 5px 5px 0 0;
 	}
 
 	.legend {
