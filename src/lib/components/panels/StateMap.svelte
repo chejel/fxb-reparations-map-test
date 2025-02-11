@@ -3,7 +3,7 @@
 	import { scaleSqrt } from 'd3-scale';
 
 	// Import stores
-	import { statesMap, countiesMap } from '$lib/stores.js';
+	import { statesMap, reparationsCountyData } from '$lib/stores.js';
 
 	// Declare variable for state selection
 	export let locationData = null; // Get data from selected location
@@ -106,12 +106,18 @@
 	}
 
 	// When county is selected, generate state map showing only that county
+	// by narrowing down $reparationsCountyData (which contains geometry data) to selected county only
 	$: if (locationType === 'County') {
-		selectedCountyObj = $countiesMap?.features.find(
+		selectedCountyObj = $reparationsCountyData?.find(
 			(d) =>
-				d.properties.name === locationData.properties.Location &&
-				d.properties.state === locationData.properties.State
+				d.properties.Location === locationData.properties.Location &&
+				d.properties.State === locationData.properties.State
 		);
+	}
+
+	// If selecting a city, clear any selected county
+	$: if (locationType === 'City') {
+		selectedCountyObj = null;
 	}
 </script>
 

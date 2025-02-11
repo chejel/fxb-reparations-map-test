@@ -68,7 +68,7 @@
 				center: [centerMapPt.lng, centerMapPt.lat],
 				zoom: initialZoom,
 				// minZoom: 3.75, // adds bounce when resetting map
-				maxZoom: 6,
+				maxZoom: 7,
 				maxBounds: [
 					[-190, 10], // SW corner
 					[-40, 72.5] // NE corner
@@ -150,6 +150,28 @@
 				$citiesPanelVisible = false;
 				$countiesPanelVisible = false;
 				$statesPanelVisible = true;
+
+				// Clear any highlighted/selected city or county on map
+				// in order of geographic layers added to map
+				if (
+					$map.setFilter('panel-county-selected-layer', [
+						'all',
+						['==', $selectedLocation.Location, ['get', 'Location']],
+						['==', $selectedLocation.State, ['get', 'State']]
+					])
+				) {
+					$map.setFilter('panel-county-selected-layer', ['==', 'Location', '']);
+				}
+
+				if (
+					$map.setFilter('panel-city-selected-layer', [
+						'all',
+						['==', $selectedLocation.Location, ['get', 'Location']],
+						['==', $selectedLocation.State, ['get', 'State']]
+					])
+				) {
+					$map.setFilter('panel-city-selected-layer', ['==', 'Location', '']);
+				}
 			});
 
 			// Add layer for filtered states (fill)
@@ -231,7 +253,7 @@
 				layout: {},
 				paint: {
 					//'fill-color': 'rgb(120, 148, 97)',
-					'fill-color': '#2b4518',
+					'fill-color': 'rgba(43, 69, 24, 0.85)', // '#2b4518',
 					'fill-opacity': 0.8
 				}
 			});
@@ -263,6 +285,27 @@
 				$citiesPanelVisible = false;
 				$countiesPanelVisible = true;
 				$statesPanelVisible = false;
+
+				// Clear any highlighted/selected state or county on map
+				// in order of geographic layers added to map
+				if (
+					$map.setFilter('panel-state-selected-layer', [
+						'any',
+						['==', $selectedLocation.State, ['get', 'State']]
+					])
+				) {
+					$map.setFilter('panel-state-selected-layer', ['==', 'State', '']);
+				}
+
+				if (
+					$map.setFilter('panel-city-selected-layer', [
+						'all',
+						['==', $selectedLocation.Location, ['get', 'Location']],
+						['==', $selectedLocation.State, ['get', 'State']]
+					])
+				) {
+					$map.setFilter('panel-city-selected-layer', ['==', 'Location', '']);
+				}
 			});
 
 			// Add layer for filtered counties (fill)
@@ -323,14 +366,13 @@
 			$map.setFilter('panel-county-selected-layer', ['==', 'Location', '']);
 			// When location is selected via panel, polygon will have a yellow glow
 
-			// Add county labels (that appear above any highlighted county)
+			// Add county labels (that appear above any highlighted county polygon)
 			$map.addLayer({
 				id: 'county-labels-layer',
 				type: 'symbol',
 				source: 'counties',
 				layout: {
-					//'text-field': ['concat', ['get', 'name'], ' County'],
-					'text-field': ['format', ['upcase', ['concat', ['get', 'Location'], ' County']], {}],
+					'text-field': ['get', 'Full County Name'],
 					'text-variable-anchor': ['left'],
 					'text-radial-offset': 0.5,
 					'text-justify': 'auto',
@@ -344,7 +386,7 @@
 					}
 				},
 				paint: {
-					'text-color': '#5d5d5d',
+					'text-color': '#6f6f6f', // '#5d5d5d',
 					'text-halo-color': 'white',
 					'text-halo-width': 1
 				}
@@ -417,6 +459,27 @@
 				$citiesPanelVisible = true;
 				$countiesPanelVisible = false;
 				$statesPanelVisible = false;
+
+				// Clear any highlighted/selected state or county on map
+				// in order of geographic layers added to map
+				if (
+					$map.setFilter('panel-state-selected-layer', [
+						'all',
+						['==', $selectedLocation.State, ['get', 'State']]
+					])
+				) {
+					$map.setFilter('panel-state-selected-layer', ['==', 'State', '']);
+				}
+
+				if (
+					$map.setFilter('panel-county-selected-layer', [
+						'all',
+						['==', $selectedLocation.Location, ['get', 'Location']],
+						['==', $selectedLocation.State, ['get', 'State']]
+					])
+				) {
+					$map.setFilter('panel-county-selected-layer', ['==', 'Location', '']);
+				}
 			});
 
 			// Add layer for filtered cities (via toggles)
