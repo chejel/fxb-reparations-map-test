@@ -30,7 +30,8 @@
 		?.map((location) => ({
 			...location,
 			properties: {
-				Location: location.properties.Location, //.replace(/County|Borough|Parish/g, '').trim(),
+				Location: location.properties.Location,
+				'Full County Name': location.properties['Full County Name'],
 				Geography: location.properties.Geography,
 				State: location.properties.State,
 				...[
@@ -63,7 +64,7 @@
 		}))
 		.find(
 			(location) =>
-				location.properties.Location === $selectedLocation.Location && //.replace(/County|Borough|Parish/g, '').trim()
+				location.properties.Location === $selectedLocation.Location &&
 				location.properties.State === $selectedLocation.State
 		);
 
@@ -115,78 +116,80 @@
 
 <!-- State name -->
 <div class="header">
-	<h2>
-		{#if locationData.properties.State === 'Alaska'}
-			{locationData.properties.Location}
-			{!locationData.properties.Location.includes('Borough') ? 'Borough' : ''}
-		{:else if locationData.properties.State === 'Louisiana'}
-			{locationData.properties.Location}
-			{!locationData.properties.Location.includes('Parish') ? 'Parish' : ''}
-		{:else}
-			{locationData.properties.Location}
-			{!locationData.properties.Location.includes('County') ? 'County' : ''}
-		{/if}
-		<!-- {locationData.properties.Location}
-		{locationData.properties.Geography === 'County' &&
-		!locationData.properties.Location.includes('County')
-			? 'County'
-			: ''} -->
-	</h2>
-	<span class="state-name">{locationData.properties.State}</span>
+	<!-- Card header if city -->
+	{#if locationData.properties.Geography === 'City'}
+		<h2>{locationData.properties.Location}</h2>
+		<!-- Add state name -->
+		<span class="state-name">{locationData.properties.State}</span>
+		<!-- Card header if county -->
+	{:else if locationData.properties.Geography === 'County'}
+		<h2>
+			{locationData.properties['Full County Name']}
+			<!-- Add state name -->
+			<span class="state-name">{locationData.properties.State}</span>
+		</h2>
+		<!-- Card header if state -->
+	{:else}
+		<h2>{locationData.properties.Location}</h2>
+	{/if}
 </div>
 
 <hr />
 
 <!-- Location details -->
 <table class="location-info">
-	{#each Object.entries(locationData.properties).filter((location) => location[0] !== 'Location' && location[0] !== 'Geography' && location[0] !== 'State') as location}
+	{#each Object.entries(locationData.properties).filter((location) => location[0] !== 'Location' && location[0] !== 'Geography' && location[0] !== 'State' && location[0] !== 'Full County Name') as location}
 		{#if location[0] !== 'Where is funding directed?' && location[0] !== 'What other topic areas included in the reparation approach?' && location[0] !== 'Additional Notes'}
-			<tr class="qAndA">
-				<td>
-					{#if location[1].response?.includes('No')}
-						<XIcon />
-					{:else}
-						<CheckIcon />
-					{/if}</td
-				>
-				<td
-					><p>
-						<span class="question-bold">
-							{location[1].question}
-						</span>
-						<span class="response"
-							>{#if location[1].link}
-								{location[1].response}
-								<a href={location[1].link} class="source-btn" aria-label="See related link"
-									><LinkIcon />Source</a
-								>
-							{:else}
-								{location[1].response}
-							{/if}
-						</span>
-					</p></td
-				>
-			</tr>
+			<tbody>
+				<tr class="qAndA">
+					<td>
+						{#if location[1].response?.includes('No')}
+							<XIcon />
+						{:else}
+							<CheckIcon />
+						{/if}</td
+					>
+					<td
+						><p>
+							<span class="question-bold">
+								{location[1].question}
+							</span>
+							<span class="response"
+								>{#if location[1].link}
+									{location[1].response}
+									<a href={location[1].link} class="source-btn" aria-label="See related link"
+										><LinkIcon />Source</a
+									>
+								{:else}
+									{location[1].response}
+								{/if}
+							</span>
+						</p></td
+					>
+				</tr>
+			</tbody>
 		{:else}
-			<tr class="additional">
-				<td>
-					<p>
-						<span class="question-bold">
-							{location[1].question}
-						</span>
-						<span class="response"
-							>{#if location[1].link}
-								{location[1].response}
-								<a href={location[1].link} class="source-btn" aria-label="See related link"
-									><LinkIcon />Source</a
-								>
-							{:else}
-								{location[1].response}
-							{/if}
-						</span>
-					</p>
-				</td>
-			</tr>
+			<tbody>
+				<tr class="additional">
+					<td>
+						<p>
+							<span class="question-bold">
+								{location[1].question}
+							</span>
+							<span class="response"
+								>{#if location[1].link}
+									{location[1].response}
+									<a href={location[1].link} class="source-btn" aria-label="See related link"
+										><LinkIcon />Source</a
+									>
+								{:else}
+									{location[1].response}
+								{/if}
+							</span>
+						</p>
+					</td>
+				</tr>
+			</tbody>
 		{/if}
 	{/each}
 </table>
@@ -212,9 +215,9 @@
 		flex-direction: column;
 	}
 
-	.location-info > tr {
+	/* .location-info > tr {
 		margin-bottom: 0.9rem;
-	}
+	} */
 
 	.qAndA {
 		padding: 0 0.75rem;
