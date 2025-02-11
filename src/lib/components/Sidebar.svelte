@@ -19,22 +19,24 @@
 
 <!-- Header -->
 <header>
-	<h1>Black Reparations Map</h1>
-	<p class="subheader">Where the Conversations Have Started</p>
-</header>
+	<div class="header-title">
+		<h1>Black Reparations Map</h1>
+		<p class="subheader">Where the Conversations Have Started</p>
+	</div>
 
-<!-- About + Places buttons -->
-<PanelBtns />
+	<!-- About + Places buttons -->
+	<PanelBtns />
+</header>
 
 <!-- Body -->
 {#if $aboutPanelVisible}
-	<div class="panel-body" in:fade>
+	<main class="panel-body" in:fade>
 		<AboutPanel />
-	</div>
+	</main>
 {:else if $listPanelVisible}
-	<div class="panel-body" in:fade>
+	<main class="panel-body" in:fade>
 		<PlacesPanel />
-	</div>
+	</main>
 {/if}
 
 <!-- Close button -->
@@ -48,8 +50,6 @@
 
 <style>
 	header {
-		padding: 1rem 1rem 0.5rem;
-
 		/* Source: https://uigradients.com */
 		background: #ffb347; /* older browsers */
 		background: -webkit-linear-gradient(to top, #f4d948, #ffb347); /* Chrome 10-25, Safari 5.1-6 */
@@ -58,6 +58,10 @@
 			#f4d948,
 			/* #ffd23f, #ffcc33 */ #ffb347
 		); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+	}
+
+	.header-title {
+		padding: 1rem 1rem 0.5rem;
 	}
 
 	.subheader {

@@ -3,7 +3,7 @@
 </script>
 
 <label for="state-toggle" class="toggle">
-	<input type="checkbox" id="state-toggle" bind:checked role="switch" />
+	<input id="state-toggle" name="state-toggle" type="checkbox" bind:checked role="switch" />
 	<span class="switch"></span>
 </label>
 <span class="toggle-text">Sort by State</span>

@@ -7,7 +7,7 @@
 	import { aboutPanelVisible, listPanelVisible, map } from '$lib/stores.js';
 </script>
 
-<div class="btn-container">
+<nav class="btn-container">
 	<button
 		class:active={$aboutPanelVisible}
 		on:click|stopPropagation={() => {
@@ -32,7 +32,7 @@
 			$map.setFilter('panel-state-selected-layer', ['==', 'State', '']);
 		}}><ListIcon />List of Places</button
 	>
-</div>
+</nav>
 
 <style>
 	.btn-container {
@@ -42,7 +42,7 @@
 	}
 
 	button {
-		font-family: 'Barlow Condensed';
+		font-family: 'Barlow Condensed', sans-serif;
 		background-color: #fffffd;
 		font-size: 1.1rem;
 		text-transform: uppercase;

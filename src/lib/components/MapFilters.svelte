@@ -96,9 +96,10 @@
 					<!-- Toggle switch based on https://www.w3.org/WAI/ARIA/apg/patterns/switch/examples/switch-checkbox/ -->
 					<label for={toggleValue} class="toggle">
 						<input
+							id={toggleValue}
+							name={toggleValue}
 							type="checkbox"
 							role="switch"
-							id={toggleValue}
 							bind:group={questionToggle}
 							value={question}
 							on:change={() => {
@@ -138,7 +139,7 @@
 	}
 
 	label:focus-within {
-		padding: 2px 2px 4px 4px;
+		padding: 4.5px 2px 4px 4px;
 		border-width: 2px;
 		border-radius: 10px;
 	}
@@ -240,7 +241,7 @@
 		/* border: 1px solid #3f9ab8; */
 		border: 0.75px solid #333;
 		border-radius: 1px;
-		width: 175px;
+		width: 195px;
 	}
 
 	details > summary {

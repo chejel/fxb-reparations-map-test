@@ -41,13 +41,13 @@
 			</div>
 		{/if}
 
-		<section class="card locations-table-container" in:fade>
+		<section aria-label="List of locations" class="card locations-table-container" in:fade>
 			<LocationsTable
 				sortByState={$citiesPanelVisible || $countiesPanelVisible ? sortByState : null}
 			/>
 		</section>
 	{:else}
-		<section class="back-arrow">
+		<div class="back-arrow">
 			<button
 				on:click={() => {
 					$selectedLocation = undefined;
@@ -68,8 +68,12 @@
 							: 'states'}</span
 				>
 			</button>
-		</section>
-		<section class="card selected-location" in:fade>
+		</div>
+		<section
+			aria-label="Details about the selected location"
+			class="card selected-location"
+			in:fade
+		>
 			<SelectedLocationCard />
 		</section>
 	{/if}

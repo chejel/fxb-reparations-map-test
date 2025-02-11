@@ -42,40 +42,38 @@
 	}
 </script>
 
-<main class="places-body">
-	<!-- Buttons: Cities, Counties, States -->
-	<section class="btn-container">
-		<!-- Button template -->
-		{#each buttonData as { label, count }}
-			<button
-				class:active={($citiesPanelVisible && label === 'Cities') ||
-					($countiesPanelVisible && label === 'Counties') ||
-					($statesPanelVisible && label === 'States')}
-				on:click|stopPropagation={() => handlePlacesBtnClick(label)}
+<!-- Buttons: Cities, Counties, States -->
+<section aria-label="Buttons for viewing cities, counties and states" class="btn-container">
+	<!-- Button template -->
+	{#each buttonData as { label, count }}
+		<button
+			class:active={($citiesPanelVisible && label === 'Cities') ||
+				($countiesPanelVisible && label === 'Counties') ||
+				($statesPanelVisible && label === 'States')}
+			on:click|stopPropagation={() => handlePlacesBtnClick(label)}
+		>
+			{label}
+			<span class="btn-badge" style="padding: {count < 10 ? '0.15rem 0.5rem' : '0.15rem 0.25rem'}"
+				>{count}</span
 			>
-				{label}
-				<span class="btn-badge" style="padding: {count < 10 ? '0.15rem 0.5rem' : '0.15rem 0.25rem'}"
-					>{count}</span
-				>
-			</button>
-		{/each}
-	</section>
+		</button>
+	{/each}
+</section>
 
-	<!-- Cities / Counties / States panel -->
-	{#if $citiesPanelVisible || $countiesPanelVisible || $statesPanelVisible}
-		<section class="location-container" in:fade>
-			<LocationsPanel />
-		</section>
-	{/if}
-</main>
+<!-- Cities / Counties / States panel -->
+{#if $citiesPanelVisible || $countiesPanelVisible || $statesPanelVisible}
+	<section aria-label="Locations with reparations efforts" class="location-container" in:fade>
+		<LocationsPanel />
+	</section>
+{/if}
 
 <style>
 	/* to display scrollbar on table section only */
-	.places-body {
+	/* .places-body {
 		display: flex;
 		flex-direction: column;
 		overflow: hidden;
-	}
+	} */
 
 	.location-container {
 		display: flex;

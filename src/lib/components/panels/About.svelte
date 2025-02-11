@@ -12,7 +12,7 @@
 </script>
 
 <!-- Intro text -->
-<section class="introduction">
+<section aria-label="Introduction" class="introduction">
 	<p>Zoom in or double click on the map to see any city names that do not initially appear.</p>
 	<div class="legend-container">
 		<p class="legend-header">
@@ -29,7 +29,10 @@
 
 <!-- Stats card -->
 {#if $reparationsCityData}
-	<section class="card">
+	<section
+		aria-label="Stats about the number of cities, counties and states on the map"
+		class="card"
+	>
 		<!-- header -->
 		<p class="card-header"><StatsIcon /> Locations Represented</p>
 
