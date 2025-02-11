@@ -13,7 +13,6 @@
 	import { onMount } from 'svelte';
 	export let data; // Airtable directory data
 	import {
-		countiesMap,
 		statesMap,
 		reparationsData,
 		reparationsCityData,
@@ -39,20 +38,28 @@
 		// Reparations data via Airtable
 		reparationsData.set({
 			type: 'FeatureCollection',
-			features: data.airtableRecords.map((d) => {
-				const obj = {
-					type: 'Feature',
-					geometry: {
-						type: 'Point',
-						coordinates: [+d['Longitude'], +d['Latitude']]
-					},
-					properties: {
-						...d
-					}
-				};
+			features: data.airtableRecords
+				.map((d) => {
+					const obj = {
+						type: 'Feature',
+						geometry: {
+							type: 'Point',
+							coordinates: [+d['Longitude'], +d['Latitude']]
+						},
+						properties: {
+							...d
+						}
+					};
 
-				return obj;
-			})
+					return obj;
+				})
+				// Must have Location, Geography, State fields
+				.filter(
+					(feature) =>
+						feature.properties['Location'] &&
+						feature.properties['Geography'] &&
+						feature.properties['State']
+				)
 		});
 
 		// ...filtered to city data
@@ -61,7 +68,7 @@
 				.filter(
 					(feature) =>
 						feature.properties['Geography'] === 'City' &&
-						feature.properties['State'] &&
+						//feature.properties['State'] &&
 						feature.properties['Latitude'] &&
 						feature.properties['Longitude']
 				)
@@ -78,22 +85,23 @@
 		reparationsCountyData.set(
 			$reparationsData?.features
 				.filter(
-					(feature) => feature.properties['Geography'] === 'County' && feature.properties['State']
+					(feature) => feature.properties['Geography'] === 'County'
+					//&& feature.properties['State']
 				)
 				// remove non-applicable point geometry data (long/lat) from county data
+				// .map((feature) => {
+				// 	delete feature.geometry;
+				// 	return feature;
+				// })
 				.map((feature) => {
-					delete feature.geometry;
-					return feature;
-				})
-				.map((feature) => {
-					// If feature contains a commma, remove including everything after
+					// If feature contains a comma, remove including everything after
 					if (feature.properties['Location']?.includes(',')) {
 						feature.properties['Location'] = feature.properties['Location'].split(',', 1)[0];
 					}
-					// If feature contains " County", remove the string
-					// if (feature.properties['Location']?.includes(' County')) {
-					// 	feature.properties['Location'] = feature.properties['Location'].replace(' County', '');
-					// }
+					// 	// If feature contains " County", remove the string
+					// 	// if (feature.properties['Location']?.includes(' County')) {
+					// 	// 	feature.properties['Location'] = feature.properties['Location'].replace(' County', '');
+					// 	// }
 					return feature;
 				})
 		);
@@ -104,83 +112,83 @@
 				.filter((feature) => {
 					return feature.properties['Geography'] === 'State' && feature.properties['State'];
 				})
-				// remove non-applicable point geometry data (long/lat) from state data
+				// remove any non-applicable point geometry data (long/lat) from state data
 				.map((feature) => {
 					delete feature.geometry;
 					return feature;
 				})
 		);
 
-		// Map data for all counties
-		countiesMap.set(topojson.feature(topoCounties, topoCounties.objects.counties));
-
 		// In fipsCodes, convert fips_code to string value
+		// Source: https://www.census.gov/library/reference/code-lists/ansi.html#cou
 		fipsCodes.forEach((d) => {
 			d.fips_code = String(d.fips_code);
+			// Create a new property that extracts from the county name any of the following: County, Parish, Borough, or Census Area
+			// d.county_name = d.COUNTYNAME
+			// 	.replace(/County|Parish|Borough|Census Area|Municipality/g, '')
+			// 	.trim();
 		});
 
-		countiesMap.update((d) => {
-			d.features.forEach((feature) => {
+		// Map data for all counties
+		let countiesMap = topojson
+			.feature(topoCounties, topoCounties.objects.counties)
+			// Add fips code to each county feature to use that as variable to match the reparations dataset and topojson
+			.features.map((feature) => {
 				// Exclude feature with id of 02261 (Valdez–Cordova Census Area, Alaska which has been replaced as of 2019; map data is 2017, fips data is 2020)
 				if (feature.id !== '02261') {
 					const fips = feature.id;
 					const state = fipsCodes.find((d) => d.fips_code === fips);
 					feature.properties['state'] = state.state_name;
-				}
-			});
-			return d;
-		});
-
-		// Filter to counties (with reparation efforts) as feature collection for mapping
-		// countyPolygons.set({
-		// 	type: 'FeatureCollection',
-		// 	features: $countiesMap?.features.filter((d) =>
-		// 		$reparationsCountyData.some(
-		// 			(e) =>
-		// 				d.properties['name'] === e.properties.Location &&
-		// 				d.properties['state'] === e.properties.State
-		// 		)
-		// 	)
-		// });
-
-		// For reparationsCountyData, pull in county polygon data from countiesMap
-		reparationsCountyData.update((data) => {
-			return data.map((feature) => {
-				const county = $countiesMap?.features.find(
-					(d) =>
-						d.properties['name'] ===
-							feature.properties['Location'].replace(/County|Borough|Parish/g, '').trim() &&
-						d.properties['state'] === feature.properties['State']
-				);
-				if (county) {
-					feature.geometry = county.geometry;
+					feature.properties['full_name'] = state.COUNTYNAME; // Include full county name for labeling
 				}
 				return feature;
 			});
+
+		// Add county geometry features from countiesMap to reparationsCountyData
+		reparationsCountyData.update((reparationsData) => {
+			return (
+				reparationsData
+					.map((feature) => {
+						const county = countiesMap?.find(
+							(topoData) =>
+								topoData.properties['name'] ===
+									feature.properties['Location']
+										// Remove any noted geographic description
+										.replace(/County|Borough|City and Borough|Census Area|Municipality|Parish/g, '')
+										.trim() && topoData.properties['state'] === feature.properties['State']
+						);
+						// Add geometry feature
+						if (county) {
+							feature.geometry = county.geometry;
+							// Add "full" county or equivalent name to reparationsCountyData
+							feature.properties['Full County Name'] = county.properties['full_name'];
+						}
+						return feature;
+					})
+					// Return only features with a valid geometry
+					.filter((feature) => feature.geometry.coordinates[0])
+			);
 		});
 
 		// Map data for all states
 		statesMap.set(topojson.feature(topoCounties, topoCounties.objects.states));
 
-		// Filter to individual states (with reparation efforts) as feature collection for mapping
-		// statePolygons.set({
-		// 	type: 'FeatureCollection',
-		// 	features: $statesMap?.features.filter((d) =>
-		// 		$reparationsStateData.some((e) => d.properties['name'] === e.properties.Location)
-		// 	)
-		// });
-
 		// For reparationsStateData, pull in county polygon data from statesMap
 		reparationsStateData.update((data) => {
-			return data.map((feature) => {
-				const state = $statesMap?.features.find(
-					(d) => d.properties['name'] === feature.properties['Location']
-				);
-				if (state) {
-					feature.geometry = state.geometry;
-				}
-				return feature;
-			});
+			return (
+				data
+					.map((feature) => {
+						const state = $statesMap?.features.find(
+							(d) => d.properties['name'] === feature.properties['Location']
+						);
+						if (state) {
+							feature.geometry = state.geometry;
+						}
+						return feature;
+					})
+					// Filter to only features with geometry
+					.filter((feature) => feature.geometry)
+			);
 		});
 
 		// Detect orientation change and resize
