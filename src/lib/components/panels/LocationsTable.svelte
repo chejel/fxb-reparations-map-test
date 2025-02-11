@@ -28,7 +28,8 @@
 		return {
 			Location: feature.properties.Location,
 			Geography: feature.properties.Geography,
-			State: feature.properties.State
+			State: feature.properties.State,
+			...($countiesPanelVisible && { fullCountyName: feature.properties['Full County Name'] })
 		};
 	});
 
@@ -62,15 +63,15 @@
 	</colgroup>
 	<thead>
 		<tr
-			><th scope="column"></th>
-			<th scope="column"
+			><th scope="col" />
+			<th scope="col"
 				>{#if $citiesPanelVisible}City{:else if $countiesPanelVisible}County{:else}State{/if}</th
 			>
-			{#if !$statesPanelVisible}<th scope="column">State</th>{/if}
+			{#if !$statesPanelVisible}<th scope="col">State</th>{/if}
 		</tr>
 	</thead>
 	<tbody>
-		{#each tableDataSort as { Location, Geography, State }, index}
+		{#each tableDataSort as { Location, fullCountyName, Geography, State }, index}
 			<tr>
 				<td class="index">{index + 1}</td>
 				{#if $citiesPanelVisible || $countiesPanelVisible}
@@ -96,17 +97,7 @@
 							}}
 						>
 							{#if $countiesPanelVisible}
-								{#if Geography === 'County'}
-									{#if State === 'Alaska'}
-										{Location} {!Location.includes('Borough') ? 'Borough' : ''}
-									{:else if State === 'Louisiana'}
-										{Location} {!Location.includes('Parish') ? 'Parish' : ''}
-									{:else}
-										{Location} {!Location.includes('County') ? 'County' : ''}
-									{/if}
-								{:else}
-									{Location}
-								{/if}
+								{fullCountyName}
 							{:else}
 								{Location}
 							{/if}
@@ -139,6 +130,7 @@
 <style>
 	button {
 		font-size: 1rem;
+		text-align: left;
 	}
 
 	/* Table */
