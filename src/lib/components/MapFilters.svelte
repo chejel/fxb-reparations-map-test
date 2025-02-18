@@ -133,7 +133,7 @@
 
 	label {
 		padding: 0 6px; /* prevents jumping */
-		border: 0 solid rgba(71, 147, 175, 0.75);
+		border: 0 solid rgb(var(--blue), 0.75);
 		cursor: pointer;
 		font-family: 'Barlow Condensed', sans-serif;
 	}
@@ -163,7 +163,7 @@
 		top: 1px;
 		display: inline-block;
 		border: 1px solid gray;
-		background-color: #dbdada;
+		background-color: rgba(var(--gray), 0.65);
 		width: 40px;
 		height: 20px;
 		border-radius: 10px;
@@ -171,7 +171,7 @@
 
 	/* toggle-switch when switch checked */
 	label input[role='switch']:checked ~ .toggle-text-container > .toggle-switch {
-		background-color: #333;
+		background-color: rgba(var(--black), 1);
 		opacity: 0.75;
 	}
 
@@ -181,7 +181,7 @@
 		top: 1.5px;
 		left: 2px;
 		display: inline-block;
-		border: 0.75px solid #333;
+		border: 0.75px solid rgba(var(--black), 1);
 		border-radius: 9px;
 		width: 15px;
 		height: 15px;
@@ -237,23 +237,23 @@
 	/* accordion styles from https://css-tricks.com/how-to-animate-the-details-element/ */
 	details {
 		box-sizing: border-box;
-		background-color: rgba(255, 255, 255, 0.75);
-		/* border: 1px solid #3f9ab8; */
-		border: 0.75px solid #333;
-		border-radius: 1px;
+		background-color: rgba(var(--white), 0.6);
+		border: 0.75px solid rgba(var(--black), 1);
+		border-radius: 3px;
 		width: 195px;
+		filter: drop-shadow(3px 3px 3px rgb(0.25 0.25 0.25 / 0.1));
 	}
 
 	details > summary {
 		padding: 0.5rem;
-		/* background-color: rgba(238, 238, 238, 0.5); */
-		background-color: rgba(199, 0, 57, 0.95);
+		background-color: rgba(var(--red), 0.95);
 		color: white;
 		font-weight: 600;
 		cursor: pointer;
 		font-family: 'Barlow Condensed', sans-serif;
 		font-size: 1rem;
 		text-transform: uppercase;
+		border-radius: 3px 3px 0 0;
 	}
 
 	/* space between arrow and text */

@@ -36,12 +36,12 @@
 		left: 0;
 		right: 0;
 		bottom: 0;
-		background-color: #ccc;
+		background-color: rgba(var(--gray), 1);
 		border-radius: 20px;
 		-webkit-transition: 0.3s;
 		transition: 0.3s;
 		cursor: pointer;
-		border: 1px solid #fff;
+		border: 1px solid rgba(var(--white), 1);
 	}
 
 	.switch:before {
@@ -51,14 +51,14 @@
 		width: 14px;
 		top: 2px;
 		left: 3px;
-		background-color: #fff;
+		background-color: rgba(var(--white), 1);
 		-webkit-transition: 0.4s;
 		transition: 0.3s;
 		border-radius: 50%;
 	}
 
 	input:checked + .switch {
-		background-color: var(--green);
+		background-color: rgba(var(--green), 1);
 	}
 
 	input:checked + .switch:before {

@@ -5,27 +5,32 @@
 
 <div class="legend-item">
 	<svg width="15" height="15" xmlns="http://www.w3.org/2000/svg">
+		<!-- City -->
 		{#if geoType === 'city'}
-			<circle r="5" cx="8" cy="8" stroke="white" stroke-width="1.5" fill="var(--red)" />
+			<circle r="5" cx="8" cy="8" stroke="white" stroke-width="1.5" fill="rgba(var(--red), 1)" />
+
+			<!-- County -->
 		{:else if geoType == 'county'}
 			<rect
 				width="12"
 				height="12"
 				x="2"
 				y="2"
-				stroke="#2b4518"
+				stroke="rgba(var(--dark-green), 1)"
 				stroke-width="1"
-				fill="rgba(43, 69, 24, 0.75)"
-			></rect>
+				fill="rgba(var(--dark-green), 0.75)"
+			/>
+
+			<!-- State -->
 		{:else}
 			<rect
 				width="12"
 				height="12"
 				x="2"
 				y="2"
-				stroke="#2b4518"
+				stroke="rgba(var(--dark-green), 1)"
 				stroke-width="1"
-				fill="rgba(120, 148, 97, 0.15)"
+				fill="rgba(var(--green), 0.25)"
 			/>
 		{/if}
 	</svg>

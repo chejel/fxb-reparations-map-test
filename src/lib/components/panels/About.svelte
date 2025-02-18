@@ -48,24 +48,18 @@
 		margin-top: 10px;
 		font-size: 0.85rem;
 		font-family: 'Barlow Condensed', sans-serif;
-		background-color: rgba(255, 255, 255, 0.75);
+		background-color: rgba(var(--white), 0.75);
 		display: flex;
 		flex-direction: column;
 		justify-content: space-between;
-		/* border: 0.75px solid #feb746; */
-		border: 0.75px solid #597e52;
+		border: 0.75px solid rgba(var(--dark-green), 1);
 		border-radius: 5px;
-		/* overflow: auto; */
 	}
-
-	/* .legend-container hr {
-		margin: 5px 0;
-	} */
 
 	.legend-header {
 		padding: 7px 10px;
 		text-transform: uppercase;
-		background-color: rgba(254, 183, 70, 0.75);
+		background-color: rgba(var(--yellow-orange), 0.75);
 		display: flex;
 		gap: 2px;
 		align-items: center;
@@ -80,12 +74,13 @@
 		gap: 25px;
 	}
 
+	/* stats */
 	.card-header {
 		font-family: 'Barlow Condensed', sans-serif;
 		font-size: 1rem;
 		text-transform: uppercase;
 		font-weight: 600;
-		background-color: rgba(234, 230, 230, 0.7);
+		background-color: rgba(var(--gray), 0.35);
 		padding: 0.6rem 0.75rem;
 		display: flex;
 		gap: 5px;

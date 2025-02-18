@@ -37,13 +37,13 @@
 <style>
 	.btn-container {
 		display: flex;
-		border-top: 0.75px solid var(--orange);
-		border-bottom: 3px solid #eee;
+		border-top: 0.75px solid rgba(var(--orange), 1);
+		border-bottom: 3px solid rgba(var(--gray), 1);
 	}
 
 	button {
 		font-family: 'Barlow Condensed', sans-serif;
-		background-color: #fffffd;
+		background-color: rgba(var(--light-gray), 1);
 		font-size: 1.1rem;
 		text-transform: uppercase;
 		padding: 10px 0;
@@ -54,13 +54,18 @@
 		flex: 1 1 0px; /* make buttons equal width */
 	}
 
+	button:hover {
+		background-color: rgba(var(--white), 0.95);
+	}
+
 	button:not(:last-child) {
 		border-right: 1px solid #eee;
 	}
 
-	.active {
-		box-shadow: inset 0px -3px 0px 0px var(--green);
+	button.active {
+		box-shadow: inset 0px -3px 0px 0px rgba(var(--green), 1);
 		font-weight: 700;
 		cursor: auto;
+		background-color: rgba(var(--white), 1);
 	}
 </style>

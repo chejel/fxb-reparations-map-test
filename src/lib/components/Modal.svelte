@@ -18,15 +18,15 @@
 <style>
 	dialog {
 		margin: auto;
-		background-color: #333;
-		color: white;
+		background-color: rgba(var(--black), 1);
+		color: rgba(var(--white), 1);
 		border-radius: 3px;
 		border: none;
 		text-align: center;
 	}
 
 	dialog::backdrop {
-		background: rgba(0, 0, 0, 0.4);
+		background: rgba(var(--black), 0.4);
 	}
 
 	dialog > div {

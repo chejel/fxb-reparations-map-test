@@ -148,21 +148,21 @@
 	}
 
 	th {
-		background-color: rgb(254, 183, 70);
+		background-color: rgb(var(--yellow-orange), 0.85);
 		padding: 0.25rem 0;
 		font-family: 'Barlow Condensed', sans-serif;
 		text-transform: uppercase;
 		font-size: 0.85rem;
 		font-weight: 800;
-		box-shadow: 0 1px 2px -1px rgba(0, 0, 0, 0.4);
+		box-shadow: 0 1px 2px -1px rgba(var(--black), 0.4);
 	}
 
 	tr:not(:last-child) td {
-		border-bottom: 1px solid var(--divider-gray);
+		border-bottom: 1px solid rgba(var(--gray), 0.65);
 	}
 
 	tr:hover {
-		background-color: rgba(254, 183, 70, 0.1);
+		background-color: rgba(var(--yellow-orange), 0.1);
 	}
 
 	/* index numbers */
@@ -174,10 +174,6 @@
 	td {
 		padding: 0.2rem 0;
 	}
-
-	/* tr:last-child td {
-		padding-bottom: 0.2rem;
-	} */
 
 	/* additional padding for states table */
 	td.states {
@@ -193,13 +189,13 @@
 	}
 
 	.index {
-		color: var(--red);
+		color: rgba(var(--red), 1);
 	}
 
 	/* for touch screens */
 	@media (hover: none) {
 		button {
-			color: #333;
+			color: rgb(var(--black));
 		}
 	}
 </style>

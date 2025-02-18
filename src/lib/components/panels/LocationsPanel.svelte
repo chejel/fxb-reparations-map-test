@@ -117,7 +117,7 @@
 	/* for touch screens */
 	@media (hover: none) {
 		button {
-			color: #333;
+			color: rgb(var(--black));
 		}
 	}
 </style>

@@ -71,9 +71,7 @@
 
 	.panel-body {
 		padding: 1rem;
-		/* background-color: rgba(252, 231, 204, 0.5); */
-		/* background-color: rgba(236, 194, 122, 0.2); */
-		background-color: rgba(251, 244, 226, 1);
+		background-color: rgb(var(--beige), 1);
 		max-height: calc(100svh - 2rem);
 		display: flex;
 		flex-direction: column;

@@ -68,13 +68,6 @@
 {/if}
 
 <style>
-	/* to display scrollbar on table section only */
-	/* .places-body {
-		display: flex;
-		flex-direction: column;
-		overflow: hidden;
-	} */
-
 	.location-container {
 		display: flex;
 		flex-direction: column;
@@ -87,7 +80,7 @@
 
 	.btn-container {
 		display: flex;
-		background-color: rgba(220, 220, 220, 0.65);
+		background-color: rgba(var(--gray), 0.45);
 		border-radius: 5px;
 		border: 0.5px solid silver;
 	}
@@ -101,6 +94,7 @@
 		justify-content: center;
 		align-items: center;
 		font-family: 'Outfit', sans-serif;
+		position: relative;
 	}
 
 	button:first-child {
@@ -111,14 +105,10 @@
 		margin-left: -1px;
 	}
 
-	button {
-		position: relative;
-	}
-
 	button:not(.active):after {
 		content: '❘';
 		font-size: 1.5rem;
-		color: #fffffd;
+		color: rgba(var(--white), 1);
 		display: inline-block;
 		position: absolute;
 		right: -7px;
@@ -128,16 +118,16 @@
 		border-radius: 0 5px 5px 0;
 	}
 
-	.active {
+	button.active {
 		font-weight: 700;
-		background-color: rgba(255, 255, 253, 0.75);
-		border: 1px solid var(--orange);
+		background-color: rgba(var(--white), 0.8);
+		border: 1px solid rgba(var(--orange), 1);
 		border-radius: 5px !important;
 	}
 
 	.btn-badge {
-		background-color: var(--orange);
-		color: #333;
+		background-color: rgba(var(--orange), 1);
+		color: rgba(var(--black), 1);
 		font-size: 0.8rem;
 		margin-left: 0.5rem;
 		border-radius: 50%;

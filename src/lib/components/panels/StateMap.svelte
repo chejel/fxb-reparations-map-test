@@ -23,7 +23,7 @@
 	let path;
 	let cx, cy; // displaying city
 
-	$: viewBox = `0 0 ${width} ${height}`;
+	$: viewBox = `0 -9 ${width} ${height}`;
 
 	// For radius of circle marking location of city on map:
 	let radiusScale;
@@ -124,7 +124,7 @@
 <svg {viewBox}>
 	<!-- Draw state -->
 	{#if selectedStateObj}
-		<g fill="#ffc17e" stroke="#c54209" stroke-width="1.5">
+		<g fill="rgba(var(--light-orange), 0.95)" stroke="rgba(var(--red), 0.75)" stroke-width="1.5">
 			<path
 				d={path(selectedStateObj)}
 				aria-hidden="true"
@@ -134,7 +134,7 @@
 	{/if}
 
 	{#if selectedCountyObj}
-		<g fill="#333" opacity="0.75" stroke="white" stroke-width="3">
+		<g fill="rgba(var(--black), 1)" opacity="0.75" stroke="white" stroke-width="3">
 			<path d={path(selectedCountyObj)} aria-hidden="true" />
 		</g>
 	{/if}
@@ -146,22 +146,11 @@
 			{cy}
 			r="40"
 			opacity="1"
-			fill="#333"
+			fill="rgba(var(--black), 1)"
 			fill-opacity="0.85"
 			stroke="white"
 			stroke-width="7"
 			aria-hidden="true"
 		/>
-		<!-- <circle
-			{cx}
-			{cy}
-			r="40"
-			opacity="1"
-			fill="#C70039"
-			fill-opacity="0.95"
-			stroke="white"
-			stroke-width="12"
-			aria-hidden="true"
-		/> -->
 	{/if}
 </svg>

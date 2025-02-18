@@ -254,7 +254,7 @@
 		<img src={rotateIcon} alt="" width="50" style="margin: auto; padding-bottom: 5px;" />
 		<p>Please rotate your device to access the</p>
 		<p
-			style="font-size: 1.35em; text-transform: uppercase; font-weight: 700; color: var(--orange);"
+			style="font-size: 1.35em; text-transform: uppercase; font-weight: 700; color: rgba(var(--orange), 1);"
 		>
 			Black Reparations Map
 		</p>
@@ -267,11 +267,11 @@
 		max-width: 375px;
 		max-height: calc(100svh - 2rem);
 		border-radius: 5px;
-		background-color: rgb(245, 247, 248);
+		background-color: rgb(var(--light-gray), 1);
 		top: 0;
 		z-index: 1;
 		margin: 1rem;
-		box-shadow: 0px 0px 24px 3px rgba(0, 0, 0, 0.1);
+		box-shadow: 0px 0px 24px 3px rgba(var(--black), 0.1);
 		display: flex;
 		flex-direction: column;
 		overflow: hidden;

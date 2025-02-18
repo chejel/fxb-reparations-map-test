@@ -55,8 +55,9 @@
 		width: 20px;
 		border-radius: 100%;
 		border: 3px solid;
-		border-color: #eee #eee rgb(255, 171, 77) #eee;
-		animation: spin 2s linear infinite;
+		border-color: rgba(var(--light-gray), 1) rgba(var(--light-gray), 1) rgba(var(--orange), 1)
+			rgba(var(--light-gray), 1);
+		animation: spin 2s ease infinite;
 	}
 
 	@keyframes spin {
