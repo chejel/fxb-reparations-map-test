@@ -86,7 +86,7 @@
 		$map.addControl(new mapboxgl.NavigationControl({ showCompass: false }), 'top-right');
 
 		$map.on('load', () => {
-			// Establish initial center longtitude value
+			// Establish initial center longitude value
 			initialCenterLng = $map?.getCenter().lng;
 			initialCenterLat = $map?.getCenter().lat;
 			movedCenterLng = $map?.getCenter().lng;
@@ -561,6 +561,12 @@
 					}
 				}
 			);
+
+			// "Disable map rotation using right click + drag"
+			$map.dragRotate.disable();
+
+			// "Disable map rotation using touch rotation gesture"
+			$map.touchZoomRotate.disableRotation();
 		});
 	});
 
@@ -578,7 +584,15 @@
 </script>
 
 <!-- Reset map button -->
-{#if (initialCenterLng?.toFixed(1) !== movedCenterLng?.toFixed(1) || initialCenterLat?.toFixed(1) !== movedCenterLat?.toFixed(1) || $map?.getPitch() !== 0) && $map?.getZoom() !== 3.75}
+<!-- <div class="reset-container" transition:fade={{ duration: 100 }}>
+	Reset
+	<ResetMapBtn {centerMapPt}><ResetIcon /></ResetMapBtn>
+	Map
+</div>
+<div class="btn-container"></div> -->
+
+<!-- {#if (initialCenterLng?.toFixed(1) !== movedCenterLng?.toFixed(1) || initialCenterLat?.toFixed(1) !== movedCenterLat?.toFixed(1) || $map?.getPitch() !== 0) && $map?.getZoom() !== 3.75} -->
+{#if initialCenterLng?.toFixed(1) !== movedCenterLng?.toFixed(1) || initialCenterLat?.toFixed(1) !== movedCenterLat?.toFixed(1) || $map?.getZoom() !== 3.75}
 	<div class="reset-container" transition:fade={{ duration: 100 }}>
 		Reset
 		<ResetMapBtn {centerMapPt}><ResetIcon /></ResetMapBtn>
