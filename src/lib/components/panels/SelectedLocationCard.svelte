@@ -114,34 +114,39 @@
 	/>
 </div>
 
-<!-- State name -->
-<div class="header">
-	<!-- Card header if city -->
-	{#if locationData.properties.Geography === 'City'}
-		<h2>{locationData.properties.Location}</h2>
-		<!-- Add state name -->
-		<span class="state-name">{locationData.properties.State}</span>
-		<!-- Card header if county -->
-	{:else if locationData.properties.Geography === 'County'}
-		<h2>
-			{locationData.properties['Full County Name']}
-			<!-- Add state name -->
-			<span class="state-name">{locationData.properties.State}</span>
-		</h2>
-		<!-- Card header if state -->
-	{:else}
-		<h2>{locationData.properties.Location}</h2>
-	{/if}
-</div>
-
-<hr />
-
 <!-- Location details -->
 <table class="location-info">
-	{#each Object.entries(locationData.properties).filter((location) => location[0] !== 'Location' && location[0] !== 'Geography' && location[0] !== 'State' && location[0] !== 'Full County Name') as location}
-		{#if location[0] !== 'Where is funding directed?' && location[0] !== 'What other topic areas included in the reparation approach?' && location[0] !== 'Additional Notes'}
-			<tbody>
+	<thead>
+		<tr>
+			<th scope="col">
+				<!-- State name -->
+				<div class="header">
+					<!-- Card header if city -->
+					{#if locationData.properties.Geography === 'City'}
+						<h2>{locationData.properties.Location}</h2>
+						<!-- Add state name -->
+						<span class="state-name">{locationData.properties.State}</span>
+						<!-- Card header if county -->
+					{:else if locationData.properties.Geography === 'County'}
+						<h2>
+							{locationData.properties['Full County Name']}
+							<!-- Add state name -->
+							<span class="state-name">{locationData.properties.State}</span>
+						</h2>
+						<!-- Card header if state -->
+					{:else}
+						<h2>{locationData.properties.Location}</h2>
+					{/if}
+				</div>
+				<hr /></th
+			>
+		</tr>
+	</thead>
+	<tbody>
+		{#each Object.entries(locationData.properties).filter((location) => location[0] !== 'Location' && location[0] !== 'Geography' && location[0] !== 'State' && location[0] !== 'Full County Name') as location}
+			{#if location[0] !== 'Where is funding directed?' && location[0] !== 'What other topic areas included in the reparation approach?' && location[0] !== 'Additional Notes'}
 				<tr class="qAndA">
+					<!-- icon -->
 					<td>
 						{#if location[1].response?.includes('No')}
 							<XIcon />
@@ -149,6 +154,8 @@
 							<CheckIcon />
 						{/if}</td
 					>
+
+					<!-- Q&A -->
 					<td
 						><p>
 							<span class="question-bold">
@@ -156,9 +163,14 @@
 							</span>
 							<span class="response"
 								>{#if location[1].link}
-									{location[1].response}
-									<a href={location[1].link} class="source-btn" aria-label="See related link"
-										><LinkIcon />Source</a
+									<span
+										>{location[1].response}
+										&nbsp;<a
+											href={location[1].link}
+											class="source-btn"
+											target="_blank"
+											aria-label="Open source link in new window"><LinkIcon />Source</a
+										></span
 									>
 								{:else}
 									{location[1].response}
@@ -167,20 +179,26 @@
 						</p></td
 					>
 				</tr>
-			</tbody>
-		{:else}
-			<tbody>
+			{:else}
 				<tr class="additional">
 					<td>
 						<p>
+							<!-- additional question -->
 							<span class="question-bold">
 								{location[1].question}
 							</span>
+
+							<!-- additional answer -->
 							<span class="response"
 								>{#if location[1].link}
-									{location[1].response}
-									<a href={location[1].link} class="source-btn" aria-label="See related link"
-										><LinkIcon />Source</a
+									<span
+										>{location[1].response}&nbsp;
+										<a
+											href={location[1].link}
+											class="source-btn"
+											target="_blank"
+											aria-label="Open source link in new window"><LinkIcon />Source</a
+										></span
 									>
 								{:else}
 									{location[1].response}
@@ -189,9 +207,9 @@
 						</p>
 					</td>
 				</tr>
-			</tbody>
-		{/if}
-	{/each}
+			{/if}
+		{/each}
+	</tbody>
 </table>
 
 <style>
@@ -207,7 +225,7 @@
 		text-transform: uppercase;
 		font-size: 1rem;
 		font-weight: 600;
-		color: #fc915e;
+		color: rgba(var(--salmon), 1);
 	}
 
 	.location-info {
@@ -215,12 +233,8 @@
 		flex-direction: column;
 	}
 
-	/* .location-info > tr {
-		margin-bottom: 0.9rem;
-	} */
-
 	.qAndA {
-		padding: 0 0.75rem;
+		padding: 0.5rem 0.75rem;
 	}
 
 	.qAndA:last-child {
@@ -229,17 +243,29 @@
 
 	.response {
 		display: flex;
-		flex-wrap: wrap;
-		row-gap: 3px;
-		column-gap: 5px;
-		/* display: inline-flex;
-		flex-wrap: wrap;
+		/* flex-wrap: wrap;
 		row-gap: 3px;
 		column-gap: 5px; */
 	}
 
+	thead {
+		position: sticky;
+		top: 0;
+		z-index: 2;
+		background-color: rgba(254, 250, 246, 0.9);
+	}
+
+	th {
+		width: 100%;
+	}
+
+	tr {
+		display: flex;
+		gap: 0;
+	}
+
 	tr.additional {
-		background-color: #eeeeee; /* #f6f5f2; /* #faf3f3; /* #fff1f1; /* #fdf3f4; /* #f1f1f1; */
+		background-color: rgba(var(--light-gray), 1);
 		width: 100%;
 		margin-bottom: 0;
 		padding-top: 1rem;
@@ -257,20 +283,15 @@
 		font-family: 'Barlow Condensed', sans-serif;
 	}
 
-	tr {
-		display: flex;
-		gap: 0;
-	}
-
 	.map-container {
 		position: absolute;
 		top: 200px;
 		right: 40px;
 		width: 25%;
-		z-index: 1;
+		z-index: 10;
 	}
 
 	hr {
-		padding-bottom: 0.75rem;
+		margin-bottom: 0.75rem;
 	}
 </style>
