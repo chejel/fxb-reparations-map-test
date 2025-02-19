@@ -412,8 +412,9 @@
 		width: 100%;
 	}
 
-	td {
+	td:not(:first-child) {
 		vertical-align: middle;
+		padding: 5px 0;
 	}
 
 	.number {
