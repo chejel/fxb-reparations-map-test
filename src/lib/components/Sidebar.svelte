@@ -30,11 +30,11 @@
 
 <!-- Body -->
 {#if $aboutPanelVisible}
-	<main class="panel-body" in:fade>
+	<main class="panel-body panel-about" in:fade>
 		<AboutPanel />
 	</main>
 {:else if $listPanelVisible}
-	<main class="panel-body" in:fade>
+	<main class="panel-body panel-list" in:fade>
 		<PlacesPanel />
 	</main>
 {/if}
@@ -73,6 +73,13 @@
 		padding: 1rem;
 		background-color: rgb(var(--beige), 1);
 		max-height: calc(100svh - 2rem);
+	}
+
+	.panel-about {
+		overflow-y: auto;
+	}
+
+	.panel-list {
 		display: flex;
 		flex-direction: column;
 		overflow: hidden;
