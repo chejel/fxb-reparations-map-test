@@ -13,7 +13,29 @@
 
 <!-- Intro text -->
 <section aria-label="Introduction" class="introduction">
-	<p>Zoom in or double click on the map to see any city names that do not initially appear.</p>
+	<p>
+		The FXB Center’s <strong>National Black Reparations Map</strong> is an interactive tool that
+		tracks the progress of reparation conversations, i.e., research, policy development, and
+		enactment of reparations policy at the state, city, and local county level across the United
+		States. Reparations for the African American community seek redress for slavery, redlining, mass
+		incarceration, and other anti-black policies in the United States. Our research focuses on
+		<a href="/" target="_blank"><strong>Making the Health Case for Reparations</strong></a>, and
+		this map supports that work by tracking where reparations are being passed to address health
+		disparities within the Black American community.
+	</p>
+
+	<p>
+		The <a href="https://airtable.com/appVAaDUbHug6JBVT/shrc7vnOjje5jmgBF" target="_blank"
+			><strong>Black Reparations Directory</strong></a
+		> also accompanies the interactive map where you can find more information and links to the reparations
+		work happening within state, city, and local governments.
+	</p>
+
+	<p>This project was made possible through funding from the Robert Wood Johnson Foundation.</p>
+	<hr />
+	<p style="font-size: 0.8rem;">
+		Zoom in or double click on the map to see any city names that do not initially appear.
+	</p>
 	<div class="legend-container">
 		<p class="legend-header">
 			<MarkerIcon />
@@ -89,5 +111,9 @@
 	.stats-table {
 		/* margin-top: 0.5rem; */
 		padding: 0.5rem 0.75rem;
+	}
+
+	.introduction:not(legend-container) > p {
+		margin-bottom: 0.75rem;
 	}
 </style>
