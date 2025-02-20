@@ -30,8 +30,9 @@
 	<!-- Table of matching county names, state -->
 	{#if !$selectedLocation}
 		<p style="margin-bottom: {$statesPanelVisible ? '0.35rem' : '0'}">
-			Select a {$citiesPanelVisible ? 'city' : $countiesPanelVisible ? 'county' : 'state'} for information
-			about its reparations efforts.
+			Select a <strong
+				>{$citiesPanelVisible ? 'city' : $countiesPanelVisible ? 'county' : 'state'}</strong
+			> from the full list for information about its reparations efforts.
 		</p>
 
 		<!-- Sort by state toggle -->
