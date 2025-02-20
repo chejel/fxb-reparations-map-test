@@ -30,7 +30,7 @@
 			$map.setFilter('panel-county-selected-layer', ['==', 'Location', '']);
 			$map.setFilter('panel-county-selected-layer', ['==', 'State', '']);
 			$map.setFilter('panel-state-selected-layer', ['==', 'State', '']);
-		}}><ListIcon />List of Places</button
+		}}><ListIcon />List of Locations</button
 	>
 </nav>
 
