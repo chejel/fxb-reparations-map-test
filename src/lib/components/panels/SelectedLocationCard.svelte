@@ -161,19 +161,23 @@
 							<span class="question-bold">
 								{location[1].question}
 							</span>
-							<span class="response"
-								>{#if location[1].link}
-									<span
-										>{location[1].response}
-										&nbsp;<a
-											href={location[1].link}
-											class="source-btn"
-											target="_blank"
-											aria-label="Open source link in new window"><LinkIcon />Source</a
-										></span
-									>
+							<span class="response">
+								{#if location[1].response}
+									{#if location[1].link}
+										<span>
+											{location[1].response}
+											&nbsp;<a
+												href={location[1].link}
+												class="source-btn"
+												target="_blank"
+												aria-label="Open source link in new window"><LinkIcon />Source</a
+											>
+										</span>
+									{:else}
+										{location[1].response}
+									{/if}
 								{:else}
-									{location[1].response}
+									N/A
 								{/if}
 							</span>
 						</p></td
@@ -189,19 +193,23 @@
 							</span>
 
 							<!-- additional answer -->
-							<span class="response"
-								>{#if location[1].link}
-									<span
-										>{location[1].response}&nbsp;
-										<a
-											href={location[1].link}
-											class="source-btn"
-											target="_blank"
-											aria-label="Open source link in new window"><LinkIcon />Source</a
-										></span
-									>
+							<span class="response">
+								{#if location[1].response}
+									{#if location[1].link}
+										<span
+											>{location[1].response}&nbsp;
+											<a
+												href={location[1].link}
+												class="source-btn"
+												target="_blank"
+												aria-label="Open source link in new window"><LinkIcon />Source</a
+											></span
+										>
+									{:else}
+										{location[1].response}
+									{/if}
 								{:else}
-									{location[1].response}
+									N/A
 								{/if}
 							</span>
 						</p>
