@@ -94,12 +94,14 @@
 				// 	return feature;
 				// })
 				.map((feature) => {
-					// If feature contains a comma, remove including everything after
+					// If feature contains a comma, remove + everything after
 					if (feature.properties['Location']?.includes(',')) {
-						feature.properties['Location'] = feature.properties['Location'].split(',', 1)[0];
+						feature.properties['Location'] = feature.properties['Location'].split(',', 1)[0].trim();
 					}
+
+					// If feature contains a parenthesis, remove + everything after
 					if (feature.properties['Location']?.includes('(')) {
-						feature.properties['Location'] = feature.properties['Location'].split('(', 1)[0];
+						feature.properties['Location'] = feature.properties['Location'].split('(', 1)[0].trim();
 					}
 					// 	// If feature contains " County", remove the string
 					// 	// if (feature.properties['Location']?.includes(' County')) {
@@ -169,7 +171,8 @@
 						return feature;
 					})
 					// Return only features with a valid geometry
-					.filter((feature) => feature.geometry.coordinates[0])
+					.filter((feature) => feature.geometry.coordinates[0]) // sort by location name
+					.sort((a, b) => a.properties['Location'].localeCompare(b.properties['Location']))
 			);
 		});
 
