@@ -1,6 +1,14 @@
 <script>
 	// Import stores
-	import { reparationsCityData, reparationsCountyData, reparationsStateData } from '$lib/stores.js';
+	import {
+		reparationsCityData,
+		reparationsCountyData,
+		reparationsStateData,
+		selectedLocation,
+		map,
+		aboutPanelVisible,
+		listPanelVisible
+	} from '$lib/stores.js';
 
 	// # of cities
 	const numCities = $reparationsCityData?.length;
@@ -20,20 +28,22 @@
 	let statesTab = false;
 
 	// Variables for each question
-	let numReports;
-	let numFunding;
-	let numSource;
-	let numAllocation;
-	let numDirect;
-	let numEligibility;
-	let numHealth;
+	let numReports, numFunding, numSource, numAllocation, numDirect, numEligibility, numHealth;
+	// Variables for dataset filtered by locations that apply for each question
+	let reportsFiltered,
+		fundingFiltered,
+		sourceFiltered,
+		allocationFiltered,
+		directFiltered,
+		eligibilityFiltered,
+		healthFiltered;
 
 	// Function to return number of locations that apply for each question
 	filterByProperty($reparationsCityData);
 
 	function filterByProperty(dataset) {
 		// numReports
-		numReports = dataset
+		reportsFiltered = dataset
 			?.filter((d) => d.properties['Has the location released a report on reparations?'])
 			.filter((d) =>
 				['yes'].some((value) =>
@@ -41,10 +51,11 @@
 						.toLowerCase()
 						.includes(value)
 				)
-			).length;
+			);
+		numReports = reportsFiltered.length;
 
 		// numFunding
-		numFunding = dataset
+		fundingFiltered = dataset
 			?.filter((d) => d.properties['Has the location approved reparations funding?'])
 			.filter((d) =>
 				['yes'].some((value) =>
@@ -52,18 +63,21 @@
 						.toLowerCase()
 						.includes(value)
 				)
-			).length;
+			);
+		numFunding = fundingFiltered.length;
 
 		// numSource
-		numSource = dataset
+		sourceFiltered = dataset
 			?.filter((d) => d.properties['What is the potential funding source?'])
 			.filter((d) =>
 				['yes'].some((value) =>
 					d.properties['What is the potential funding source?'].toLowerCase().includes(value)
 				)
-			).length;
+			);
+		numSource = sourceFiltered.length;
 
-		numAllocation = dataset
+		// numAllocation
+		allocationFiltered = dataset
 			?.filter((d) => d.properties['Has the location begun allocating reparations?'])
 			.filter((d) =>
 				['yes'].some((value) =>
@@ -71,9 +85,11 @@
 						.toLowerCase()
 						.includes(value)
 				)
-			).length;
+			);
+		numAllocation = allocationFiltered.length;
 
-		numDirect = dataset
+		// numDirect
+		directFiltered = dataset
 			?.filter(
 				(d) => d.properties['Has the location determined if direct payments will be included?']
 			)
@@ -83,9 +99,11 @@
 						.toLowerCase()
 						.includes(value)
 				)
-			).length;
+			);
+		numDirect = directFiltered.length;
 
-		numEligibility = dataset
+		// numEligibility
+		eligibilityFiltered = dataset
 			?.filter(
 				(d) =>
 					d.properties['Has the location determined who is eligible to receive direct payments?']
@@ -96,50 +114,85 @@
 						.toLowerCase()
 						.includes(value)
 				)
-			).length;
+			);
+		numEligibility = eligibilityFiltered.length;
 
-		numHealth = dataset
+		// numHealth
+		healthFiltered = dataset
 			?.filter((d) => d.properties['Is any of the funding addressing health?'])
 			.filter((d) =>
 				['yes'].some((value) =>
 					d.properties['Is any of the funding addressing health?'].toLowerCase().includes(value)
 				)
-			).length;
+			);
+		numHealth = healthFiltered.length;
 
 		return {
 			numReports,
+			reportsFiltered,
 			numFunding,
+			fundingFiltered,
 			numSource,
+			sourceFiltered,
 			numAllocation,
+			allocationFiltered,
 			numDirect,
+			directFiltered,
 			numEligibility,
-			numHealth
+			eligibilityFiltered,
+			numHealth,
+			healthFiltered
 		};
 	}
 
 	// Questions
 	$: questions = [
-		{ count: numReports, label: 'released a report' },
-		{ count: numFunding, label: 'approved funding' },
-		{ count: numSource, label: 'a funding source' },
-		{ count: numAllocation, label: 'started allocating reparations' },
-		{ count: numDirect, label: 'determined direct payments' },
-		{ count: numEligibility, label: 'determined eligibility' },
-		{ count: numHealth, label: 'health' }
+		{ count: numReports, filteredData: reportsFiltered, label: 'released a report' },
+		{ count: numFunding, filteredData: fundingFiltered, label: 'approved funding' },
+		{ count: numSource, filteredData: sourceFiltered, label: 'a funding source' },
+		{
+			count: numAllocation,
+			filteredData: allocationFiltered,
+			label: 'started allocating reparations'
+		},
+		{ count: numDirect, filteredData: directFiltered, label: 'determined direct payments' },
+		{ count: numEligibility, filteredData: eligibilityFiltered, label: 'determined eligibility' },
+		{ count: numHealth, filteredData: healthFiltered, label: 'health' }
 	];
+
+	// Zoom to AK or HI when state or location in state is selected
+	function flyTo(state) {
+		if (state === 'Hawaii') {
+			$map.fitBounds([
+				[-154.80833743387433, 22.23238695135951],
+				[-160.24970712717126, 18.91727560534605]
+			]);
+		} else if (state === 'Alaska') {
+			$map.fitBounds([
+				[-155.95894737171596, 71.5388],
+				[-115.02205262828487, 51.214183]
+			]);
+		}
+	}
+
+	const centerMapPt = { lng: -95.7, lat: 38.1 };
 </script>
 
 <!-- note about filters -->
 <div class="filters-note">
-	To see the locations of which the below criteria apply, toggle the respective filters on the map.
+	You can also toggle the corresponding map filters to see all the cities, counties and states that
+	match the criteria.
+	<!-- To see the locations that meet the criteria below, toggle the respective filters on the map. -->
 </div>
 
 <!-- tabs -->
-<div class="location-stats">
+<div class="tabs-container">
 	<!-- Cities -->
 	<button
 		class:active={citiesTab}
-		style={citiesTab ? 'border-top: 2px solid rgba(var(--red), 1)' : ''}
+		style={citiesTab
+			? 'border-top: 3px solid rgba(var(--red), 1); border-left: 0.5px solid rgba(var(--red), 1); border-right: 0.5px solid rgba(var(--red), 1);'
+			: ''}
 		on:click|stopPropagation={() => {
 			citiesTab = true;
 			countiesTab = false;
@@ -147,14 +200,18 @@
 			filterByProperty($reparationsCityData);
 		}}
 	>
-		<span class="number tab-num" style="color: rgba(var(--red), 0.85);">{numCities}</span>
+		<span class="tab-num" style={citiesTab ? 'color: rgba(var(--red), 0.85);' : ''}
+			>{numCities}</span
+		>
 		<span class="tab-text">Cities</span>
 	</button>
 
 	<!-- Counties -->
 	<button
 		class:active={countiesTab}
-		style={countiesTab ? 'border-top: 2px solid rgba(var(--green), 1)' : ''}
+		style={countiesTab
+			? 'border-top: 3px solid rgba(var(--dark-green), 1); border-left: 0.5px solid rgba(var(--dark-green), 1); border-right: 0.5px solid rgba(var(--dark-green), 1);'
+			: ''}
 		on:click|stopPropagation={() => {
 			citiesTab = false;
 			countiesTab = true;
@@ -162,15 +219,18 @@
 			filterByProperty($reparationsCountyData);
 		}}
 	>
-		<span class="number tab-num" style="color: rgba(var(--dark-green), 0.75);">{numCounties}</span>
+		<span class="tab-num" style={countiesTab ? 'color: rgba(var(--dark-green), 0.75)' : ''}
+			>{numCounties}</span
+		>
 		<span class="tab-text">Counties</span>
 	</button>
 
 	<!-- States -->
 	<button
 		class:active={statesTab}
-		class="tab"
-		style={statesTab ? 'border-top: 2px solid rgba(var(--green), 1)' : ''}
+		style={statesTab
+			? 'border-top: 3px solid rgba(var(--green), 1); border-left: 0.5px solid rgba(var(--green), 1); border-right: 0.5px solid rgba(var(--green), 1);'
+			: ''}
 		on:click|stopPropagation={() => {
 			citiesTab = false;
 			countiesTab = false;
@@ -178,38 +238,38 @@
 			filterByProperty($reparationsStateData);
 		}}
 	>
-		<span class="number tab-num" style="color: rgba(var(--green), 1);">{numStates}</span>
+		<span class="tab-num" style={statesTab ? 'color: rgba(var(--green), 1)' : ''}>{numStates}</span>
 		<span class="tab-text">States</span>
 	</button>
 </div>
 
-<table cellpadding="0" cellspacing="0" border="0">
-	<colgroup>
-		<col style="width: 20px" />
-		<col style="width: auto" />
-	</colgroup>
-	<tbody>
-		{#each questions as question}
-			<!-- divider -->
-			<tr>
-				<td colspan="2">
-					<hr class="outer" style="margin-top: 0;" />
-				</td>
-			</tr>
-
-			<!-- tab: count of locations for each geography type -->
-			<tr>
-				<td
+<div
+	class="stats-container"
+	style={citiesTab
+		? 'border: 0.5px solid rgba(var(--red), 1)'
+		: countiesTab
+			? 'border: 0.5px solid rgba(var(--dark-green), 0.75)'
+			: 'border: 0.5px solid rgba(var(--green), 0.85)'}
+>
+	{#each questions as question, index}
+		<details class="stat">
+			<!-- count of locations for each geography type -->
+			<summary
+				style={index !== questions.length - 1
+					? 'border-bottom: 1px solid rgba(var(--gray), 0.5);'
+					: ''}
+			>
+				<span
 					class="number"
 					style={citiesTab
 						? 'color: rgba(var(--red), 0.85)'
 						: countiesTab
 							? 'color: rgba(var(--dark-green), 0.75)'
-							: 'color: rgba(var(--green), 1)'}>{question.count}</td
+							: 'color: rgba(var(--green), 1)'}>{question.count}</span
 				>
 
 				<!-- text referring to questions -->
-				<td class="question">
+				<span class="question">
 					{citiesTab
 						? question.count !== 1
 							? 'cities'
@@ -229,86 +289,183 @@
 					{#if question.label === 'health'}
 						{question.count !== 1 ? 'address' : 'addresses'}
 					{/if}
-					{question.label}</td
-				>
-			</tr>
-		{/each}
-	</tbody>
-</table>
+					{question.label}
+
+					<!-- arrow icon -->
+					{#if question.count > 0}
+						<span class="arrow-down-icon" aria-hidden="true">▼</span>
+					{/if}
+				</span>
+			</summary>
+
+			{#if question.count > 0}
+				<div class="stat-locations">
+					<ul>
+						{#if citiesTab}
+							{#each question.filteredData as location}
+								<li class="city-color">
+									<button
+										on:click={() => {
+											selectedLocation.set({
+												Location: location.properties.Location,
+												Geography: location.properties.Geography,
+												State: location.properties.State
+											});
+
+											listPanelVisible.set(true);
+											aboutPanelVisible.set(false);
+
+											// If state is AK or HI, zoom to state
+											if (
+												location.properties.State === 'Alaska' ||
+												location.properties.State === 'Hawaii'
+											) {
+												flyTo(location.properties.State);
+											} else {
+												$map.flyTo({
+													center: [centerMapPt.lng, centerMapPt.lat],
+													essential: true,
+													zoom: 3.75,
+													pitch: 0,
+													speed: 1,
+													curve: 1
+												});
+											}
+										}}>{location.properties.Location}, {location.properties.State}</button
+									>
+								</li>
+							{/each}
+						{:else if countiesTab}
+							{#each question.filteredData as location}
+								<li class="county-color">
+									{location.properties.Location} ({location.properties.State})
+								</li>
+							{/each}
+						{:else if statesTab}
+							{#each question.filteredData as location}
+								<li class="state-color">{location.properties.Location}</li>
+							{/each}
+						{/if}
+					</ul>
+				</div>
+			{/if}
+		</details>
+	{/each}
+</div>
 
 <style>
-	.location-stats {
+	/* tabs */
+	.tabs-container {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		/* border-bottom: 0.5px solid rgba(var(--black), 0.75); */
+	}
+
+	.tabs-container button {
+		display: flex;
+		align-items: center;
+		column-gap: 5px;
+		padding: 2px 10px;
+		flex-grow: 1;
+		background-color: rgba(var(--gray), 0.5);
+		border-top: 2px solid rgba(var(--white), 1);
+		text-transform: uppercase;
+		font-family: 'Barlow Condensed', sans-serif;
+		color: rgba(var(--black), 0.65);
+	}
+
+	.tabs-container button:not(:first-child),
+	.tabs-container button:not(:last-child) {
+		border-left: 1px solid rgba(var(--white), 1);
+	}
+
+	.tabs-container button:hover {
+		background-color: rgba(var(--light-gray), 0.85);
+	}
+
+	.tabs-container button.active {
+		cursor: auto;
+		background-color: rgba(var(--white), 1);
+		font-weight: 600;
+		color: rgba(var(--black), 1);
+	}
+
+	.tabs-container > button .tab-num {
+		font-size: 1.5rem;
+		/* padding: 0 0.25rem 0 0; */
+	}
+
+	.tabs-container > button .tab-text {
+		font-size: 1.1rem;
+		font-family: 'Barlow Condensed', sans-serif;
+	}
+
+	/* stats */
+	.stats-container {
+		width: 100%;
+	}
+
+	summary {
+		width: 100%;
+		border: none;
+		display: flex;
+		align-items: center;
+		cursor: pointer;
+		padding: 3px 5px 3px 5px;
+		column-gap: 5px;
+		background-color: rgba(var(--white), 1);
+	}
+
+	summary:hover {
+		background-color: rgba(var(--white), 1);
+	}
+
+	summary > .number {
+		font-size: 1.2rem;
+		text-align: right;
+		/* width: 25px; */
+
+		flex: 0 0 25px;
+	}
+
+	summary > .question {
+		font-size: 0.95rem;
+		line-height: 1.1;
+		width: 100%;
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
 	}
 
-	.location-stats button {
-		display: flex;
-		align-items: center;
-		padding: 2px 10px;
-		flex-grow: 1;
-		background-color: rgba(var(--gray), 0.5);
-		border-top: 2px solid rgba(var(--white), 1);
+	summary > .question > .arrow-down-icon {
+		font-size: 10px;
+		color: rgba(var(--black), 0.4);
 	}
 
-	.location-stats button:not(:first-child),
-	.location-stats button:not(:last-child) {
-		border-left: 1px solid rgba(var(--white), 1);
+	details > div.stat-locations {
+		background-color: rgba(var(--light-gray), 0.5);
+		border-bottom: 1px solid rgba(var(--gray), 0.75);
+		padding: 3px 0;
+		box-shadow: 0 2px 2px -1px inset rgba(var(--gray), 0.25);
 	}
 
-	.location-stats button:hover {
-		background-color: rgba(var(--light-gray), 0.85);
+	details > .stat-locations ul {
+		padding: 0 30px;
+		font-size: 0.85rem;
+		list-style-type: circle;
 	}
 
-	.location-stats button.active {
-		cursor: auto;
-		background-color: rgba(var(--white), 1);
+	details > .stat-locations ul > li.city-color::marker {
+		color: rgba(var(--red), 1);
 	}
 
-	table {
-		width: 100%;
+	details > .stat-locations ul > li.county-color::marker {
+		color: rgba(var(--dark-green), 1);
 	}
 
-	td:not(:first-child) {
-		vertical-align: middle;
-		padding: 5px 0;
-	}
-
-	.number {
-		font-size: 1.2rem;
-		text-align: right;
-		padding: 0 0.5rem 0 0;
-	}
-
-	td.number {
-		text-align: left;
-		padding: 0 0 0 3px;
-	}
-
-	.tab-num {
-		font-size: 1.4rem;
-		/* padding: 0 0.25rem 0 0; */
-	}
-
-	.tab-text {
-		font-size: 1.1rem;
-		/* font-family: 'Barlow Condensed', sans-serif; */
-	}
-
-	.question {
-		font-size: 0.95rem;
-		line-height: 1.1;
-	}
-
-	hr {
-		margin-top: 0.1rem;
-		margin-bottom: 0.1rem;
-	}
-
-	hr.outer {
-		margin-top: 0.25rem;
-		border-top: 0.5px solid rgba(var(--black), 0.75);
+	details > .stat-locations ul > li.state-color::marker {
+		color: rgba(var(--green), 1);
 	}
 
 	.filters-note {
