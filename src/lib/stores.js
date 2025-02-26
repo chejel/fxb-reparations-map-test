@@ -1,10 +1,7 @@
 import { writable } from 'svelte/store';
 
 export let map = writable();
-export let countiesMap = writable(); // map data for all counties
 export let statesMap = writable(); // map data for all states
-// export let countyPolygons = writable(); // show counties with reparations efforts on map
-// export let statePolygons = writable(); // show cities with reparations efforts on map
 
 // Reparations data
 export let reparationsData = writable();
@@ -14,7 +11,6 @@ export let reparationsStateData = writable();
 
 // Variables that will trigger sidebar to open
 export let selectedLocation = writable(); // Object containing selected city/county and state name
-//export let selectedState = writable();
 
 // Panels
 export let aboutPanelVisible = writable(true);
