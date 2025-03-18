@@ -37,7 +37,7 @@
 				...[
 					'Has the location released a report on reparations?',
 					'Has the location approved reparations funding?',
-					'What is the potential funding source?',
+					'What is the potential or current funding source?',
 					'Has the location begun allocating reparations?',
 					'Has the location determined if direct payments will be included?',
 					'Has the location determined who is eligible to receive direct payments?',
