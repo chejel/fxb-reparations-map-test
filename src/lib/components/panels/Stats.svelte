@@ -67,16 +67,17 @@
 		numFunding = fundingFiltered.length;
 
 		// numSource
-		sourceFiltered = dataset?.filter(
-			(d) => d.properties['What is the potential or current funding source?']
-		);
-		// .filter((d) =>
-		// 	['yes'].some((value) =>
-		// 		d.properties['What is the potential or current funding source?']
-		// 			.toLowerCase()
-		// 			.includes(value)
-		// 	)
-		// );
+		sourceFiltered = dataset
+			?.filter((d) => d.properties['What is the potential or current funding source?'])
+			.filter(
+				(d) =>
+					!['no', 'n/a'].some((value) =>
+						d.properties['What is the potential or current funding source?']
+							.toLowerCase()
+							.startsWith(value)
+					)
+			);
+
 		numSource = sourceFiltered.length;
 
 		// numAllocation
