@@ -307,9 +307,9 @@
 
 	.map-container {
 		position: absolute;
-		top: 200px;
+		top: 100px;
 		right: 40px;
-		width: 25%;
+		width: 20%;
 		z-index: 10;
 	}
 

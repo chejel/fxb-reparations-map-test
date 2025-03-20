@@ -26,6 +26,7 @@
 				: $reparationsStateData
 	)?.map((feature) => {
 		return {
+			OrigLocName: feature.properties['Original location name'],
 			Location: feature.properties.Location,
 			Geography: feature.properties.Geography,
 			State: feature.properties.State,
@@ -71,7 +72,7 @@
 		</tr>
 	</thead>
 	<tbody>
-		{#each tableDataSort as { Location, fullCountyName, Geography, State }, index}
+		{#each tableDataSort as { OrigLocName, Location, fullCountyName, Geography, State }, index}
 			<tr>
 				<td class="index">{index + 1}</td>
 				{#if $citiesPanelVisible || $countiesPanelVisible}
@@ -115,8 +116,16 @@
 							on:click={() => {
 								selectedLocation.set({ Location, Geography, State });
 							}}
-							>{State}
-							<span style="position: absolute; right: 0; width: 85%">
+							>{#if OrigLocName === Location}
+								{Location}
+							{:else}
+								<!-- ex. Texas (Episcopal Diocese)-->
+								{Location}
+								<span style="font-weight: 400; text-transform: capitalize; margin-left: 5px;">
+									{OrigLocName.replace(Location, '')}</span
+								>
+							{/if}
+							<span style="position: absolute; right: 0; width: 25%;">
 								<StateMap stateNameTable={State} />
 							</span>
 						</button>
