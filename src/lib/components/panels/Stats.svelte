@@ -38,103 +38,40 @@
 	filterByProperty($reparationsCityData);
 
 	function filterByProperty(dataset) {
-		// 1. report released
-		reportsFiltered = dataset?.filter((d) => {
-			// get responses to report question – instead of hardcoding question, search for ques containing "report" in case wording of ques changes
-			const response = d.properties[
-				Object.keys(d.properties).find((key) => key.toLowerCase().includes('report'))
-			]
-				?.toString()
-				.toLowerCase()
-				.trim();
+		// instead of hardcoding question, search for ques containing specific words in case wording of ques changes
+		const filters = [
+			'report',
+			'approved',
+			'source',
+			'allocating',
+			'included',
+			'eligible',
+			'directed',
+			'health'
+		];
 
-			// exclude response if it contains "no", "n/a" and anything that may (not) come after it
-			return response && !/^(no|n\/a|na)([\s.,!?;:].*)?$/i.test(response);
-		});
+		[
+			reportsFiltered,
+			fundingApprovedFiltered,
+			sourceFiltered,
+			allocationFiltered,
+			directFiltered,
+			eligibilityFiltered,
+			directedFiltered,
+			healthFiltered
+		] = filters.map((filter) =>
+			dataset?.filter((d) => {
+				const response = d.properties[
+					Object.keys(d.properties).find((key) => key.toLowerCase().includes(filter))
+				]
+					?.toString()
+					.toLowerCase()
+					.trim();
 
-		// 2. funding approved
-		fundingApprovedFiltered = dataset?.filter((d) => {
-			const response = d.properties[
-				Object.keys(d.properties).find((key) => key.toLowerCase().includes('approved'))
-			]
-				?.toString()
-				.toLowerCase()
-				.trim();
-
-			return response && !/^(no|n\/a|na)([\s.,!?;:].*)?$/i.test(response);
-		});
-
-		// 3. funding source
-		sourceFiltered = dataset?.filter((d) => {
-			const response = d.properties[
-				Object.keys(d.properties).find((key) => key.toLowerCase().includes('source'))
-			]
-				?.toString()
-				.toLowerCase()
-				.trim();
-
-			return response && !/^(no|n\/a|na)([\s.,!?;:].*)?$/i.test(response);
-		});
-
-		// 4. allocating
-		allocationFiltered = dataset?.filter((d) => {
-			const response = d.properties[
-				Object.keys(d.properties).find((key) => key.toLowerCase().includes('allocating'))
-			]
-				?.toString()
-				.toLowerCase()
-				.trim();
-
-			return response && !/^(no|n\/a|na)([\s.,!?;:].*)?$/i.test(response);
-		});
-
-		// 5. direct payments
-		directFiltered = dataset?.filter((d) => {
-			const response = d.properties[
-				Object.keys(d.properties).find((key) => key.toLowerCase().includes('included'))
-			]
-				?.toString()
-				.toLowerCase()
-				.trim();
-
-			return response && !/^(no|n\/a|na)([\s.,!?;:].*)?$/i.test(response);
-		});
-
-		// 6. eligibility
-		eligibilityFiltered = dataset?.filter((d) => {
-			const response = d.properties[
-				Object.keys(d.properties).find((key) => key.toLowerCase().includes('eligible'))
-			]
-				?.toString()
-				.toLowerCase()
-				.trim();
-
-			return response && !/^(no|n\/a|na)([\s.,!?;:].*)?$/i.test(response);
-		});
-
-		// 7. funding directed
-		directedFiltered = dataset?.filter((d) => {
-			const response = d.properties[
-				Object.keys(d.properties).find((key) => key.toLowerCase().includes('directed'))
-			]
-				?.toString()
-				.toLowerCase()
-				.trim();
-
-			return response && !/^(no|n\/a|na)([\s.,!?;:].*)?$/i.test(response);
-		});
-
-		// 8. address health
-		healthFiltered = dataset?.filter((d) => {
-			const response = d.properties[
-				Object.keys(d.properties).find((key) => key.toLowerCase().includes('health'))
-			]
-				?.toString()
-				.toLowerCase()
-				.trim();
-
-			return response && !/^(no|n\/a|na)([\s.,!?;:].*)?$/i.test(response);
-		});
+				// exclude response if it contains "no", "n/a" and anything that may or may not come after it
+				return response && !/^(no|n\/a|na)([\s.,!?;:].*)?$/i.test(response);
+			})
+		);
 
 		return {
 			reportsFiltered,
