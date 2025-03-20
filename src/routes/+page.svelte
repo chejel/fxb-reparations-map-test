@@ -73,8 +73,10 @@
 						feature.properties['Longitude']
 				)
 				.map((feature) => {
-					// If feature contains a commma, remove including everything after
 					if (feature.properties['Location']?.includes(',')) {
+						// Retain original location name
+						feature.properties['Original location name'] = feature.properties['Location'];
+						// If feature contains a commma, remove including everything after
 						feature.properties['Location'] = feature.properties['Location'].split(',', 1)[0];
 					}
 					return feature;
@@ -94,6 +96,9 @@
 				// 	return feature;
 				// })
 				.map((feature) => {
+					// Retain original location name
+					feature.properties['Original location name'] = feature.properties['Location'];
+
 					// If feature contains a comma, remove + everything after
 					if (feature.properties['Location']?.includes(',')) {
 						feature.properties['Location'] = feature.properties['Location'].split(',', 1)[0].trim();
@@ -184,6 +189,23 @@
 			return (
 				data
 					.map((feature) => {
+						// Retain original location name (to display on location card)
+						feature.properties['Original location name'] = feature.properties['Location'];
+
+						// If feature contains a comma, remove + everything after
+						if (feature.properties['Location']?.includes(',')) {
+							feature.properties['Location'] = feature.properties['Location']
+								.split(',', 1)[0]
+								.trim();
+						}
+
+						// If feature contains a parenthesis, remove + everything after
+						if (feature.properties['Location']?.includes('(')) {
+							feature.properties['Location'] = feature.properties['Location']
+								.split('(', 1)[0]
+								.trim();
+						}
+
 						const state = $statesMap?.features.find(
 							(d) => d.properties['name'] === feature.properties['Location']
 						);
