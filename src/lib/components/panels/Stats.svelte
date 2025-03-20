@@ -19,149 +19,165 @@
 	// # of states
 	const numStates = $reparationsStateData?.length;
 
-	// filter for multiple words in the response string
-	//const wordsIncluded = ['yes', 'but'];
-
 	// Designating the selected geography tab (cities, counties, states)
 	let citiesTab = true;
 	let countiesTab = false;
 	let statesTab = false;
 
-	// Variables for each question
-	let numReports, numFunding, numSource, numAllocation, numDirect, numEligibility, numHealth;
 	// Variables for dataset filtered by locations that apply for each question
 	let reportsFiltered,
-		fundingFiltered,
+		fundingApprovedFiltered,
 		sourceFiltered,
 		allocationFiltered,
 		directFiltered,
 		eligibilityFiltered,
+		directedFiltered,
 		healthFiltered;
 
 	// Function to return number of locations that apply for each question
 	filterByProperty($reparationsCityData);
 
 	function filterByProperty(dataset) {
-		// numReports
-		reportsFiltered = dataset
-			?.filter((d) => d.properties['Has the location released a report on reparations?'])
-			.filter((d) =>
-				['yes'].some((value) =>
-					d.properties['Has the location released a report on reparations?']
-						.toLowerCase()
-						.includes(value)
-				)
-			);
-		numReports = reportsFiltered.length;
+		// 1. report released
+		reportsFiltered = dataset?.filter((d) => {
+			// get responses to report question – instead of hardcoding question, search for ques containing "report" in case wording of ques changes
+			const response = d.properties[
+				Object.keys(d.properties).find((key) => key.toLowerCase().includes('report'))
+			]
+				?.toString()
+				.toLowerCase()
+				.trim();
 
-		// numFunding
-		fundingFiltered = dataset
-			?.filter((d) => d.properties['Has the location approved reparations funding?'])
-			.filter((d) =>
-				['yes'].some((value) =>
-					d.properties['Has the location approved reparations funding?']
-						.toLowerCase()
-						.includes(value)
-				)
-			);
-		numFunding = fundingFiltered.length;
+			// exclude response if it contains "no", "n/a" and anything that may (not) come after it
+			return response && !/^(no|n\/a|na)([\s.,!?;:].*)?$/i.test(response);
+		});
 
-		// numSource
-		sourceFiltered = dataset
-			?.filter((d) => d.properties['What is the potential or current funding source?'])
-			.filter(
-				(d) =>
-					!['no', 'n/a'].some((value) =>
-						d.properties['What is the potential or current funding source?']
-							.toLowerCase()
-							.startsWith(value)
-					)
-			);
+		// 2. funding approved
+		fundingApprovedFiltered = dataset?.filter((d) => {
+			const response = d.properties[
+				Object.keys(d.properties).find((key) => key.toLowerCase().includes('approved'))
+			]
+				?.toString()
+				.toLowerCase()
+				.trim();
 
-		numSource = sourceFiltered.length;
+			return response && !/^(no|n\/a|na)([\s.,!?;:].*)?$/i.test(response);
+		});
 
-		// numAllocation
-		allocationFiltered = dataset
-			?.filter((d) => d.properties['Has the location begun allocating reparations?'])
-			.filter((d) =>
-				['yes'].some((value) =>
-					d.properties['Has the location begun allocating reparations?']
-						.toLowerCase()
-						.includes(value)
-				)
-			);
-		numAllocation = allocationFiltered.length;
+		// 3. funding source
+		sourceFiltered = dataset?.filter((d) => {
+			const response = d.properties[
+				Object.keys(d.properties).find((key) => key.toLowerCase().includes('source'))
+			]
+				?.toString()
+				.toLowerCase()
+				.trim();
 
-		// numDirect
-		directFiltered = dataset
-			?.filter(
-				(d) => d.properties['Has the location determined if direct payments will be included?']
-			)
-			.filter((d) =>
-				['yes'].some((value) =>
-					d.properties['Has the location determined if direct payments will be included?']
-						.toLowerCase()
-						.includes(value)
-				)
-			);
-		numDirect = directFiltered.length;
+			return response && !/^(no|n\/a|na)([\s.,!?;:].*)?$/i.test(response);
+		});
 
-		// numEligibility
-		eligibilityFiltered = dataset
-			?.filter(
-				(d) =>
-					d.properties['Has the location determined who is eligible to receive direct payments?']
-			)
-			.filter((d) =>
-				['yes'].some((value) =>
-					d.properties['Has the location determined who is eligible to receive direct payments?']
-						.toLowerCase()
-						.includes(value)
-				)
-			);
-		numEligibility = eligibilityFiltered.length;
+		// 4. allocating
+		allocationFiltered = dataset?.filter((d) => {
+			const response = d.properties[
+				Object.keys(d.properties).find((key) => key.toLowerCase().includes('allocating'))
+			]
+				?.toString()
+				.toLowerCase()
+				.trim();
 
-		// numHealth
-		healthFiltered = dataset
-			?.filter((d) => d.properties['Is any of the funding addressing health?'])
-			.filter((d) =>
-				['yes'].some((value) =>
-					d.properties['Is any of the funding addressing health?'].toLowerCase().includes(value)
-				)
-			);
-		numHealth = healthFiltered.length;
+			return response && !/^(no|n\/a|na)([\s.,!?;:].*)?$/i.test(response);
+		});
+
+		// 5. direct payments
+		directFiltered = dataset?.filter((d) => {
+			const response = d.properties[
+				Object.keys(d.properties).find((key) => key.toLowerCase().includes('included'))
+			]
+				?.toString()
+				.toLowerCase()
+				.trim();
+
+			return response && !/^(no|n\/a|na)([\s.,!?;:].*)?$/i.test(response);
+		});
+
+		// 6. eligibility
+		eligibilityFiltered = dataset?.filter((d) => {
+			const response = d.properties[
+				Object.keys(d.properties).find((key) => key.toLowerCase().includes('eligible'))
+			]
+				?.toString()
+				.toLowerCase()
+				.trim();
+
+			return response && !/^(no|n\/a|na)([\s.,!?;:].*)?$/i.test(response);
+		});
+
+		// 7. funding directed
+		directedFiltered = dataset?.filter((d) => {
+			const response = d.properties[
+				Object.keys(d.properties).find((key) => key.toLowerCase().includes('directed'))
+			]
+				?.toString()
+				.toLowerCase()
+				.trim();
+
+			return response && !/^(no|n\/a|na)([\s.,!?;:].*)?$/i.test(response);
+		});
+
+		// 8. address health
+		healthFiltered = dataset?.filter((d) => {
+			const response = d.properties[
+				Object.keys(d.properties).find((key) => key.toLowerCase().includes('health'))
+			]
+				?.toString()
+				.toLowerCase()
+				.trim();
+
+			return response && !/^(no|n\/a|na)([\s.,!?;:].*)?$/i.test(response);
+		});
 
 		return {
-			numReports,
 			reportsFiltered,
-			numFunding,
-			fundingFiltered,
-			numSource,
+			fundingApprovedFiltered,
 			sourceFiltered,
-			numAllocation,
 			allocationFiltered,
-			numDirect,
 			directFiltered,
-			numEligibility,
 			eligibilityFiltered,
-			numHealth,
+			directedFiltered,
 			healthFiltered
 		};
 	}
 
 	// Questions
 	$: questions = [
-		{ count: numReports, filteredData: reportsFiltered, label: 'released a report' },
-		{ count: numFunding, filteredData: fundingFiltered, label: 'approved funding' },
-		{ count: numSource, filteredData: sourceFiltered, label: 'a funding source' },
+		{ count: reportsFiltered.length, filteredData: reportsFiltered, label: 'released a report' },
 		{
-			count: numAllocation,
+			count: fundingApprovedFiltered.length,
+			filteredData: fundingApprovedFiltered,
+			label: 'approved funding'
+		},
+		{ count: sourceFiltered.length, filteredData: sourceFiltered, label: 'a funding source' },
+		{
+			count: allocationFiltered.length,
 			filteredData: allocationFiltered,
 			label: 'started allocating reparations'
 		},
-		{ count: numDirect, filteredData: directFiltered, label: 'determined direct payments' },
-		{ count: numEligibility, filteredData: eligibilityFiltered, label: 'determined eligibility' },
-		{ count: numHealth, filteredData: healthFiltered, label: 'health' }
+		{
+			count: directFiltered.length,
+			filteredData: directFiltered,
+			label: 'include direct payments'
+		},
+		{
+			count: eligibilityFiltered.length,
+			filteredData: eligibilityFiltered,
+			label: 'determined eligibility'
+		},
+		{
+			count: directedFiltered.length,
+			filteredData: directedFiltered,
+			label: 'designated funds'
+		},
+		{ count: healthFiltered.length, filteredData: healthFiltered, label: 'health' }
 	];
 
 	// Zoom to AK or HI when state or location in state is selected
