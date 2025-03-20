@@ -209,7 +209,8 @@
 							<!-- additional answer -->
 							<span class="response">
 								{#if location[1].response}
-									{#if location[1].link}
+									{@html marked.parse(location[1].fullResponse)}
+									<!-- {#if location[1].link}
 										<span
 											>{location[1].response}&nbsp;
 											<a
@@ -221,7 +222,7 @@
 										>
 									{:else}
 										{location[1].response}
-									{/if}
+									{/if} -->
 								{:else}
 									N/A
 								{/if}
@@ -265,6 +266,7 @@
 
 	.response {
 		display: flex;
+		font-size: 0.85rem;
 		/* flex-wrap: wrap;
 		row-gap: 3px;
 		column-gap: 5px; */
