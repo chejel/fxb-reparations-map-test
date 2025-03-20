@@ -12,10 +12,8 @@
 	export let stateNameCard = null; // Get state name from card
 
 	// SVG dimensions for displaying state
-	// let width = 975,
-	// 	height = 1000;
-	let width = 250,
-		height = 400;
+	export let width = 975,
+		height = 1000;
 
 	// Declaring variables for drawing state proportionally (i.e. not filling up the svg container)
 	let selectedStateObj; // states data filtered to single selected state

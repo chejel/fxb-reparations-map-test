@@ -126,7 +126,7 @@
 								>
 							{/if}
 							<span style="position: absolute; right: 0; width: 25%;">
-								<StateMap stateNameTable={State} />
+								<StateMap stateNameTable={State} width={250} height={400} />
 							</span>
 						</button>
 					</td>
