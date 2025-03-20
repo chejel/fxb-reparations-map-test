@@ -67,6 +67,7 @@
 				location.properties.Location === $selectedLocation.Location &&
 				location.properties.State === $selectedLocation.State
 		);
+	// exclude variables that include "link" in the string:
 
 	// Scroll to top of card when loading a location
 	// Otherwise, if scrolling to bottom of a card and then loading a new location via selection of location on map, the new card will remain at the same bottom position
@@ -153,57 +154,65 @@
 		</tr>
 	</thead>
 	<tbody>
-		{#each Object.entries(locationData.properties).filter((location) => location[0] !== 'Original location name' && location[0] !== 'Location' && location[0] !== 'Geography' && location[0] !== 'State' && location[0] !== 'Full County Name') as location}
-			{#if location[0] !== 'Additional Notes'}
-				<tr class="qAndA">
-					<!-- icon -->
-					<td>
-						<!-- {#if location[1].response?.includes('No')} -->
-						<!-- if response does not contain "no" or "n/a"-->
-						{#if !/^(no|n\/a|na)([\s.,!?;:].*)?$/i.test(location[1].response)}
-							<CheckIcon />
-						{:else}
-							<XIcon />
-						{/if}</td
-					>
+		<!-- excludes 'where funding directed' and 'additional notes' -->
+		{#each Object.entries(locationData.properties).filter((location) => location[0] !== 'Original location name' && location[0] !== 'Location' && location[0] !== 'Geography' && location[0] !== 'State' && location[0] !== 'Full County Name' && !location[0]
+					.toLowerCase()
+					.includes('directed') && !location[0].toLowerCase().includes('notes') && !location[0]
+					.toLowerCase()
+					.includes('link')) as location}
+			<tr class="qAndA">
+				<!-- icon -->
+				<td>
+					{#if !/^(no|n\/a|na)([\s.,!?;:].*)?$/i.test(location[1].response)}
+						<CheckIcon />
+					{:else}
+						<XIcon />
+					{/if}
+				</td>
 
-					<!-- Q&A -->
-					<td
-						><p>
-							<span class="question-bold">
-								{location[1].question}
-							</span>
-							<span class="response">
-								{#if location[1].response}
-									{@html marked.parse(location[1].fullResponse)}
-								{:else}
-									N/A
-								{/if}
-							</span>
-						</p></td
-					>
-				</tr>
-			{:else}
-				<tr class="additional">
-					<td>
-						<p>
-							<!-- additional question -->
-							<span class="question-bold">
-								{location[1].question}
-							</span>
+				<!-- Q&A -->
+				<td>
+					<p>
+						<span class="question-bold">
+							{location[1].question}
+						</span>
+						<span class="response">
+							{#if location[1].response}
+								{@html marked.parse(location[1].fullResponse)}
+							{:else}
+								N/A
+							{/if}
+						</span>
+					</p>
+				</td>
+			</tr>
+		{/each}
 
-							<!-- additional answer -->
-							<span class="response">
-								{#if location[1].response}
-									{@html marked.parse(location[1].fullResponse)}
-								{:else}
-									N/A
-								{/if}
-							</span>
-						</p>
-					</td>
-				</tr>
-			{/if}
+		<!--  'where funding directed' and 'additional notes' -->
+		{#each Object.entries(locationData.properties).filter((location) => location[0] !== 'Original location name' && location[0] !== 'Location' && location[0] !== 'Geography' && location[0] !== 'State' && location[0] !== 'Full County Name' && (location[0]
+					.toLowerCase()
+					.includes('directed') || location[0].toLowerCase().includes('notes')) && !location[0]
+					.toLowerCase()
+					.includes('link')) as location}
+			<tr class="additional">
+				<td>
+					<p>
+						<!-- additional question -->
+						<span class="question-bold">
+							{location[1].question}
+						</span>
+
+						<!-- additional answer -->
+						<span class="response">
+							{#if location[1].response}
+								{@html marked.parse(location[1].fullResponse)}
+							{:else}
+								N/A
+							{/if}
+						</span>
+					</p>
+				</td>
+			</tr>
 		{/each}
 	</tbody>
 </table>
@@ -240,9 +249,9 @@
 	.response {
 		display: flex;
 		font-size: 0.85rem;
-		/* flex-wrap: wrap;
-		row-gap: 3px;
-		column-gap: 5px; */
+		/* flex-wrap: wrap; */
+		flex-direction: column;
+		row-gap: 7px;
 	}
 
 	thead {
