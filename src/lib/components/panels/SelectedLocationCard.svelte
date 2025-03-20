@@ -15,7 +15,7 @@
 	// Import icon components
 	import XIcon from '$lib/components/icons/X.svelte';
 	import CheckIcon from '$lib/components/icons/Check.svelte';
-	import LinkIcon from '$lib/components/icons/Link.svelte';
+	//import LinkIcon from '$lib/components/icons/Link.svelte';
 
 	let data;
 	$: if ($selectedLocation.Geography === 'City') {
@@ -35,33 +35,31 @@
 				'Full County Name': location.properties['Full County Name'],
 				Geography: location.properties.Geography,
 				State: location.properties.State,
-				...[
-					'Has the location released a report on reparations?',
-					'Has the location approved reparations funding?',
-					'What is the potential or current funding source?',
-					'Has the location begun allocating reparations?',
-					'Will direct payments be included?',
-					'Has the location determined who is eligible to receive direct payments?',
-					'Is any of the funding addressing health?',
-					'Where is funding directed?',
-					'Additional Notes'
-				].reduce((acc, question) => {
-					const response = location.properties[question];
-					const link = response?.includes('[') ? response.match(/\[(.*?)\]\((.*?)\)/)?.[2] : null;
-
-					acc[question] = {
-						question: question,
-						fullResponse: response,
-						response: response
-							? response?.includes('[')
+				...Object.keys(location.properties)
+					.filter((key) =>
+						[
+							'report',
+							'approved',
+							'source',
+							'allocating',
+							'included',
+							'eligible',
+							'directed',
+							'health',
+							'notes'
+						].some((term) => key.toLowerCase().includes(term))
+					)
+					.reduce((acc, question) => {
+						const response = location.properties[question];
+						acc[question] = {
+							question,
+							fullResponse: response,
+							response: response?.includes('[')
 								? response.match(/\[(.*?)\]\((.*?)\)/)?.[1]
-								: response.trim()
-							: null,
-						link: link
-					};
-
-					return acc;
-				}, {})
+								: response?.trim() || null
+						};
+						return acc;
+					}, {})
 			}
 		}))
 		.find(
@@ -156,14 +154,16 @@
 	</thead>
 	<tbody>
 		{#each Object.entries(locationData.properties).filter((location) => location[0] !== 'Original location name' && location[0] !== 'Location' && location[0] !== 'Geography' && location[0] !== 'State' && location[0] !== 'Full County Name') as location}
-			{#if location[0] !== 'Where is funding directed?' && location[0] !== 'Additional Notes'}
+			{#if location[0] !== 'Additional Notes'}
 				<tr class="qAndA">
 					<!-- icon -->
 					<td>
-						{#if location[1].response?.includes('No')}
-							<XIcon />
-						{:else}
+						<!-- {#if location[1].response?.includes('No')} -->
+						<!-- if response does not contain "no" or "n/a"-->
+						{#if !/^(no|n\/a|na)([\s.,!?;:].*)?$/i.test(location[1].response)}
 							<CheckIcon />
+						{:else}
+							<XIcon />
 						{/if}</td
 					>
 
@@ -176,20 +176,6 @@
 							<span class="response">
 								{#if location[1].response}
 									{@html marked.parse(location[1].fullResponse)}
-
-									<!-- {#if location[1].link}
-										<span>
-											{location[1].response}
-											&nbsp;<a
-												href={location[1].link}
-												class="source-btn"
-												target="_blank"
-												aria-label="Open source link in new window"><LinkIcon />Source</a
-											>
-										</span>
-									{:else}
-										{location[1].response}
-									{/if} -->
 								{:else}
 									N/A
 								{/if}
@@ -210,19 +196,6 @@
 							<span class="response">
 								{#if location[1].response}
 									{@html marked.parse(location[1].fullResponse)}
-									<!-- {#if location[1].link}
-										<span
-											>{location[1].response}&nbsp;
-											<a
-												href={location[1].link}
-												class="source-btn"
-												target="_blank"
-												aria-label="Open source link in new window"><LinkIcon />Source</a
-											></span
-										>
-									{:else}
-										{location[1].response}
-									{/if} -->
 								{:else}
 									N/A
 								{/if}
