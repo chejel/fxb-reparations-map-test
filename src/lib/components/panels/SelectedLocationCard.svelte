@@ -30,7 +30,8 @@
 		?.map((location) => ({
 			...location,
 			properties: {
-				Location: location.properties.Location,
+				'Original location name': location.properties['Original location name'],
+				Location: location.properties['Location'],
 				'Full County Name': location.properties['Full County Name'],
 				Geography: location.properties.Geography,
 				State: location.properties.State,
@@ -39,11 +40,10 @@
 					'Has the location approved reparations funding?',
 					'What is the potential or current funding source?',
 					'Has the location begun allocating reparations?',
-					'Has the location determined if direct payments will be included?',
+					'Will direct payments be included?',
 					'Has the location determined who is eligible to receive direct payments?',
 					'Is any of the funding addressing health?',
 					'Where is funding directed?',
-					'What other topic areas included in the reparation approach?',
 					'Additional Notes'
 				].reduce((acc, question) => {
 					const response = location.properties[question];
@@ -51,6 +51,7 @@
 
 					acc[question] = {
 						question: question,
+						fullResponse: response,
 						response: response
 							? response?.includes('[')
 								? response.match(/\[(.*?)\]\((.*?)\)/)?.[1]
@@ -58,6 +59,7 @@
 							: null,
 						link: link
 					};
+
 					return acc;
 				}, {})
 			}
@@ -103,6 +105,8 @@
 	}
 
 	$: $cardScroll, scrollToTop();
+
+	import { marked } from 'marked';
 </script>
 
 <!-- State icon -->
@@ -136,6 +140,14 @@
 						<!-- Card header if state -->
 					{:else}
 						<h2>{locationData.properties.Location}</h2>
+						<!-- Add anything after state name -->
+						<span class="state-name">
+							{#if locationData.properties['Original location name']?.includes('(')}
+								{locationData.properties['Original location name'].match(/\((.*?)\)/)?.[1]}
+							{:else}
+								{''}
+							{/if}
+						</span>
 					{/if}
 				</div>
 				<hr /></th
@@ -143,8 +155,8 @@
 		</tr>
 	</thead>
 	<tbody>
-		{#each Object.entries(locationData.properties).filter((location) => location[0] !== 'Location' && location[0] !== 'Geography' && location[0] !== 'State' && location[0] !== 'Full County Name') as location}
-			{#if location[0] !== 'Where is funding directed?' && location[0] !== 'What other topic areas included in the reparation approach?' && location[0] !== 'Additional Notes'}
+		{#each Object.entries(locationData.properties).filter((location) => location[0] !== 'Original location name' && location[0] !== 'Location' && location[0] !== 'Geography' && location[0] !== 'State' && location[0] !== 'Full County Name') as location}
+			{#if location[0] !== 'Where is funding directed?' && location[0] !== 'Additional Notes'}
 				<tr class="qAndA">
 					<!-- icon -->
 					<td>
@@ -163,7 +175,9 @@
 							</span>
 							<span class="response">
 								{#if location[1].response}
-									{#if location[1].link}
+									{@html marked.parse(location[1].fullResponse)}
+
+									<!-- {#if location[1].link}
 										<span>
 											{location[1].response}
 											&nbsp;<a
@@ -175,7 +189,7 @@
 										</span>
 									{:else}
 										{location[1].response}
-									{/if}
+									{/if} -->
 								{:else}
 									N/A
 								{/if}
