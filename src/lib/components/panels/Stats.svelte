@@ -97,7 +97,7 @@
 		{
 			count: allocationFiltered.length,
 			filteredData: allocationFiltered,
-			label: 'started allocating reparations'
+			label: 'are allocating reparations'
 		},
 		{
 			count: directFiltered.length,
@@ -249,9 +249,18 @@
 					{question.label}
 
 					<!-- arrow icon -->
-					{#if question.count > 0}
-						<span class="arrow-down-icon" aria-hidden="true">▼</span>
-					{/if}
+					<span
+						class="arrow-down-icon"
+						style={citiesTab
+							? 'color: rgba(var(--red), 0.8)'
+							: countiesTab
+								? 'color: rgba(var(--dark-green), 0.75)'
+								: 'color: rgba(var(--green), 1)'}
+						aria-hidden="true"
+					>
+						{#if question.count > 0}▼
+						{/if}
+					</span>
 				</span>
 			</summary>
 
@@ -291,14 +300,17 @@
 								>
 									{#if !statesTab}{location.properties.Location}{:else}{location.properties[
 											'Original location name'
-										]}{/if}
-									{#if !statesTab}, {location.properties.State}{/if}
+										]}{/if}{#if !statesTab}, {location.properties.State}{/if}
 								</button>
 							</li>
 						{/each}
 					</ul>
 				</div>
 			{/if}
+			<span class="arrow-up-icon" style="color: rgba(var(--red), 0.85);" aria-hidden="true">
+				{#if question.count > 0}▲
+				{/if}
+			</span>
 		</details>
 	{/each}
 </div>
@@ -368,14 +380,12 @@
 	}
 
 	summary:hover {
-		background-color: rgba(var(--white), 1);
+		background-color: rgba(var(--light-gray), 0.1);
 	}
 
 	summary > .number {
 		font-size: 1.2rem;
 		text-align: right;
-		/* width: 25px; */
-
 		flex: 0 0 25px;
 	}
 
@@ -386,11 +396,33 @@
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
+
+		position: relative;
 	}
 
-	summary > .question > .arrow-down-icon {
+	/* arrow icon */
+	details.stat {
+		position: relative;
+	}
+
+	summary > .question > .arrow-down-icon,
+	.arrow-up-icon {
 		font-size: 10px;
 		color: rgba(var(--black), 0.4);
+
+		position: absolute;
+		top: 3px;
+		right: 5px;
+		display: block;
+	}
+
+	details.stat > .arrow-up-icon {
+		top: 7px;
+		right: 10px;
+	}
+
+	details[open] > summary > .question > .arrow-down-icon {
+		visibility: hidden;
 	}
 
 	details > div.stat-locations {
