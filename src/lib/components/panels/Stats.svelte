@@ -258,51 +258,44 @@
 			{#if question.count > 0}
 				<div class="stat-locations">
 					<ul>
-						{#if citiesTab}
-							{#each question.filteredData as location}
-								<li class="city-color">
-									<button
-										on:click={() => {
-											selectedLocation.set({
-												Location: location.properties.Location,
-												Geography: location.properties.Geography,
-												State: location.properties.State
+						{#each question.filteredData as location}
+							<li class={citiesTab ? 'city-color' : countiesTab ? 'county-color' : 'state-color'}>
+								<button
+									on:click={() => {
+										selectedLocation.set({
+											Location: location.properties.Location,
+											Geography: location.properties.Geography,
+											State: location.properties.State
+										});
+
+										listPanelVisible.set(true);
+										aboutPanelVisible.set(false);
+
+										// If state is AK or HI, zoom to state
+										if (
+											location.properties.State === 'Alaska' ||
+											location.properties.State === 'Hawaii'
+										) {
+											flyTo(location.properties.State);
+										} else {
+											$map.flyTo({
+												center: [centerMapPt.lng, centerMapPt.lat],
+												essential: true,
+												zoom: 3.75,
+												pitch: 0,
+												speed: 1,
+												curve: 1
 											});
-
-											listPanelVisible.set(true);
-											aboutPanelVisible.set(false);
-
-											// If state is AK or HI, zoom to state
-											if (
-												location.properties.State === 'Alaska' ||
-												location.properties.State === 'Hawaii'
-											) {
-												flyTo(location.properties.State);
-											} else {
-												$map.flyTo({
-													center: [centerMapPt.lng, centerMapPt.lat],
-													essential: true,
-													zoom: 3.75,
-													pitch: 0,
-													speed: 1,
-													curve: 1
-												});
-											}
-										}}>{location.properties.Location}, {location.properties.State}</button
-									>
-								</li>
-							{/each}
-						{:else if countiesTab}
-							{#each question.filteredData as location}
-								<li class="county-color">
-									{location.properties.Location} ({location.properties.State})
-								</li>
-							{/each}
-						{:else if statesTab}
-							{#each question.filteredData as location}
-								<li class="state-color">{location.properties.Location}</li>
-							{/each}
-						{/if}
+										}
+									}}
+								>
+									{#if !statesTab}{location.properties.Location}{:else}{location.properties[
+											'Original location name'
+										]}{/if}
+									{#if !statesTab}, {location.properties.State}{/if}
+								</button>
+							</li>
+						{/each}
 					</ul>
 				</div>
 			{/if}
