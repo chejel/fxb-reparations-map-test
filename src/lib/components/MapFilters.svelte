@@ -1,6 +1,6 @@
 <script>
 	// Stores
-	import { map } from '$lib/stores.js';
+	import { map, reparationsData } from '$lib/stores.js';
 
 	// Set variables for toggle
 	let questionToggle;
@@ -16,17 +16,32 @@
 		'state-border-layer'
 	];
 
+	// Generate list of locations based on applied filters/toggles
+	let filteredLocations = [];
+
 	function toggleFilter(question) {
 		const filter = filterQuestions(question);
 		layers.forEach((layer) => $map.setFilter(layer, filter));
+
+		filteredLocations = $map
+			.queryRenderedFeatures({
+				layers: layers
+			})
+			.map((d) => d.properties.Location);
 	}
 
 	function filterQuestions(questions) {
-		const words = ['Yes', 'but']; // search for multiple words in the response field
-		const quesArrItems = questions.map((question) => {
+		const words = ['Yes', 'Yes,', 'Pending']; // search for multiple words in the response field
+
+		const generateFullQuestions = $reparationsData?.features
+			.map((d) => Object.keys(d.properties))[0]
+			.filter((column) => questions.some((question) => column.toLowerCase().includes(question)));
+
+		const quesArrItems = generateFullQuestions.map((question) => {
 			const conditions = words.map((word) => ['in', word, ['string', ['get', question]]]);
 			return ['any'].concat(conditions);
 		});
+
 		return ['all'].concat(quesArrItems);
 	}
 
@@ -41,43 +56,51 @@
 			id: 1,
 			name: 'Report released',
 			toggleValue: 'reportReleased',
-			question: 'Has the location released a report on reparations?'
+			// question: 'Has the location released a report on reparations?'
+			keyword: 'report'
 		},
 		{
 			id: 2,
 			name: 'Funding approved',
 			toggleValue: 'fundingApproved',
-			question: 'Has the location approved reparations funding?'
+			// question: 'Has the location approved reparations funding?'
+			keyword: 'approved'
 		},
-		{
-			id: 3,
-			name: 'Funding source',
-			toggleValue: 'fundingSource',
-			question: 'What is the potential funding source?'
-		},
+		// exclude questions without direct yes/no responses
+		// {
+		// 	id: 3,
+		// 	name: 'Funding source',
+		// 	toggleValue: 'fundingSource',
+		// 	// question: 'What is the potential funding source?'
+		// 	keyword: 'source'
+		// },
 		{
 			id: 4,
 			name: 'Allocation started',
 			toggleValue: 'allocationStarted',
-			question: 'Has the location begun allocating reparations?'
+			// question: 'Has the location begun allocating reparations?'
+			keyword: 'allocating'
 		},
 		{
 			id: 5,
 			name: 'Direct payments',
 			toggleValue: 'directPayments',
-			question: 'Has the location determined if direct payments will be included?'
+			// question: 'Will direct payments be included?'
+			keyword: 'included'
 		},
 		{
 			id: 6,
 			name: 'Eligibility determined',
 			toggleValue: 'eligibility',
-			question: 'Has the location determined who is eligible to receive direct payments?'
+			// question: 'Has the location determined who is eligible to receive direct payments?'
+			keyword: 'eligible'
 		},
 		{
 			id: 7,
 			name: 'Health addressed',
 			toggleValue: 'health',
-			question: 'Is any of the funding addressing health?'
+			// question: 'Is any of the funding addressing health?'
+			keyword: 'health'
 		}
 	];
 
@@ -96,7 +119,7 @@
 			>
 				Applying a filter will show all cities, counties and states that meet the criteria.
 			</p>
-			{#each data as { name, toggleValue, question }}
+			{#each data as { name, toggleValue, keyword }}
 				<div class="single-toggle-switch">
 					<!-- Toggle switch based on https://www.w3.org/WAI/ARIA/apg/patterns/switch/examples/switch-checkbox/ -->
 					<label for={toggleValue} class="toggle">
@@ -106,7 +129,7 @@
 							type="checkbox"
 							role="switch"
 							bind:group={questionToggle}
-							value={question}
+							value={keyword}
 							on:change={() => {
 								if (questionToggle.length) {
 									toggleFilter(questionToggle);
@@ -117,7 +140,7 @@
 						/><span class="toggle-container">
 							<span class="toggle-switch">
 								<span class="text" aria-hidden="true"
-									>{#if questionToggle?.includes(question)}On
+									>{#if questionToggle?.includes(keyword)}On
 									{:else}Off{/if}</span
 								>
 								<span class="switch"></span>
