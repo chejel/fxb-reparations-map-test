@@ -104,6 +104,15 @@
 		background-color: rgba(var(--white), 0.75);
 	}
 
+	.directions > ul {
+		list-style-position: outside;
+		padding-left: 0.5rem;
+	}
+
+	.directions > ul > li {
+		margin: 5px;
+	}
+
 	/* stats */
 	.card-header {
 		font-family: 'Barlow Condensed', sans-serif;
