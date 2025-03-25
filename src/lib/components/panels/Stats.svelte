@@ -307,6 +307,7 @@
 					</ul>
 				</div>
 			{/if}
+
 			<span class="arrow-up-icon" style="color: rgba(var(--red), 0.85);" aria-hidden="true">
 				{#if question.count > 0}▲
 				{/if}
@@ -379,6 +380,10 @@
 		background-color: rgba(var(--white), 1);
 	}
 
+	summary::-webkit-details-marker {
+		display: none;
+	}
+
 	summary:hover {
 		background-color: rgba(var(--light-gray), 0.1);
 	}
@@ -396,11 +401,10 @@
 		display: flex;
 		justify-content: space-between;
 		align-items: center;
-
-		position: relative;
+		position: relative; /* to position arrow icon */
 	}
 
-	/* arrow icon */
+	/* to position arrow icon */
 	details.stat {
 		position: relative;
 	}
@@ -425,16 +429,16 @@
 		visibility: hidden;
 	}
 
-	details > div.stat-locations {
+	/* <details> body content */
+	details > .stat-locations {
 		background-color: rgba(var(--light-gray), 0.5);
 		border-bottom: 1px solid rgba(var(--gray), 0.75);
-		padding: 3px 0;
+		padding: 3px 0 5px 0;
 		box-shadow: 0 2px 2px -1px inset rgba(var(--gray), 0.25);
 	}
 
 	details > .stat-locations ul {
 		padding: 0 30px;
-		font-size: 0.85rem;
 		list-style-type: circle;
 	}
 
@@ -448,6 +452,15 @@
 
 	details > .stat-locations ul > li.state-color::marker {
 		color: rgba(var(--green), 1);
+	}
+
+	details > .stat-locations > ul > li > button {
+		font-size: 0.9rem;
+		line-height: 1.4;
+	}
+
+	details > .stat-locations > ul > li > button:hover {
+		background-color: rgba(var(--white), 0.75);
 	}
 
 	.filters-note {

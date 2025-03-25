@@ -125,15 +125,6 @@ button {
 	color: rgba(var(--black), 1);
 }
 
-ul {
-	list-style-position: outside;
-	padding-left: 0.5rem;
-}
-
-li {
-	margin: 5px;
-}
-
 hr {
 	border: 0;
 	height: 0;
@@ -159,7 +150,6 @@ mapboxgl-ctrl-group,
 .card {
 	background-color: rgba(var(--white), 0.75);
 	border: 0.75px solid rgba(var(--dark-green), 1);
-	/* padding: 0.75rem; */
 	border-radius: 5px;
 	margin-top: 1rem;
 	overflow: auto;
