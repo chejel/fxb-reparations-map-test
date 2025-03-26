@@ -1,6 +1,12 @@
 <script>
 	// Stores
-	import { map, reparationsData, selectedLocation, filteredLocations } from '$lib/stores.js';
+	import {
+		map,
+		reparationsData,
+		selectedLocation,
+		filteredLocations,
+		toggleTags
+	} from '$lib/stores.js';
 
 	// Set variables for toggle
 	let questionToggle;
@@ -18,9 +24,6 @@
 
 	// Generate list of locations based on applied filters/toggles:
 	let filter;
-
-	// For toggle keywords in box of filtered locations on map
-	let toggleTags = [];
 
 	// Source: https://docs.mapbox.com/mapbox-gl-js/example/filter-features-within-map-view/
 	function getUniqueFeatures(features, comparatorProperty) {
@@ -54,9 +57,17 @@
 			}));
 
 			// Generate the respective toggle `labels` for the selected toggle `keywords`, based on the data object
-			toggleTags = question
-				.map((q) => data?.find((d) => d.keyword === q)?.label)
-				.filter((label) => label); // Filter out undefined labels
+			$toggleTags = question.map((q) =>
+				q === 'approved'
+					? 'funding'
+					: q === 'allocating'
+						? 'allocation'
+						: q === 'included'
+							? 'payments'
+							: q === 'eligible'
+								? 'eligibility'
+								: q
+			);
 		}, 100);
 	}
 
@@ -205,7 +216,7 @@
 <style>
 	.single-toggle-switch {
 		padding: 0 5px;
-		margin-top: -7px;
+		margin-top: -9px;
 	}
 
 	label {
