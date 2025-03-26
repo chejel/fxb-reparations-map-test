@@ -25,8 +25,8 @@
 
 <style>
 	button.reset-map {
-		background-color: rgba(var(--white), 1);
-		border: 1px solid rgba(var(--red), 0.75);
+		background-color: rgba(var(--black), 1);
+		/* border: 1px solid rgba(var(--red), 0.75); */
 		padding: 5px 6px;
 		border-radius: 4px;
 		font-size: 0.9rem;
