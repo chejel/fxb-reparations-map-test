@@ -78,23 +78,35 @@
 	});
 
 	// When location is selected on panel, highlight on map
-	$: if ($selectedLocation?.Geography === 'City') {
-		$map.setFilter('panel-city-selected-layer', [
-			'any',
-			['==', $selectedLocation.Location, ['get', 'Location']]
-			// Use `==` for single values, `in` for arrays
-		]);
-	} else if ($selectedLocation?.Geography === 'County') {
-		$map.setFilter('panel-county-selected-layer', [
-			'all',
+	$: if ($selectedLocation) {
+		const filters = [
 			['==', $selectedLocation.Location, ['get', 'Location']],
 			['==', $selectedLocation.State, ['get', 'State']]
-		]);
-	} else if ($selectedLocation?.Geography === 'State') {
-		$map.setFilter('panel-state-selected-layer', [
-			'any',
-			['==', $selectedLocation.State, ['get', 'State']]
-		]);
+		];
+
+		if ($selectedLocation.Geography === 'City') {
+			$map.setFilter('panel-city-selected-layer', ['all', ...filters]);
+		} else if ($selectedLocation.Geography === 'County') {
+			$map.setFilter('panel-county-selected-layer', ['all', ...filters]);
+		} else if ($selectedLocation.Geography === 'State') {
+			$map.setFilter('panel-state-selected-layer', [
+				'any',
+				['==', $selectedLocation.State, ['get', 'State']]
+			]);
+		}
+
+		['city-labels-layer', 'county-labels-layer'].forEach((layer) => {
+			$map.setPaintProperty(layer, 'text-color', [
+				'case',
+				[
+					'all',
+					['==', ['get', 'Location'], $selectedLocation.Location],
+					['==', ['get', 'State'], $selectedLocation.State]
+				],
+				'rgba(199, 0, 57, 0.85)',
+				'#333'
+			]);
+		});
 	}
 
 	function scrollToTop() {

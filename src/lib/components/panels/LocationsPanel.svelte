@@ -52,11 +52,41 @@
 			<button
 				on:click={() => {
 					$selectedLocation = undefined;
-					// Clear any location highlights on map:
-					$map.setFilter('panel-city-selected-layer', ['==', 'Location', '']);
-					$map.setFilter('panel-county-selected-layer', ['==', 'Location', '']);
-					$map.setFilter('panel-county-selected-layer', ['==', 'State', '']);
-					$map.setFilter('panel-state-selected-layer', ['==', 'State', '']);
+
+					// Clear any location highlighted on map and reset label colors:
+					const layersToClear = [
+						{
+							layer: 'panel-city-selected-layer',
+							filters: [
+								['==', 'Location', ''],
+								['==', 'State', '']
+							]
+						},
+						{
+							layer: 'panel-county-selected-layer',
+							filters: [
+								['==', 'Location', ''],
+								['==', 'State', '']
+							]
+						},
+						{
+							layer: 'panel-state-selected-layer',
+							filters: [
+								['==', 'Location', ''],
+								['==', 'State', '']
+							]
+						}
+					];
+
+					// Clear any layers for selected locations:
+					layersToClear.forEach(({ layer, filters }) => {
+						filters.forEach((filter) => $map.setFilter(layer, filter));
+					});
+
+					// Reset location label color for any that had been highlighted in red:
+					['city-labels-layer', 'county-labels-layer'].forEach((layer) => {
+						$map.setPaintProperty(layer, 'text-color', '#333');
+					});
 				}}
 				class="back-button"
 			>
