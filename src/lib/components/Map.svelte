@@ -68,7 +68,7 @@
 				center: [centerMapPt.lng, centerMapPt.lat],
 				zoom: initialZoom,
 				// minZoom: 3.75, // adds bounce when resetting map
-				maxZoom: 7,
+				maxZoom: 10,
 				maxBounds: [
 					[-190, 10], // SW corner
 					[-40, 72.5] // NE corner
@@ -642,6 +642,7 @@
 		z-index: 1;
 		text-transform: uppercase;
 		font-family: 'Barlow Condensed', sans-serif;
+		font-size: 0.8rem;
 		font-weight: 600;
 		text-align: center;
 		color: darkslategray;
