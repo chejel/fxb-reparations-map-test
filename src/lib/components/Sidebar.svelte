@@ -70,7 +70,6 @@
 	}
 
 	.panel-body {
-		padding: 1rem;
 		background-color: rgb(var(--beige), 1);
 		max-height: calc(100svh - 2rem);
 	}
@@ -80,6 +79,7 @@
 	}
 
 	.panel-list {
+		padding: 1rem; /* not added to panel-about so that some elements can have a diff bg color */
 		display: flex;
 		flex-direction: column;
 		overflow: hidden;

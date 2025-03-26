@@ -2,7 +2,7 @@
 	--black: 51, 51, 51; /* #333; */
 	--white: 253, 253, 253; /* #fdfdfd; */
 	--beige: 251, 244, 226; /* #fbf4e2 */
-	--yellow: rgb(244, 206, 20); /* #f4ce14 */
+	--yellow: 244, 206, 20; /* #f4ce14 */
 	--orange: 255, 171, 77; /* #ffab4d */
 	--light-orange: 255, 193, 126; /* #ffc17e */
 	--yellow-orange: 254, 183, 70; /* #feb746 */
