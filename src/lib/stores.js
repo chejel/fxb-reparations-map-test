@@ -9,6 +9,7 @@ export let reparationsCityData = writable();
 export let reparationsCountyData = writable();
 export let reparationsStateData = writable();
 export let filteredLocations = writable(); // locations based on applied filters/toggles
+export let toggleTags = writable(); // for listing applied filters/toggles as tags in list of locations
 
 // Variables that will trigger sidebar to open
 export let selectedLocation = writable(); // Object containing selected city/county and state name
