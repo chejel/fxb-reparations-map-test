@@ -581,24 +581,24 @@
 		padding: mapPadding,
 		duration: 1000
 	});
+
+	// List of filtered locations
+	import FilteredList from '$lib/components/FilteredList.svelte';
 </script>
 
-<!-- Reset map button -->
-<!-- <div class="reset-container" transition:fade={{ duration: 100 }}>
-	Reset
-	<ResetMapBtn {centerMapPt}><ResetIcon /></ResetMapBtn>
-	Map
+<!-- List of locations after filters applied -->
+<div class="filtered-list-container">
+	<FilteredList />
 </div>
-<div class="btn-container"></div> -->
 
-<!-- {#if (initialCenterLng?.toFixed(1) !== movedCenterLng?.toFixed(1) || initialCenterLat?.toFixed(1) !== movedCenterLat?.toFixed(1) || $map?.getPitch() !== 0) && $map?.getZoom() !== 3.75} -->
+<!-- Reset map button -->
 {#if initialCenterLng?.toFixed(1) !== movedCenterLng?.toFixed(1) || initialCenterLat?.toFixed(1) !== movedCenterLat?.toFixed(1) || $map?.getZoom() !== 3.75}
 	<div class="reset-container" transition:fade={{ duration: 100 }}>
 		Reset
 		<ResetMapBtn {centerMapPt}><ResetIcon /></ResetMapBtn>
 		Map
 	</div>
-	<div class="btn-container"></div>
+	<!-- <div class="btn-container"></div> -->
 {/if}
 
 <!-- Map -->
@@ -618,7 +618,7 @@
 		bottom: 0;
 	}
 
-	.btn-container {
+	/* .btn-container {
 		position: absolute;
 		top: 80px;
 		right: 10px;
@@ -626,6 +626,13 @@
 		flex-direction: column;
 		align-items: flex-end;
 		row-gap: 10px;
+	} */
+
+	.filtered-list-container {
+		position: absolute;
+		top: 10px;
+		right: 50px;
+		z-index: 1;
 	}
 
 	.reset-container {

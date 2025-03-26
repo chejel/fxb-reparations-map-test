@@ -1,12 +1,12 @@
 <script>
 	// Stores
-	import { map, reparationsData } from '$lib/stores.js';
+	import { map, reparationsData, selectedLocation, filteredLocations } from '$lib/stores.js';
 
 	// Set variables for toggle
 	let questionToggle;
 
 	// Layers to filter based on toggle selections
-	const layers = [
+	let layers = [
 		'city-markers-layer',
 		'city-labels-layer',
 		'county-fill-layer',
@@ -16,18 +16,71 @@
 		'state-border-layer'
 	];
 
-	// Generate list of locations based on applied filters/toggles
-	let filteredLocations = [];
+	// Generate list of locations based on applied filters/toggles:
+	let filter;
+
+	// For toggle keywords in box of filtered locations on map
+	let toggleTags = [];
+
+	// Source: https://docs.mapbox.com/mapbox-gl-js/example/filter-features-within-map-view/
+	function getUniqueFeatures(features, comparatorProperty) {
+		const uniqueIds = new Set();
+		const uniqueFeatures = [];
+		for (const feature of features) {
+			const id = feature.properties[comparatorProperty];
+			if (!uniqueIds.has(id)) {
+				uniqueIds.add(id);
+				uniqueFeatures.push(feature);
+			}
+		}
+		return uniqueFeatures;
+	}
 
 	function toggleFilter(question) {
-		const filter = filterQuestions(question);
-		layers.forEach((layer) => $map.setFilter(layer, filter));
+		filter = filterQuestions(question);
 
-		filteredLocations = $map
-			.queryRenderedFeatures({
-				layers: layers
-			})
-			.map((d) => d.properties.Location);
+		layers.forEach((layer) => $map?.setFilter(layer, filter));
+
+		// delay querying rendered features to ensure the map has updated
+		setTimeout(() => {
+			const getRenderedFeatures = $map.queryRenderedFeatures({
+				layers: ['city-markers-layer', 'county-fill-layer', 'state-fill-layer']
+			});
+
+			$filteredLocations = getUniqueFeatures(getRenderedFeatures, 'Location').map((d) => ({
+				Location: d.properties.Location,
+				State: d.properties.State,
+				Geography: d.properties.Geography
+			}));
+
+			// Generate the respective toggle `labels` for the selected toggle `keywords`, based on the data object
+			toggleTags = question
+				.map((q) => data?.find((d) => d.keyword === q)?.label)
+				.filter((label) => label); // Filter out undefined labels
+		}, 100);
+	}
+
+	// If filters are applied, shows text labels for any selected location (even if not part of filtered data)
+	$: if ($filteredLocations) {
+		const locationFilter = $selectedLocation
+			? [
+					'all',
+					['==', ['get', 'Location'], $selectedLocation.Location],
+					['==', ['get', 'State'], $selectedLocation.State]
+				]
+			: null;
+
+		if ($selectedLocation?.Geography === 'City') {
+			$map.setFilter('city-labels-layer', ['any', locationFilter, filter]);
+		} else if ($selectedLocation?.Geography === 'County') {
+			['county-labels-layer', 'county-fill-layer'].forEach((layer) => {
+				$map.setFilter(layer, ['any', locationFilter, filter]);
+			});
+		} else {
+			['city-labels-layer', 'county-labels-layer', 'county-fill-layer'].forEach((layer) => {
+				$map.setFilter(layer, filter);
+			});
+		}
 	}
 
 	function filterQuestions(questions) {
@@ -46,60 +99,55 @@
 	}
 
 	function resetFilter() {
-		if ($map) {
-			layers.forEach((layer) => $map.setFilter(layer, null));
+		layers.forEach((layer) => $map.setFilter(layer, null));
+		if ($filteredLocations) {
+			$filteredLocations = null;
 		}
 	}
 
 	const data = [
 		{
 			id: 1,
-			name: 'Report released',
+			label: 'Report released',
 			toggleValue: 'reportReleased',
-			// question: 'Has the location released a report on reparations?'
 			keyword: 'report'
 		},
 		{
 			id: 2,
-			name: 'Funding approved',
+			label: 'Funding approved',
 			toggleValue: 'fundingApproved',
-			// question: 'Has the location approved reparations funding?'
 			keyword: 'approved'
 		},
 		// exclude questions without direct yes/no responses
 		// {
 		// 	id: 3,
-		// 	name: 'Funding source',
+		// 	label: 'Funding source',
 		// 	toggleValue: 'fundingSource',
 		// 	// question: 'What is the potential funding source?'
 		// 	keyword: 'source'
 		// },
 		{
 			id: 4,
-			name: 'Allocation started',
+			label: 'Allocation started',
 			toggleValue: 'allocationStarted',
-			// question: 'Has the location begun allocating reparations?'
 			keyword: 'allocating'
 		},
 		{
 			id: 5,
-			name: 'Direct payments',
+			label: 'Direct payments',
 			toggleValue: 'directPayments',
-			// question: 'Will direct payments be included?'
 			keyword: 'included'
 		},
 		{
 			id: 6,
-			name: 'Eligibility determined',
+			label: 'Eligibility determined',
 			toggleValue: 'eligibility',
-			// question: 'Has the location determined who is eligible to receive direct payments?'
 			keyword: 'eligible'
 		},
 		{
 			id: 7,
-			name: 'Health addressed',
+			label: 'Health addressed',
 			toggleValue: 'health',
-			// question: 'Is any of the funding addressing health?'
 			keyword: 'health'
 		}
 	];
@@ -119,7 +167,7 @@
 			>
 				Applying a filter will show all cities, counties and states that meet the criteria.
 			</p>
-			{#each data as { name, toggleValue, keyword }}
+			{#each data as { label, toggleValue, keyword }, i}
 				<div class="single-toggle-switch">
 					<!-- Toggle switch based on https://www.w3.org/WAI/ARIA/apg/patterns/switch/examples/switch-checkbox/ -->
 					<label for={toggleValue} class="toggle">
@@ -131,7 +179,7 @@
 							bind:group={questionToggle}
 							value={keyword}
 							on:change={() => {
-								if (questionToggle.length) {
+								if (questionToggle.length > 0 && $map) {
 									toggleFilter(questionToggle);
 								} else {
 									resetFilter();
@@ -145,7 +193,7 @@
 								>
 								<span class="switch"></span>
 							</span>
-							<span class="toggle-text">{name}</span>
+							<span class="toggle-text">{label}</span>
 						</span></label
 					>
 				</div>
@@ -306,12 +354,10 @@
 
 	/* style arrow marker */
 	summary::-webkit-details-marker {
-		/* color: var(--red); */
-		color: white;
+		color: rgba(var(--white), 0.9);
 	}
 	summary::marker {
-		/* color: var(--red); */
-		color: white;
+		color: rgba(var(--white), 0.9);
 	}
 
 	details > .content {
