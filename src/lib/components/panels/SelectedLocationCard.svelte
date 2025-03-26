@@ -161,8 +161,8 @@
 						</span>
 					{/if}
 				</div>
-				<hr /></th
-			>
+				<hr />
+			</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -190,7 +190,9 @@
 						</span>
 						<span class="response">
 							{#if location[1].response}
-								{@html marked.parse(location[1].fullResponse)}
+								{@html marked
+									.parse(location[1].fullResponse)
+									.replace(/<a /g, '<a target="_blank" rel="noopener noreferrer" ')}
 							{:else}
 								N/A
 							{/if}
@@ -235,6 +237,8 @@
 		align-items: baseline;
 		gap: 8px;
 		padding: 0.75rem 0.75rem 0;
+		background-color: rgba(var(--light-gray), 0.4);
+		padding-bottom: 0.5rem;
 	}
 
 	.state-name {
@@ -310,6 +314,7 @@
 	}
 
 	hr {
+		margin-top: 0;
 		margin-bottom: 0.75rem;
 	}
 </style>
