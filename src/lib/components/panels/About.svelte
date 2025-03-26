@@ -56,10 +56,10 @@
 				Select a <span style="color: rgba(var(--red), 1); font-weight: 700;">city</span>,
 				<span style="color: rgba(var(--dark-green), 0.75); font-weight: 700;">county</span> or
 				<span style="color: rgba(var(--green), 1); font-weight: 700;">state</span>
-				on the map to see more information about reparations efforts at the location.
+				on the map for more information about reparations efforts at the location.
 			</li>
 			<li>
-				Zoom in or double click on the map to see any geographic names that do not initially appear.
+				Zoom in or double click on the map to see any place names that do not initially appear.
 			</li>
 			<li>
 				To see a list of all the locations represented on the map, select the <span
