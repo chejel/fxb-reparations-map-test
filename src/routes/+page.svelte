@@ -1,6 +1,7 @@
 <script>
 	// Import components
 	import Map from '$lib/components/Map.svelte';
+	import MapFilters from '$lib/components/MapFilters.svelte';
 	import Footer from '$lib/components/Footer.svelte';
 
 	// Sidebar components
@@ -11,7 +12,7 @@
 
 	// Import reparations data
 	import { onMount } from 'svelte';
-	export let data; // Airtable directory data
+
 	import {
 		statesMap,
 		reparationsData,
@@ -34,33 +35,15 @@
 	// Declare variables for map data
 	import topoCounties from '$lib/data/counties-10m.json'; // unprojected US county geometries
 
-	onMount(async () => {
-		// Reparations data via Airtable
-		reparationsData.set({
-			type: 'FeatureCollection',
-			features: data.airtableRecords
-				.map((d) => {
-					const obj = {
-						type: 'Feature',
-						geometry: {
-							type: 'Point',
-							coordinates: [+d['Longitude'], +d['Latitude']]
-						},
-						properties: {
-							...d
-						}
-					};
+	// Hide elements when JavaScript is disabled
+	let showJSDisabled = false;
 
-					return obj;
-				})
-				// Must have Location, Geography, State fields
-				.filter(
-					(feature) =>
-						feature.properties['Location'] &&
-						feature.properties['Geography'] &&
-						feature.properties['State']
-				)
-		});
+	onMount(async () => {
+		const res = await fetch('/api');
+		if (res.ok) {
+			const apiData = await res.json();
+			reparationsData.set(apiData);
+		}
 
 		// ...filtered to city data
 		reparationsCityData.set(
@@ -220,7 +203,7 @@
 		});
 
 		// Detect orientation change and resize
-		checkMobileLandscape();
+		// checkMobileLandscape();
 
 		// Event listeners for change in screen size and orientation
 		window.addEventListener('resize', checkMobileLandscape);
@@ -231,6 +214,14 @@
 			window.removeEventListener('resize', checkMobileLandscape);
 			window.removeEventListener('orientationchange', checkMobileLandscape);
 		};
+	});
+
+	onMount(() => {
+		// Check if using mobile in landscape mode
+		checkMobileLandscape();
+
+		// Hide elements when JavaScript is disabled
+		showJSDisabled = true;
 	});
 
 	// Message when on mobile landscape mode
@@ -248,62 +239,133 @@
 
 		isLandscapeMode = isMobile && isLandscape && isTouchDevice;
 	}
+
+	// Loading elements
+	import { browser } from '$app/environment';
+	let mapLoaded = false;
+	$: hasData = $reparationsData?.features.length > 0; // Data loading state
 </script>
 
-<!-- Map -->
-{#if $reparationsData}
-	<Map bind:sidebarVisible />
-{/if}
-
-<!-- Sidebar -->
-{#if sidebarVisible && !isLandscapeMode}
-	<div class="sidebar-content" transition:fly={{ x: -200, duration: 1000 }}>
-		<!-- <div class="sidebar-content" transition:fade> -->
-		<Sidebar bind:sidebarVisible></Sidebar>
-	</div>
-{:else}
-	<button
-		aria-label="Show sidebar"
-		class="sidebar-collapsed"
-		on:click|stopPropagation={() => (sidebarVisible = true)}
-	>
-		<ListIcon />
-	</button>
-{/if}
-
-<!-- Footer -->
-<footer class="footer-container">
-	<Footer />
-</footer>
-
-<!-- Message when in mobile landscape mode -->
-{#if isLandscapeMode}
-	<Modal bind:isLandscapeMode>
-		<img src={rotateIcon} alt="" width="50" style="margin: auto; padding-bottom: 5px;" />
-		<p>Please rotate your device to access the</p>
-		<p
-			style="font-size: 1.35em; text-transform: uppercase; font-weight: 700; color: rgba(var(--orange), 1);"
+<div class="map-layout">
+	<!-- Sidebar -->
+	{#if sidebarVisible && !isLandscapeMode}
+		<div class="sidebar-content" transition:fly={{ x: -200, duration: 1000 }}>
+			<!-- <div class="sidebar-content" transition:fade> -->
+			<Sidebar bind:sidebarVisible />
+		</div>
+	{:else}
+		<button
+			aria-label="Show sidebar"
+			class="sidebar-collapsed"
+			on:click|stopPropagation={() => (sidebarVisible = true)}
 		>
-			Black Reparations Map
-		</p>
-	</Modal>
-{/if}
+			<ListIcon />
+		</button>
+	{/if}
+
+	<!-- Map -->
+	{#if !browser}
+		<div class="map-fallback">
+			<p>This map requires JavaScript to load.</p>
+			<!-- <div class="loader"></div> -->
+		</div>
+	{:else}
+		{#if !mapLoaded && !hasData}
+			<div class="map-loader">
+				<p>Loading map…</p>
+				<div class="loader"></div>
+			</div>
+		{/if}
+
+		{#if hasData}
+			<Map bind:sidebarVisible on:load={() => (mapLoaded = true)} />
+			<!-- Message when in mobile landscape mode -->
+			{#if isLandscapeMode}
+				<Modal bind:isLandscapeMode>
+					<img src={rotateIcon} alt="" width="50" style="margin: auto; padding-bottom: 5px;" />
+					<p>Please rotate your device to access the</p>
+					<p
+						style="font-size: 1.35em; text-transform: uppercase; font-weight: 700; color: rgba(var(--orange), 1);"
+					>
+						National Black Reparations Map
+					</p>
+				</Modal>
+			{/if}
+		{/if}
+	{/if}
+
+	<!-- Footer -->
+	{#if showJSDisabled}
+		<footer class="footer-container">
+			<!-- toggle filters -->
+			<div class="map-filters-container">
+				<MapFilters />
+			</div>
+
+			<!-- logo -->
+			<Footer />
+		</footer>
+	{/if}
+</div>
 
 <style>
-	.sidebar-content {
+	.map-layout {
+		position: relative;
+		width: 100vw;
+		height: 100vh;
+		overflow: hidden;
+	}
+
+	.map-fallback {
+		width: 100%;
+		height: 100%;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		background-color: #eee;
+		flex-direction: column;
+	}
+
+	/* loader */
+	.map-loader {
+		display: block;
+		height: 100vh;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		height: 100vh;
+	}
+
+	/* .sidebar-content {
 		position: relative;
 		max-width: 375px;
-		max-height: calc(100svh - 2rem);
+		max-height: calc(100svh - 5rem);
 		border-radius: 5px;
 		background-color: rgb(var(--light-gray), 1);
 		top: 0;
 		z-index: 1;
 		margin: 1rem;
-		box-shadow: 0px 0px 24px 3px rgba(var(--black), 0.1);
+		box-shadow: 0px 0px 24px 3px rgba(var(--black), 0.25);
 		display: flex;
 		flex-direction: column;
 		overflow: hidden;
-		z-index: 2;
+		z-index: 10;
+	} */
+
+	.sidebar-content {
+		position: absolute;
+		top: 1rem;
+		left: 1rem;
+		max-width: 375px;
+		max-height: calc(100svh - 5rem);
+		border-radius: 5px;
+		background-color: rgb(var(--light-gray), 1);
+		box-shadow: 0 0 24px 3px rgba(var(--black), 0.25);
+		display: flex;
+		flex-direction: column;
+		overflow: hidden;
+		z-index: 10;
 	}
 
 	.sidebar-collapsed {
@@ -313,12 +375,32 @@
 		cursor: pointer;
 		background-color: transparent;
 		border: 0;
+		z-index: 10;
 	}
 
 	.footer-container {
 		position: absolute;
 		bottom: 35px;
 		right: 10px;
+
+		display: flex;
+		flex-direction: column;
+		align-items: end;
+		row-gap: 20px;
+	}
+
+	.map-filters-container {
+		/* position: absolute;
+		bottom: 100px;
+		right: 10px; */
+		/* display: flex;
+		flex-direction: column;
+		row-gap: 7px; */
+
+		font-size: 12px;
+		font-weight: 600;
+		gap: 1px;
+		font-family: 'Roboto Condensed', sans-serif;
 	}
 
 	/* Center sidebar on mobile devices */
@@ -327,6 +409,11 @@
 			margin-left: auto;
 			margin-right: auto;
 		}
+
+		.footer-container {
+			bottom: 125px;
+			right: 10px;
+		}
 	}
 
 	/* @media only screen and (max-device-width: 812px) and (orientation: landscape) {
@@ -334,4 +421,27 @@
 			display: none;
 		}
 	} */
+
+	p {
+		margin: 8px;
+	}
+
+	.loader {
+		height: 20px;
+		width: 20px;
+		border-radius: 100%;
+		border: 3px solid;
+		border-color: rgba(var(--light-gray), 1) rgba(var(--light-gray), 1) rgba(var(--orange), 1)
+			rgba(var(--light-gray), 1);
+		animation: spin 2s ease infinite;
+	}
+
+	@keyframes spin {
+		0% {
+			transform: rotate(0deg);
+		}
+		100% {
+			transform: rotate(360deg);
+		}
+	}
 </style>
