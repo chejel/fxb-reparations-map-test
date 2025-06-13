@@ -50,7 +50,7 @@
 	}
 
 	mapboxgl.accessToken =
-		'pk.eyJ1IjoiamVuY2hlIiwiYSI6ImNsdDlhNWNtdTBnOXEybW5wMmxxMDRneGMifQ.-aAXBbQZGsiJeZ-zvOXJQA';
+		'pk.eyJ1IjoiZnhiLWNlbnRlciIsImEiOiJjbHVzaWw5YXowajd2Mmp0YnB0ZzR1b3VuIn0.VrL-9ZI_NCB3bDkJjCajTQ';
 
 	// Center point of map
 	const centerMapPt = { lng: -95.7, lat: 38.1 };
@@ -62,9 +62,7 @@
 			new mapboxgl.Map({
 				container: mapContainer,
 				accessToken: mapboxgl.accessToken,
-				//style: 'mapbox://styles/jenche/clt3p16ui003i01qph9fuhxoq',
 				style: 'mapbox://styles/fxb-center/cluiiae6003iv01qqb1p0970w',
-				//style: 'mapbox://styles/mapbox/standard',
 				center: [centerMapPt.lng, centerMapPt.lat],
 				zoom: initialZoom,
 				// minZoom: 3.75, // adds bounce when resetting map
@@ -604,12 +602,6 @@
 <!-- Map -->
 <div class="map" bind:this={mapContainer} />
 
-<!-- Toggle filters -->
-<div class="map-filters-container">
-	<MapFilters />
-	<!-- <hr style="border-top: 0.5px solid rgba(255, 255, 255, 1);" /> -->
-</div>
-
 <style>
 	.map {
 		position: absolute;
@@ -646,29 +638,5 @@
 		font-weight: 600;
 		text-align: center;
 		color: darkslategray;
-	}
-
-	.map-filters-container {
-		position: absolute;
-		bottom: 100px;
-		right: 10px;
-		display: flex;
-		flex-direction: column;
-		row-gap: 7px;
-
-		font-size: 12px;
-		font-weight: 600;
-		gap: 1px;
-		font-family: 'Roboto Condensed', sans-serif;
-	}
-
-	@media screen and (max-device-width: 480px) {
-		.map-filters-container {
-			bottom: 30px;
-			left: 10px;
-			right: auto;
-			display: flex;
-			flex-direction: column;
-		}
 	}
 </style>
