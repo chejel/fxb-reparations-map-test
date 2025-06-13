@@ -1,38 +1,7 @@
-# create-svelte
+# National Black Reparations Map
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/main/packages/create-svelte).
+The **FXB Center’s National Black Reparations Map** is an interactive tool that tracks the progress of reparation conversations, i.e., research, policy development, and enactment of reparations policy at the state, city, and local county level across the United States. Reparations for the African American community seek redress for slavery, redlining, mass incarceration, and other anti-black policies in the United States. Our research focuses on **Making the Health Case for Reparations**, and this map supports that work by tracking where reparations are being passed to address health disparities within the Black American community.
 
-## Creating a project
+The [Black Reparations Directory](https://airtable.com/appVAaDUbHug6JBVT/shrc7vnOjje5jmgBF/tbl8TbJwwKKTqASZR) also accompanies the interactive map where you can find more information and links to the reparations work happening within state, city, and local governments.
 
-If you're seeing this, you've probably already done this step. Congrats!
-
-```bash
-# create a new project in the current directory
-npm create svelte@latest
-
-# create a new project in my-app
-npm create svelte@latest my-app
-```
-
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
-```bash
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
-
-## Building
-
-To create a production version of your app:
-
-```bash
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+This project was made possible through funding from the **Robert Wood Johnson Foundation**.
