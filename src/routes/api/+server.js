@@ -1,19 +1,7 @@
 import { AIRTABLE_API_KEY, AIRTABLE_BASE_ID, AIRTABLE_TABLE_NAME } from '$env/static/private';
 import Airtable from 'airtable';
 
-let cache = null;
-let lastFetch = 0;
-const cacheDuration = 1000 * 60 * 5; // 5 minutes
-
 export async function GET() {
-	const now = Date.now();
-
-	if (cache && now - lastFetch < cacheDuration) {
-		return new Response(JSON.stringify(cache), {
-			headers: { 'Content-Type': 'application/json' }
-		});
-	}
-
 	try {
 		const base = new Airtable({ apiKey: AIRTABLE_API_KEY }).base(AIRTABLE_BASE_ID);
 		const records = await base(AIRTABLE_TABLE_NAME)
@@ -34,10 +22,6 @@ export async function GET() {
 					}
 				}))
 		};
-
-		// Cache data
-		cache = geojson;
-		lastFetch = now;
 
 		return new Response(JSON.stringify(geojson), {
 			headers: { 'Content-Type': 'application/json' }
