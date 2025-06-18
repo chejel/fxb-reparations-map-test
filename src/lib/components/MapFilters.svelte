@@ -170,13 +170,21 @@
 
 <!-- accordion -->
 <details bind:open={isOpen}>
-	<summary>Filter locations</summary>
+	<summary
+		><span style="display: inline-flex; gap: 47px;"
+			><span>Filter locations</span>
+			{#if isOpen}
+				<span style="color: pink;">✕</span>
+			{/if}
+		</span></summary
+	>
 	{#if isOpen}
 		<div class="content" in:slide={{ duration: 750 }}>
 			<p
 				style="font-family: 'Barlow', sans-serif; font-weight: 700; font-size: 0.75rem; line-height: 1.15;padding: 0 5px;"
 			>
-				Applying a filter will show all cities, counties and states that meet the criteria.
+				When multiple filters are applied, only the locations that match all selected criteria will
+				be shown.
 			</p>
 			{#each data as { label, toggleValue, keyword }, i}
 				<div class="single-toggle-switch">
@@ -195,6 +203,16 @@
 								} else {
 									resetFilter();
 								}
+
+								// Clear any highlighted location on map:
+								$map.setFilter('panel-city-selected-layer', ['==', 'Location', '']);
+								$map.setFilter('panel-county-selected-layer', ['==', 'Location', '']);
+								$map.setFilter('panel-county-selected-layer', ['==', 'State', '']);
+								$map.setFilter('panel-state-selected-layer', ['==', 'State', '']);
+								// Reset label colors:
+								['city-labels-layer', 'county-labels-layer'].forEach((layer) => {
+									$map.setPaintProperty(layer, 'text-color', '#333');
+								});
 							}}
 						/><span class="toggle-container">
 							<span class="toggle-switch">
