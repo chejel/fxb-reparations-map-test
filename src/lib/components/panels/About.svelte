@@ -20,17 +20,16 @@
 
 <!-- Intro text -->
 <main aria-label="Introduction" class="introduction">
-	<div class="about">
+	<section class="about">
 		<p>
 			The <strong
 				><a href="https://fxb.harvard.edu/" target="_blank">FXB Center</a>’s National Black
 				Reparations Map</strong
 			>
-			is an interactive tool that tracks the progress of reparation conversations, i.e., research,
-			policy development, and enactment of reparations policy at the state, city, and local county
-			level across the United States. Reparations for the African American community seek redress
-			for slavery, redlining, mass incarceration, and other anti-black policies in the United
-			States. Our research focuses on
+			is an interactive tool that tracks the progress of reparation conversations, i.e., research, policy
+			development, and enactment of reparations policy at the state, city, and local county level across
+			the United States. Reparations for the African American community seek redress for slavery, redlining,
+			mass incarceration, and other anti-black policies in the United States. Our research focuses on
 			<strong>Making the Health Case for Reparations</strong>, and this map supports that work by
 			tracking where reparations are being passed to address health disparities within the Black
 			American community.
@@ -57,10 +56,16 @@
 				target="_blank"><strong>complete this submission form</strong></a
 			>. Once approved, it will be added to the map and directory.
 		</div>
-	</div>
+		<!-- <div style="margin-top: 1rem; font-size: 0.8rem; display: flex; flex-direction: row; gap: 5px;">
+			<MailIcon /><span
+				>FXB Center:
+				<a href="mailto:fxbcenter_info@hsph.harvard.edu">fxbcenter_info@hsph.harvard.edu</a></span
+			>
+		</div> -->
+	</section>
 
 	{#if showJSDisabled}
-		<div class="directions">
+		<section class="directions">
 			<span class="card-header" style="background-color: transparent; padding: 0;"
 				><MapMarkerIcon />Directions</span
 			>
@@ -83,7 +88,7 @@
 					tab above.
 				</li>
 			</ul>
-		</div>
+		</section>
 	{/if}
 </main>
 
@@ -105,12 +110,11 @@
 {/if}
 
 <footer style="margin-bottom: 0; display: flex; align-items: center; gap: 7px;">
-	<MailIcon /><strong
-		><span style="font-family:'Barlow Condensed', sans-serif; text-transform: uppercase;"
-			>Contact:</span
-		>
-		<a href="mailto:fxbcenter_info@hsph.harvard.edu">fxbcenter_info@hsph.harvard.edu</a></strong
-	>
+	<MailIcon />
+	<div>
+		<span style="font-family:'Barlow Condensed', sans-serif;">FXB Center:</span>
+		<a href="mailto:fxbcenter_info@hsph.harvard.edu">fxbcenter_info@hsph.harvard.edu</a>
+	</div>
 </footer>
 
 <style>
@@ -158,7 +162,7 @@
 	}
 
 	footer {
-		background-color: rgba(var(--white), 1);
+		background-color: rgba(var(--white), 0.75);
 	}
 
 	footer a {
