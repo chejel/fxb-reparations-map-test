@@ -33,12 +33,16 @@
 		$citiesPanelVisible = label === 'Cities';
 		$countiesPanelVisible = label === 'Counties';
 		$statesPanelVisible = label === 'States';
-		$selectedLocation = undefined;
+		$selectedLocation = null;
 		// Clear any highlighted location on map:
 		$map.setFilter('panel-city-selected-layer', ['==', 'Location', '']);
 		$map.setFilter('panel-county-selected-layer', ['==', 'Location', '']);
 		$map.setFilter('panel-county-selected-layer', ['==', 'State', '']);
 		$map.setFilter('panel-state-selected-layer', ['==', 'State', '']);
+		// Reset label colors:
+		['city-labels-layer', 'county-labels-layer'].forEach((layer) => {
+			$map.setPaintProperty(layer, 'text-color', '#333');
+		});
 	}
 </script>
 
