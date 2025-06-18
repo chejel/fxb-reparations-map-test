@@ -48,7 +48,7 @@
 		background-color: rgba(var(--light-gray), 1);
 		font-size: 1.1rem;
 		text-transform: uppercase;
-		padding: 10px 0;
+		padding: 8px 0;
 		display: flex;
 		justify-content: center;
 		align-items: center;

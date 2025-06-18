@@ -266,7 +266,7 @@
 	<!-- Map -->
 	{#if !browser}
 		<div class="map-fallback">
-			<p>This map requires JavaScript to load.</p>
+			<p>This page requires JavaScript to load.</p>
 			<!-- <div class="loader"></div> -->
 		</div>
 	{:else}
@@ -313,6 +313,7 @@
 		position: relative;
 		width: 100vw;
 		height: 100vh;
+		height: 100dvh;
 		overflow: hidden;
 	}
 
@@ -411,8 +412,7 @@
 		}
 
 		.footer-container {
-			bottom: 125px;
-			right: 10px;
+			row-gap: 0;
 		}
 	}
 
