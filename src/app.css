@@ -108,8 +108,8 @@ a:hover {
 }
 
 h1 {
-	font-family: 'Outfit', sans-serif;
-	font-size: 1.95rem;
+	font-family: 'Barlow Condensed', sans-serif;
+	font-size: 1.8rem;
 }
 
 h2 {
@@ -189,4 +189,13 @@ mapboxgl-ctrl-group,
 
 a.source-btn {
 	color: rgb(var(--blue), 1);
+}
+
+ol,
+ul {
+	margin-left: 1rem;
+}
+
+li {
+	margin-bottom: 0.25rem;
 }

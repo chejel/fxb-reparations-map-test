@@ -20,8 +20,8 @@
 <!-- Header -->
 <header>
 	<div class="header-title">
-		<h1>Black Reparations Map</h1>
-		<p class="subheader">Where the Conversations Have Started</p>
+		<h1>National Black Reparations Map</h1>
+		<p class="subheader">Tracking reparation conversations across the U.S.</p>
 	</div>
 
 	<!-- About + Places buttons -->
@@ -61,16 +61,16 @@
 	}
 
 	.header-title {
-		padding: 1rem 1rem 0.5rem;
+		padding: 0.75rem 1rem 0.5rem;
 	}
 
 	.subheader {
 		font-family: 'Outfit', sans-serif;
-		font-size: 1rem;
+		font-size: 0.95rem;
 	}
 
 	.panel-body {
-		background-color: rgb(var(--beige), 1);
+		background-color: rgb(var(--beige), 0.5);
 		max-height: calc(100svh - 2rem);
 	}
 
@@ -89,6 +89,6 @@
 		position: absolute;
 		top: 4px;
 		right: 4px;
-		z-index: 100;
+		z-index: 10;
 	}
 </style>
