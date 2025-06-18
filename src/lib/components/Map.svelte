@@ -23,7 +23,7 @@
 
 	// Import components
 	import ResetMapBtn from '$lib/components/ResetMapBtn.svelte';
-	import MapFilters from '$lib/components/MapFilters.svelte';
+	import FilteredList from '$lib/components/FilteredList.svelte';
 	// Import icon components
 	import ResetIcon from '$lib/components/icons/Reset.svelte';
 
@@ -501,7 +501,7 @@
 				$map.getCanvas().style.cursor = 'pointer';
 			});
 
-			// cursor goes back to default off point
+			// Cursor goes back to default off point
 			$map.on('mouseleave', ['city-markers-layer', 'city-labels-layer'], () => {
 				$map.getCanvas().style.cursor = 'auto';
 			});
@@ -579,14 +579,11 @@
 		padding: mapPadding,
 		duration: 1000
 	});
-
-	// List of filtered locations
-	import FilteredList from '$lib/components/FilteredList.svelte';
 </script>
 
 <!-- List of locations after filters applied -->
 <div class="filtered-list-container">
-	<FilteredList />
+	<FilteredList bind:sidebarVisible />
 </div>
 
 <!-- Reset map button -->
