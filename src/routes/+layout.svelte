@@ -1,71 +1,42 @@
 <script>
 	// Import stylesheet
 	import '../app.css';
-
-	import { map, reparationsData } from '$lib/stores.js';
-
-	// Create promise that resolves when map and data have loaded
-	let dataLoaded = Promise.all([$map, $reparationsData]);
 </script>
 
 <svelte:head>
-	<title>Black Reparations Map | FXB Center for Health & Human Rights</title>
-	<!-- <meta property="og:title" content="Reparations Map" />
-	<meta property="og:description" content="Interactive map of locations considering reparations in the U.S." />
-	<meta property="og:url" content="" />
-	<meta property="og:image" content="" />
-	<meta property="og:site_name" content="Reparations Map" />
+	<title>National Black Reparations Map | FXB Center for Health & Human Rights</title>
+	<meta
+		name="description"
+		content="The National Black Reparations Map tracks the progress of reparation conversations across the U.S."
+	/>
+	<link rel="canonical" href="https://resources.fxb.harvard.edu/reparations-map" />
+
+	<meta property="og:title" content="National Black Reparations Map | FXB Center" />
+	<meta
+		property="og:description"
+		content="The National Black Reparations Map tracks the progress of reparation conversations across the U.S."
+	/>
+	<meta property="og:url" content="https://resources.fxb.harvard.edu/reparations-map" />
+	<meta
+		property="og:image"
+		content="https://resources.fxb.harvard.edu/reparations-map/images/national-black-reparations-map-ss.jpg"
+	/>
+	<meta property="og:image:alt" content="Screenshot of the National Black Reparations Map" />
+	<meta property="og:site_name" content="National Black Reparations Map | FXB Center" />
 	<meta property="og:locale" content="en_US" />
 	<meta property="og:type" content="website" />
+
 	<meta name="twitter:card" content="summary_large_image" />
-	<meta name="twitter:title" content="Reparations Map" />
-	<meta name="twitter:description" content="Interactive map of locations considering reparations in the U.S." />
-	<meta name="twitter:site" content="" />
-	<meta name="twitter:image" content="" />
-	<meta name="twitter:creator" content="" /> -->
+	<meta name="twitter:title" content="National Black Reparations Map | FXB Center" />
+	<meta
+		name="twitter:description"
+		content="Interactive map that tracks the progress of reparation conversations across the U.S."
+	/>
+	<meta
+		name="twitter:image"
+		content="https://resources.fxb.harvard.edu/reparations-map/images/national-black-reparations-map-ss.jpg"
+	/>
+	<meta name="twitter:image:alt" content="Screenshot of the National Black Reparations Map" />
 </svelte:head>
 
-{#await dataLoaded}
-	<div class="page-container">
-		<p>Loading...</p>
-		<div class="loader"></div>
-	</div>
-{:then}
-	<slot />
-{/await}
-
-<style>
-	.page-container {
-		display: block;
-		height: 100vh;
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-		height: 80vh;
-	}
-
-	p {
-		margin: 8px;
-	}
-
-	/* loader */
-	.loader {
-		height: 20px;
-		width: 20px;
-		border-radius: 100%;
-		border: 3px solid;
-		border-color: rgba(var(--light-gray), 1) rgba(var(--light-gray), 1) rgba(var(--orange), 1)
-			rgba(var(--light-gray), 1);
-		animation: spin 2s ease infinite;
-	}
-
-	@keyframes spin {
-		0% {
-			transform: rotate(0deg);
-		}
-		100% {
-			transform: rotate(360deg);
-		}
-	}
-</style>
+<slot />
