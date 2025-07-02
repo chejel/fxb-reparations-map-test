@@ -74,12 +74,6 @@
 			})
 		);
 
-		// Add contiguous US bounding box
-		// $map.fitBounds([
-		// 	[-125, 23], // SW corner
-		// 	[-66.7, 51.5] // NE corner
-		// ]);
-
 		// Add zoom controls
 		$map.addControl(new mapboxgl.NavigationControl({ showCompass: false }), 'top-right');
 
