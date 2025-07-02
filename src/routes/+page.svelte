@@ -38,88 +38,67 @@
 	// Hide elements when JavaScript is disabled
 	let showJSDisabled = false;
 
+	export let data;
 	onMount(async () => {
-		const res = await fetch('/api');
-		if (res.ok) {
-			const apiData = await res.json();
-			reparationsData.set(apiData);
+		if (data) {
+			reparationsData.set(data.data);
 		}
 
 		// ...filtered to city data
-		reparationsCityData.set(
-			$reparationsData?.features
-				.filter(
-					(feature) =>
-						feature.properties['Geography'] === 'City' &&
-						//feature.properties['State'] &&
-						feature.properties['Latitude'] &&
-						feature.properties['Longitude']
-				)
-				.map((feature) => {
-					if (feature.properties['Location']?.includes(',')) {
-						// Retain original location name
-						feature.properties['Original location name'] = feature.properties['Location'];
-						// If feature contains a commma, remove including everything after
-						feature.properties['Location'] = feature.properties['Location'].split(',', 1)[0];
-					}
-					return feature;
-				})
-		);
-
-		// ...filtered to counties data
-		reparationsCountyData.set(
-			$reparationsData?.features
-				.filter(
-					(feature) => feature.properties['Geography'] === 'County'
-					//&& feature.properties['State']
-				)
-				// remove non-applicable point geometry data (long/lat) from county data
-				// .map((feature) => {
-				// 	delete feature.geometry;
-				// 	return feature;
-				// })
-				.map((feature) => {
+		const cityData = data.data.features
+			?.filter(
+				(feature) =>
+					feature.properties['Geography'] === 'City' &&
+					feature.properties['Latitude'] &&
+					feature.properties['Longitude']
+			)
+			.map((feature) => {
+				if (feature.properties['Location']?.includes(',')) {
 					// Retain original location name
 					feature.properties['Original location name'] = feature.properties['Location'];
+					// If feature contains a comma, remove including everything after
+					feature.properties['Location'] = feature.properties['Location'].split(',', 1)[0];
+				}
+				return feature;
+			});
 
-					// If feature contains a comma, remove + everything after
-					if (feature.properties['Location']?.includes(',')) {
-						feature.properties['Location'] = feature.properties['Location'].split(',', 1)[0].trim();
-					}
+		reparationsCityData.set(cityData || []);
 
-					// If feature contains a parenthesis, remove + everything after
-					if (feature.properties['Location']?.includes('(')) {
-						feature.properties['Location'] = feature.properties['Location'].split('(', 1)[0].trim();
-					}
-					// 	// If feature contains " County", remove the string
-					// 	// if (feature.properties['Location']?.includes(' County')) {
-					// 	// 	feature.properties['Location'] = feature.properties['Location'].replace(' County', '');
-					// 	// }
-					return feature;
-				})
-		);
+		// ...filtered to counties data
+		const countyData = data.data.features
+			?.filter((feature) => feature.properties['Geography'] === 'County')
+			.map((feature) => {
+				// Retain original location name
+				feature.properties['Original location name'] = feature.properties['Location'];
+
+				// If feature contains a comma, remove + everything after
+				if (feature.properties['Location']?.includes(',')) {
+					feature.properties['Location'] = feature.properties['Location'].split(',', 1)[0].trim();
+				}
+
+				// If feature contains a parenthesis, remove + everything after
+				if (feature.properties['Location']?.includes('(')) {
+					feature.properties['Location'] = feature.properties['Location'].split('(', 1)[0].trim();
+				}
+				return feature;
+			});
+		reparationsCountyData.set(countyData || []);
 
 		// ...filtered to state data
-		reparationsStateData.set(
-			$reparationsData?.features
-				.filter((feature) => {
-					return feature.properties['Geography'] === 'State' && feature.properties['State'];
-				})
-				// remove any non-applicable point geometry data (long/lat) from state data
-				.map((feature) => {
-					delete feature.geometry;
-					return feature;
-				})
-		);
+		const stateData = data.data.features
+			?.filter(
+				(feature) => feature.properties['Geography'] === 'State' && feature.properties['State']
+			)
+			.map((feature) => {
+				delete feature.geometry;
+				return feature;
+			});
+		reparationsStateData.set(stateData || []);
 
 		// In fipsCodes, convert fips_code to string value
 		// Source: https://www.census.gov/library/reference/code-lists/ansi.html#cou
 		fipsCodes.forEach((d) => {
 			d.fips_code = String(d.fips_code);
-			// Create a new property that extracts from the county name any of the following: County, Parish, Borough, or Census Area
-			// d.county_name = d.COUNTYNAME
-			// 	.replace(/County|Parish|Borough|Census Area|Municipality/g, '')
-			// 	.trim();
 		});
 
 		// Map data for all counties
@@ -217,9 +196,6 @@
 	});
 
 	onMount(() => {
-		// Check if using mobile in landscape mode
-		checkMobileLandscape();
-
 		// Hide elements when JavaScript is disabled
 		showJSDisabled = true;
 	});
@@ -243,7 +219,7 @@
 	// Loading elements
 	import { browser } from '$app/environment';
 	let mapLoaded = false;
-	$: hasData = $reparationsData?.features.length > 0; // Data loading state
+	$: hasData = $reparationsData?.features?.length > 0; // Data loading state
 </script>
 
 <div class="map-layout">
@@ -338,22 +314,6 @@
 		height: 100vh;
 	}
 
-	/* .sidebar-content {
-		position: relative;
-		max-width: 375px;
-		max-height: calc(100svh - 5rem);
-		border-radius: 5px;
-		background-color: rgb(var(--light-gray), 1);
-		top: 0;
-		z-index: 1;
-		margin: 1rem;
-		box-shadow: 0px 0px 24px 3px rgba(var(--black), 0.25);
-		display: flex;
-		flex-direction: column;
-		overflow: hidden;
-		z-index: 10;
-	} */
-
 	.sidebar-content {
 		position: absolute;
 		top: 1rem;
@@ -391,13 +351,6 @@
 	}
 
 	.map-filters-container {
-		/* position: absolute;
-		bottom: 100px;
-		right: 10px; */
-		/* display: flex;
-		flex-direction: column;
-		row-gap: 7px; */
-
 		font-size: 12px;
 		font-weight: 600;
 		gap: 1px;
