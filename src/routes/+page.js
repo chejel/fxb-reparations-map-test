@@ -1,8 +1,4 @@
-// export async function load({ fetch }) {
-// 	const response = await fetch('/fxb-rwjf-reparations-efforts-map/api');
-// 	const data = await response.json();
-// 	return { data };
-// }
+export const prerender = true;
 
 export async function load({ fetch }) {
 	try {
