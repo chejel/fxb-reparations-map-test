@@ -6,8 +6,8 @@ on:
       [main] # Run only on main branch pushes
       #- '**' # Trigger on all branches
   schedule:
-    - cron: '0 * * * *' # Run every hour (for testing)
-    # - cron: '0 8 * * *' # Daily at 8 AM UTC
+    - cron: '30 7 * * *' # Test run at 7:30 AM UTC
+    # - cron: '0 8 * * *' # Daily at 8 AM UTC (for production)
   workflow_dispatch: # Allow manual triggering
 
 jobs:
