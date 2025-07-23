@@ -14,10 +14,12 @@ async function fetchData() {
 		view: 'Internal view for mapping'
 	};
 
-	const res = await axios.get(url, {
+	const { data } = await axios.get(url, {
 		headers: { Authorization: `Bearer ${API_KEY}` },
 		params
 	});
+
+	const records = data.records;
 
 	const EXCLUDED_FIELDS = ['Last Modified'];
 
@@ -34,7 +36,15 @@ async function fetchData() {
 
 	const geojson = {
 		type: 'FeatureCollection',
-		features: res.data.records
+		lastUpdated: new Date().toISOString(),
+		totalRecords: records.filter(
+			(r) =>
+				r.fields['Location'] &&
+				r.fields['Geography'] &&
+				r.fields['State'] &&
+				r.fields['Status'] === 'Verified'
+		).length,
+		features: records
 			.filter(
 				(r) =>
 					r.fields['Location'] &&
@@ -54,7 +64,7 @@ async function fetchData() {
 
 	fs.writeFileSync('static/mapdata.json', JSON.stringify(geojson, null, 2));
 	console.log('✅ Airtable data fetched and saved to mapdata.json');
-	console.log(`Fetched ${geojson.features.length} records`);
+	console.log(`Fetched ${geojson.features.length} records at ${geojson.lastUpdated}`);
 }
 
 fetchData().catch((err) => {
