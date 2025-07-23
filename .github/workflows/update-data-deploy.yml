@@ -34,10 +34,22 @@ jobs:
           AIRTABLE_API_KEY: ${{ secrets.AIRTABLE_API_KEY }}
           BASE_ID: ${{ secrets.AIRTABLE_BASE_ID }}
           TABLE_NAME: ${{ secrets.AIRTABLE_TABLE_NAME }}
-        run: node src/scripts/fetch-data.js
+        run: |
+          echo "Fetching data from Airtable..."
+          node src/scripts/fetch-data.js
+          echo "Checking if mapdata.json was created..."
+          ls -la static/
+          echo "Checking file size..."
+          stat static/mapdata.json || echo "mapdata.json not found"
 
       - name: Build site
-        run: npm run build
+        run: |
+          echo "Building site..."
+          npm run build
+          echo "Checking build output..."
+          ls -la build/
+          echo "Looking for mapdata.json in build..."
+          find build/ -name "mapdata.json" -ls || echo "mapdata.json not found in build"
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3

@@ -2,7 +2,6 @@ import fs from 'fs';
 import axios from 'axios';
 import dotenv from 'dotenv';
 
-// Load environment variables from .env file
 dotenv.config();
 
 const API_KEY = process.env.AIRTABLE_API_KEY;
@@ -20,10 +19,9 @@ async function fetchData() {
 		params
 	});
 
-	// Define fields to exclude from public data
 	const EXCLUDED_FIELDS = ['Last Modified'];
 
-	// Function to filter out excluded fields
+	// Filter out excluded fields
 	function filterFields(fields) {
 		const filtered = {};
 		for (const [key, value] of Object.entries(fields)) {
@@ -34,7 +32,6 @@ async function fetchData() {
 		return filtered;
 	}
 
-	// Transform data to match the API server format (GeoJSON)
 	const geojson = {
 		type: 'FeatureCollection',
 		features: res.data.records
@@ -51,15 +48,16 @@ async function fetchData() {
 					type: 'Point',
 					coordinates: [+r.fields['Longitude'], +r.fields['Latitude']]
 				},
-				properties: filterFields(r.fields) // Apply field filtering here
+				properties: filterFields(r.fields)
 			}))
 	};
 
 	fs.writeFileSync('static/mapdata.json', JSON.stringify(geojson, null, 2));
-	//console.log('Airtable data fetched and saved to mapdata.json');
+	console.log('✅ Airtable data fetched and saved to mapdata.json');
+	console.log(`Fetched ${geojson.features.length} records`);
 }
 
-fetchData().catch(() => {
-	//console.error('Error fetching data from Airtable:', err.message);
+fetchData().catch((err) => {
+	console.error('❌ Error fetching data from Airtable:', err.message);
 	process.exit(1);
 });
