@@ -36,14 +36,6 @@ async function fetchData() {
 
 	const geojson = {
 		type: 'FeatureCollection',
-		lastUpdated: new Date().toISOString(),
-		totalRecords: records.filter(
-			(r) =>
-				r.fields['Location'] &&
-				r.fields['Geography'] &&
-				r.fields['State'] &&
-				r.fields['Status'] === 'Verified'
-		).length,
 		features: records
 			.filter(
 				(r) =>
@@ -63,11 +55,11 @@ async function fetchData() {
 	};
 
 	fs.writeFileSync('static/mapdata.json', JSON.stringify(geojson, null, 2));
-	console.log('✅ Airtable data fetched and saved to mapdata.json');
-	console.log(`Fetched ${geojson.features.length} records at ${geojson.lastUpdated}`);
+	console.log('Airtable data fetched and saved to mapdata.json');
+	console.log(`Fetched ${geojson.features.length} records`);
 }
 
 fetchData().catch((err) => {
-	console.error('❌ Error fetching data from Airtable:', err.message);
+	console.error('Error fetching data from Airtable:', err.message);
 	process.exit(1);
 });
