@@ -1,0 +1,41 @@
+name: Update FXB's National Black Reparations Map data and deploy
+
+on:
+  push:
+    branches:
+      [main] # Run only on main branch pushes
+      #- '**' # Trigger on all branches
+  schedule:
+    - cron: '0 8 * * *' # Run at 8 AM UTC
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Fetch latest data from Airtable
+        env:
+          AIRTABLE_API_KEY: ${{ secrets.AIRTABLE_API_KEY }}
+          BASE_ID: ${{ secrets.AIRTABLE_BASE_ID }}
+          TABLE_NAME: ${{ secrets.AIRTABLE_TABLE_NAME }}
+        run: node src/scripts/fetch-data.js
+
+      - name: Build site
+        run: npm run build
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./build # SvelteKit static adapter outputs to build/

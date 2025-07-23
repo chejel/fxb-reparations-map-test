@@ -1,8 +1,9 @@
 export const prerender = true;
+export const ssr = false;
 
 export async function load({ fetch }) {
 	try {
-		const response = await fetch('/fxb-rwjf-reparations-efforts-map/api');
+		const response = await fetch('/fxb-rwjf-reparations-efforts-map/mapdata.json');
 
 		if (!response.ok) {
 			const text = await response.text();
