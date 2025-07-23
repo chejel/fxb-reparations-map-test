@@ -3,7 +3,6 @@ export const ssr = false;
 
 export async function load({ fetch }) {
 	try {
-		// Try relative path first
 		const response = await fetch('./mapdata.json');
 
 		if (!response.ok) {
@@ -15,7 +14,7 @@ export async function load({ fetch }) {
 
 		return { data };
 	} catch (error) {
-		// console.error('Failed to load data:', error);
+		console.error('Failed to load data:', error);
 		return { data: { type: 'FeatureCollection', features: [] } };
 	}
 }
