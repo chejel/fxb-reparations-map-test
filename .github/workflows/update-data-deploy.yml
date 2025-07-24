@@ -3,11 +3,10 @@ name: Update FXB's National Black Reparations Map data and deploy
 on:
   push:
     branches:
-      [main] # Run only on main branch pushes
-      #- '**' # Trigger on all branches
+      #- main # Run only on main branch pushes
+      - '**' # Trigger on all branches
   schedule:
-    - cron: '10 18 * * *' # Test run at 6:10 PM UTC
-    #- cron: '0 8 * * *' # Daily at 8 AM UTC (production schedule)
+    - cron: '0 7 * * *' # Daily at 7 AM UTC (3 AM EDT)
   workflow_dispatch: # Allow manual triggering
 
 jobs:
@@ -36,22 +35,10 @@ jobs:
           AIRTABLE_API_KEY: ${{ secrets.AIRTABLE_API_KEY }}
           BASE_ID: ${{ secrets.AIRTABLE_BASE_ID }}
           TABLE_NAME: ${{ secrets.AIRTABLE_TABLE_NAME }}
-        run: |
-          echo "Fetching data from Airtable..."
-          node src/scripts/fetch-data.js
-          echo "Checking if mapdata.json was created..."
-          ls -la static/
-          echo "Checking file size..."
-          stat static/mapdata.json || echo "mapdata.json not found"
+        run: node src/scripts/fetch-data.js
 
       - name: Build site
-        run: |
-          echo "Building site..."
-          npm run build
-          echo "Checking build output..."
-          ls -la build/
-          echo "Looking for mapdata.json in build..."
-          find build/ -name "mapdata.json" -ls || echo "mapdata.json not found in build"
+        run: npm run build
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
