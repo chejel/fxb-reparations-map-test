@@ -3,8 +3,7 @@ name: Update FXB's National Black Reparations Map data and deploy
 on:
   push:
     branches:
-      #- main # Run only on main branch pushes
-      - '**' # Trigger on all branches
+      - main # Run only on main branch pushes
   schedule:
     - cron: '0 7 * * *' # Daily at 7 AM UTC (3 AM EDT)
   workflow_dispatch: # Allow manual triggering
